@@ -1,0 +1,86 @@
+[
+  {
+    "id": 0,
+    "name": "Cooper",
+    "lastName": "Hurley",
+    "age": 21,
+    "address": "Hicks Street, 522 ",
+    "gender": "male",
+    "subject": [
+      {
+        "name": "mathematics",
+        "teacherId": "00"
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "name": "Walters",
+    "lastName": "Carver",
+    "age": 17,
+    "address": "Brooklyn Road, 396 ",
+    "gender": "male",
+    "subject": [
+      {
+        "name": "chemistry",
+        "teacherId": "02"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "John",
+    "lastName": "Morton",
+    "age": 18,
+    "address": "Huron Street, 651 ",
+    "gender": "female",
+    "subject": [
+      {
+        "name": "biology",
+        "teacherId": "05"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Leblanc",
+    "lastName": "Graves",
+    "age": 21,
+    "address": "Bergen Avenue, 170 ",
+    "gender": "male",
+    "subject": [
+      {
+        "name": "biology",
+        "teacherId": "05"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Castillo",
+    "lastName": "Avila",
+    "age": 20,
+    "address": "Albany Avenue, 942 ",
+    "gender": "male",
+    "subject": [
+      {
+        "name": "biology",
+        "teacherId": "02"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Lakeisha",
+    "lastName": "Newton",
+    "age": 20,
+    "address": "Heyward Street, 598 ",
+    "gender": "female",
+    "subject": [
+      {
+        "name": "physics",
+        "teacherId": "03"
+      }
+    ]
+  }
+]
