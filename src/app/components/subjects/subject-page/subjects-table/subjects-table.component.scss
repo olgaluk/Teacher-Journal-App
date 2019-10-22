@@ -1,0 +1,28 @@
+.container-subject {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 100px;
+    min-height: 60px;
+    margin: 10px;
+    border-radius: 7px;
+    background-color: rgb(253, 232, 206);
+    font-size: 1.3em;
+
+    &:hover {
+      transition: 0.2s;
+      outline: none;
+      cursor: pointer;
+      background-color: rgb(243, 205, 159);
+    }
+
+    & h3 {
+      margin: 0px;
+    }
+  }
+}
