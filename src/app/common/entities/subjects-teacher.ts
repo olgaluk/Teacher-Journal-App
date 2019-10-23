@@ -1,10 +1,14 @@
+import { StudentMark } from './student-mark';
+
 export class SubjectsTeacher {
   name: string;
-  studentsId: number[];
+  studentsInfo: StudentMark[] = [];
 
   constructor(
-    name: string
+    name: string,
+    studentsInfo: StudentMark[]
   ) {
     this.name = name;
+    this.studentsInfo = studentsInfo;
   }
 }

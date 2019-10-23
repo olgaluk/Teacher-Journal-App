@@ -4,13 +4,21 @@ import { STUDENTS } from '../constants/constants-student';
 import { Subject } from '../entities/subject';
 import { SUBJECTS } from '../constants/constants-subject';
 
+import { Teacher } from '../entities/teacher';
+import { TEACHER } from '../constants/constants-teacher';
+
 export class DataService {
 
   private dataStudents: Student[] = STUDENTS;
   private dataSubjects: Subject[] = SUBJECTS;
+  private dataTeachers: Teacher[] = TEACHER;
 
   getDataStudents(): Student[] {
     return this.dataStudents;
+  }
+
+  getDataStudent(studentId: number) {
+    return this.dataStudents.find(student => student.id === studentId);
   }
 
   addDataStudent(
@@ -37,5 +45,37 @@ export class DataService {
     if (subject == null)
       return;
     this.dataSubjects.push(new Subject(subject, cabinet, description));
+  }
+
+  getDataTeachersFromSubject(id: string) {
+    const listIdTeachers = this.dataSubjects.find(subject => subject.subject === id).teachersID;
+    const listTeachers = listIdTeachers
+      .map(teacherId => this.dataTeachers.find(teacher => teacher.id === teacherId))
+      .filter(teacher => teacher);
+    return listTeachers;
+  }
+
+  getDataTeacher(idTeacher: string) {
+    return this.dataTeachers.find(teacher => teacher.id === idTeacher);
+  }
+
+  getDataSubjectInfo(subject: string) {
+    return this.dataSubjects.find(subjectItem => subjectItem.subject === subject);
+  }
+
+  getDataStudentsFromTeacher(idTeacher: string, subject: string) {
+    const teacherInfo = this.getDataTeacher(idTeacher);
+    const teacherInfoSubjects = teacherInfo.subjects;
+    const teacherInfoSubject = teacherInfoSubjects.find(subjectInfo => subjectInfo.name === subject);
+    const studentsInfoName = teacherInfoSubject.studentsInfo.map(studentMarks => {
+      const studentId = studentMarks.studentId;
+      const student = this.getDataStudent(studentId);
+      return {
+        "studentName": student.name,
+        "studentLastName": student.lastName,
+        "marks": studentMarks.marks
+      }
+    })
+    return studentsInfoName;
   }
 }

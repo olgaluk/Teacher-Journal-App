@@ -11,6 +11,7 @@ import { SubjectsTableComponent } from './components/subjects/subject-page/subje
 import { StatisticComponent } from './components/statistics/statistic-page/statistic.component';
 import { ExportComponent } from './components/export/export.component';
 import { SubjectDetailComponent } from './components/subjects/subject-page/subject-detail/subject-detail.component';
+import { SubjectTeachersComponent } from './components/subjects/subject-page/subject-teachers/subject-teachers.component';
 
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
   { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
-  { path: 'subjects/:id', component: SubjectDetailComponent },
+  { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
+  { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent },
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }
@@ -51,7 +53,8 @@ const routes: Routes = [
     ExportComponent,
     NotFoundComponent,
     ButtonAddComponent,
-    SubjectDetailComponent
+    SubjectDetailComponent,
+    SubjectTeachersComponent
   ],
   providers: [DataService]
 })

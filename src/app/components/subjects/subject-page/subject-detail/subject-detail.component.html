@@ -1,18 +1,25 @@
-<div>
+<div class="container-marks">
   <div class="page-header">
-    <h2 class="text-center text-uppercase text-info">{{id}}</h2>
+    <h2 class="text-center text-uppercase text-info">{{subject}}</h2>
+    <h3 class="text-center text-uppercase text-danger">Teacher: {{teacher.teacherName}} {{teacher.teacherLastName}}</h3>
+    <h4 class="text-center text-uppercase text-info">Cabinet: {{subjectInfo.cabinet}}</h4>
   </div>
   <table class="table table-bordered table-striped">
     <thead>
       <tr class="text-info text-uppercase">
-        <th>subject</th>
-        <th>cabinet</th>
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Average Mark</th>
+        <th *ngFor="let date of dates">{{date}}</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>{{subject.subject}}</td>
-        <td>{{subject.cabinet}}</td>
+      <tr *ngFor="let student of students">
+        <td>{{student.studentName}}</td>
+        <td>{{student.studentLastName}}</td>
+        <td>{{getAverageMark(student)}}</td>
+        <td *ngFor="let date of dates">{{getMark(student, date)}}</td>
+      </tr>
     </tbody>
   </table>
 </div>
