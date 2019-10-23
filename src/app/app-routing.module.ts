@@ -3,7 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { HomeComponent } from './components/home-page/home.component';
+import { DataService } from './common/services/data.service';
+
+import { HomeComponent } from './components/home/home.component';
 import { StudentsTableComponent } from './components/students/student-page/students-table/students-table.component';
 import { SubjectsTableComponent } from './components/subjects/subject-page/subjects-table/subjects-table.component';
 import { StatisticComponent } from './components/statistics/statistic-page/statistic.component';
@@ -51,5 +53,6 @@ const routes: Routes = [
     ButtonAddComponent,
     SubjectDetailComponent
   ],
+  providers: [DataService]
 })
 export class AppRoutingModule { }

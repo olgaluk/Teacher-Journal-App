@@ -12,5 +12,6 @@ export class Subject {
     this.subject = subject;
     this.cabinet = cabinet;
     this.description = description;
+    this.teachersID = [];
   }
 }

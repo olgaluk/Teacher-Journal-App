@@ -10,7 +10,7 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent    
+    NavComponent   
   ],
   imports: [
     BrowserModule,

@@ -1,20 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { DataService } from '../../../../common/services/data.service';
 
 import { Subject } from '../../../../common/entities/subject';
-import subjects from '../../../../../../data/subjects.json';
 
 @Component({
   selector: 'app-subjects-table',
   templateUrl: './subjects-table.component.html',
   styleUrls: ['./subjects-table.component.scss']
 })
-export class SubjectsTableComponent {
+export class SubjectsTableComponent implements OnInit {
 
-  items: Subject[] = subjects;
+  items: Subject[] = [];
   condition: boolean = true;
   buttonInfo: string = "Add new subject";
 
-  toggle() {
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void {
+    this.getSubjects();
+  }
+
+  getSubjects(): void {
+    this.items = this.dataService.getDataSubjects();
+  }
+
+  toggle(): void {
     this.condition = !this.condition;
     this.buttonInfo === "Add new subject" ? this.buttonInfo = "Back" : this.buttonInfo = "Add new subject";
   }
@@ -24,8 +34,6 @@ export class SubjectsTableComponent {
     cabinet: number,
     description: string
   ): void {
-    if (subject == null)
-      return;
-    this.items.push(new Subject(subject, cabinet, description));
+    this.dataService.addDataSubject(subject, cabinet, description);
   }
 }

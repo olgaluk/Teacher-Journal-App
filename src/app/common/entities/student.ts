@@ -1,9 +1,12 @@
+import { StudentSubjects } from './student-subjects';
+
 export class Student {
   id: number;
   name: string;
   lastName: string;
   age: number;
   address: string;
+  subject: StudentSubjects[];
 
   constructor(
     id: number,
@@ -17,5 +20,6 @@ export class Student {
     this.lastName = lastName;
     this.age = age;
     this.address = address;
+    this.subject = [];
   }
 }
