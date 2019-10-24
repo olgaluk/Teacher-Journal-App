@@ -19,6 +19,7 @@ export class SubjectDetailComponent implements OnInit {
   teacher: Teacher;
   students: StudentNameAndMarks[] = [];
   dates: string[] = [];
+  buttonInfo: string = "Back to subject list";
 
   constructor(private dataService: DataService, private activateRoute: ActivatedRoute) {
     this.idTeacher = activateRoute.snapshot.params['teacherId'];

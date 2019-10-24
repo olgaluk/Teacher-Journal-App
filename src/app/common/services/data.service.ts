@@ -17,20 +17,24 @@ export class DataService {
     return this.dataStudents;
   }
 
+  getDataTeachers(): Teacher[] {
+    return this.dataTeachers;
+  }
+
   getDataStudent(studentId: number) {
     return this.dataStudents.find(student => student.id === studentId);
   }
 
-  addDataStudent(
-    id: number,
+  addDataNewStudent(
     name: string,
     lastName: string,
     age: number,
     address: string
   ): void {
-    if (name == null || lastName == null || name.trim() == "" || id == null || age == null)
+    if (name == null || lastName == null || name.trim() == "" || age == null)
       return;
-    this.dataStudents.push(new Student(id, name, lastName, age, address));
+    const idStudent: number = this.dataStudents.length > 0 ? Math.max(...this.dataStudents.map(student => student.id)) + 1 : 0;
+    this.dataStudents.push(new Student(idStudent, name, lastName, age, address));
   }
 
   getDataSubjects(): Subject[] {
@@ -40,11 +44,12 @@ export class DataService {
   addDataSubject(
     subject: string,
     cabinet: number,
+    teachersID: string[],
     description: string
   ): void {
     if (subject == null)
       return;
-    this.dataSubjects.push(new Subject(subject, cabinet, description));
+    this.dataSubjects.push(new Subject(subject, cabinet, teachersID, description));
   }
 
   getDataTeachersFromSubject(id: string) {

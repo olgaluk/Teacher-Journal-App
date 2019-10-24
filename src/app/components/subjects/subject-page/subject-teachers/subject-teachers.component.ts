@@ -13,6 +13,7 @@ export class SubjectTeachersComponent implements OnInit {
 
   id: string;
   teachers: Teacher[] = [];
+  buttonInfo: string = "Back to subject list";
 
   constructor(private dataService: DataService, private activateRoute: ActivatedRoute) {
     this.id = activateRoute.snapshot.params['id'];

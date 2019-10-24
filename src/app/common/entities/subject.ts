@@ -7,11 +7,12 @@ export class Subject {
   constructor(
     subject: string,
     cabinet: number,
+    teachersID: string[],
     description: string
   ) {
     this.subject = subject;
     this.cabinet = cabinet;
     this.description = description;
-    this.teachersID = [];
+    this.teachersID = teachersID;
   }
 }

@@ -10,8 +10,7 @@ import { Subject } from '../../../../common/entities/subject';
 })
 export class SubjectsTableComponent implements OnInit {
 
-  items: Subject[] = [];
-  condition: boolean = true;
+  subjects: Subject[] = [];
   buttonInfo: string = "Add new subject";
 
   constructor(private dataService: DataService) { }
@@ -21,19 +20,6 @@ export class SubjectsTableComponent implements OnInit {
   }
 
   getSubjects(): void {
-    this.items = this.dataService.getDataSubjects();
-  }
-
-  toggle(): void {
-    this.condition = !this.condition;
-    this.buttonInfo === "Add new subject" ? this.buttonInfo = "Back" : this.buttonInfo = "Add new subject";
-  }
-
-  addItem(
-    subject: string,
-    cabinet: number,
-    description: string
-  ): void {
-    this.dataService.addDataSubject(subject, cabinet, description);
+    this.subjects = this.dataService.getDataSubjects();
   }
 }

@@ -1,84 +1,26 @@
-<div *ngIf="condition">
-  <div class="page-header">
-    <h2 class="text-center text-uppercase text-info">List of students:</h2>
-  </div>
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr class="text-info text-uppercase">
-        <th>ID</th>
-        <th>Name</th>
-        <th>Last Name</th>
-        <th>Age</th>
-        <th>Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of items">
-        <td>{{item.id+1}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.lastName}}</td>
-        <td>{{item.age}}</td>
-        <td>{{item.address}}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="page-header">
+  <h2 class="text-center text-uppercase text-info">List of students:</h2>
 </div>
-
-<div *ngIf="!condition">
-  <div class="page-header">
-    <h2 class="text-center text-uppercase text-info">Add new student:</h2>
-  </div>
-  <div class="panel">
-    <form class="form-horizontal">
-
-      <div class="form-group">
-        <label for="inputId" class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">ID</label>
-        <div class="col-sm-10 col-md-7 col-lg-5">
-          <input type="number" class="form-control" id="inputId" [(ngModel)]="id" placeholder="ID"
-            [ngModelOptions]="{standalone: true}" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputName" class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Name</label>
-        <div class="col-sm-10 col-md-7 col-lg-5">
-          <input type="text" class="form-control" id="inputName" [(ngModel)]="name" placeholder="Name"
-            [ngModelOptions]="{standalone: true}" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputLastName" class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Last name</label>
-        <div class="col-sm-10 col-md-7 col-lg-5">
-          <input type="text" class="form-control" id="inputLastName" [(ngModel)]="lastName" placeholder="Last name"
-            [ngModelOptions]="{standalone: true}" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputAge" class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Age</label>
-        <div class="col-sm-10 col-md-7 col-lg-5">
-          <input type="number" class="form-control" id="inputAge" [(ngModel)]="age" placeholder="Age"
-            [ngModelOptions]="{standalone: true}" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="inputAddress" class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Address</label>
-        <div class="col-sm-10 col-md-7 col-lg-5">
-          <input type="text" class="form-control" id="inputAddress" [(ngModel)]="address" placeholder="Address"
-            [ngModelOptions]="{standalone: true}" />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
-          <button type="button" (click)="addItem(id, name, lastName, age, address)" class="btn btn-default">ADD</button>
-        </div>
-      </div>
-    </form>
-  </div>
-
-</div>
-
-<app-button-add (click)="toggle()" [value]="buttonInfo"></app-button-add>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr class="text-info text-uppercase">
+      <th>ID</th>
+      <th>Name</th>
+      <th>Last Name</th>
+      <th>Age</th>
+      <th>Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let student of students">
+      <td>{{student.id+1}}</td>
+      <td>{{student.name}}</td>
+      <td>{{student.lastName}}</td>
+      <td>{{student.age}}</td>
+      <td>{{student.address}}</td>
+    </tr>
+  </tbody>
+</table>
+<a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="/students/adding">
+  <app-button-add [value]="buttonInfo"></app-button-add>
+</a>

@@ -9,8 +9,8 @@ import { Student } from '../../../../common/entities/student';
   styleUrls: ['./students-table.component.scss']
 })
 export class StudentsTableComponent implements OnInit {
-  items: Student[] = [];
-  condition: boolean = true;
+
+  students: Student[] = [];
   buttonInfo: string = "Add new student";
 
   constructor(private dataService: DataService) { }
@@ -20,19 +20,6 @@ export class StudentsTableComponent implements OnInit {
   }
 
   getStudents(): void {
-    this.items = this.dataService.getDataStudents();
-  }
-
-  addItem(id: number,
-    name: string,
-    lastName: string,
-    age: number,
-    address: string): void {
-    this.dataService.addDataStudent(id, name, lastName, age, address);
-  }
-
-  toggle(): void {
-    this.condition = !this.condition;
-    this.buttonInfo === "Add new student" ? this.buttonInfo = "Back" : this.buttonInfo = "Add new student";
+    this.students = this.dataService.getDataStudents();
   }
 }

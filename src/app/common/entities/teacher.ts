@@ -14,5 +14,6 @@ export class Teacher {
     this.id = id;
     this.teacherName = teacherName;
     this.teacherLastName = teacherLastName;
+    this.subjects = [];
   }
 }

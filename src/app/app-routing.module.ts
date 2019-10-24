@@ -12,6 +12,8 @@ import { StatisticComponent } from './components/statistics/statistic-page/stati
 import { ExportComponent } from './components/export/export.component';
 import { SubjectDetailComponent } from './components/subjects/subject-page/subject-detail/subject-detail.component';
 import { SubjectTeachersComponent } from './components/subjects/subject-page/subject-teachers/subject-teachers.component';
+import { AddingSubjectComponent } from './components/subjects/adding-subject-page/adding-subject/adding-subject.component';
+import { AddingStudentComponent } from './components/students/adding-student-page/adding-student/adding-student.component';
 
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
@@ -20,7 +22,9 @@ import { ButtonAddComponent } from './shared/components/button/button-add/button
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
+  { path: 'students/adding', component: AddingStudentComponent, pathMatch: 'full' },
   { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
+  { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
   { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
   { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent },
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
@@ -43,7 +47,9 @@ const routes: Routes = [
     ExportComponent,
     NotFoundComponent,
     ButtonAddComponent,
-    SubjectDetailComponent
+    SubjectDetailComponent,
+    AddingSubjectComponent,
+    AddingStudentComponent
   ],
   declarations: [
     HomeComponent,
@@ -54,7 +60,9 @@ const routes: Routes = [
     NotFoundComponent,
     ButtonAddComponent,
     SubjectDetailComponent,
-    SubjectTeachersComponent
+    SubjectTeachersComponent,
+    AddingSubjectComponent,
+    AddingStudentComponent
   ],
   providers: [DataService]
 })
