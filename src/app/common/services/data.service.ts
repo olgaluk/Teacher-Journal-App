@@ -41,7 +41,7 @@ export class DataService {
     return this.dataSubjects;
   }
 
-  addDataSubject(
+  addDataNewSubject(
     subject: string,
     cabinet: number,
     teachersID: string[],

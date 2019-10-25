@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label for="inputForm" class="control-label col-sm-2 col-md-offset-2 col-lg-offset-2">{{itemName}}</label>
+  <div class="col-sm-10 col-md-7 col-lg-5">
+    <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" autocomplete="off" id="inputForm"
+      placeholder="{{itemName}}" name="itemValue" [ngModel]="itemValue" (ngModelChange)="onItemValueChange($event)" />
+    <div [hidden]="!itemInfo" class="alert alert-danger">
+      {{itemInfo}}
+    </div>
+  </div>
+</div>

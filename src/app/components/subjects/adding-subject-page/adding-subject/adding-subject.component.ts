@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../../../common/services/data.service';
+import { Router } from '@angular/router';
 
-import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 
 @Component({
@@ -11,14 +11,15 @@ import { Teacher } from '../../../../common/entities/teacher';
 })
 export class AddingSubjectComponent implements OnInit {
 
-  items: Subject[] = [];
-  teachersAll: Teacher[] = [];
-   buttonInfo: string = "Back to subject list";
+  subjectInfo: string = "";
+  cabinetInfo: string = "";
 
-  constructor(private dataService: DataService) { }
+  teachersAll: Teacher[] = [];
+  buttonInfo: string = "Back to subject list";
+
+  constructor(private dataService: DataService, private router: Router) { }
 
   ngOnInit(): void {
-    this.getSubjects();
     this.getTeachers();
   }
 
@@ -26,18 +27,35 @@ export class AddingSubjectComponent implements OnInit {
     this.teachersAll = this.dataService.getDataTeachers();
   }
 
-  getSubjects(): void {
-    this.items = this.dataService.getDataSubjects();
-  }
-
-  addItem(
+  addNewSubject(
     subject: string,
     cabinet: number,
     teachersID: string[],
     description: string
   ): void {
-    console.log(subject, cabinet, teachersID, description);
-    this.dataService.addDataSubject(subject, cabinet, teachersID, description);
+    const subjectNameRegExp = /[a-zA-Z]{4,15}/;
+    const cabinetRegExp = /[0-9]{1,2}/;
+    const messageAboutFilling = "Please fill in this field!";
+    const messageIncorrectly = "Incorrectly entered value!";
+    const messageForCabinet = "Please check the entered value!";
+    if (!subject || !cabinet) {
+      !subject ? this.subjectInfo = messageAboutFilling : this.subjectInfo = "";
+      !cabinet ? this.cabinetInfo = messageForCabinet : this.cabinetInfo = "";
+    } else if (!subjectNameRegExp.test(subject)) {
+      this.subjectInfo = messageIncorrectly;
+    } else if (!cabinetRegExp.test(cabinet.toString())) {
+      this.cabinetInfo = messageIncorrectly;
+    } else {
+      let descriptionNew: string;
+      description ? descriptionNew = description : descriptionNew = "";
+      let teachersIDNew: string[];
+      teachersID ? teachersIDNew = teachersID : teachersIDNew = [];
+      this.dataService.addDataNewSubject(subject, cabinet, teachersIDNew, descriptionNew);
+      this.router.navigate(['/subjects']);
+    }
   }
 
+  clearMessages(fieldName: string) {
+    this[fieldName] = "";
+  }
 }

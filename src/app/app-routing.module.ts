@@ -18,6 +18,8 @@ import { AddingStudentComponent } from './components/students/adding-student-pag
 import { NotFoundComponent } from './components/not-found/not-found.component';
 
 import { ButtonAddComponent } from './shared/components/button/button-add/button-add.component';
+import { InputFormGroupComponent } from './shared/components/form/input-form-group/input-form-group.component';
+import { SelectFormGroupComponent } from './shared/components/form/select-form-group/select-form-group.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -47,6 +49,8 @@ const routes: Routes = [
     ExportComponent,
     NotFoundComponent,
     ButtonAddComponent,
+    InputFormGroupComponent,
+    SelectFormGroupComponent,
     SubjectDetailComponent,
     AddingSubjectComponent,
     AddingStudentComponent
@@ -59,6 +63,8 @@ const routes: Routes = [
     ExportComponent,
     NotFoundComponent,
     ButtonAddComponent,
+    InputFormGroupComponent,
+    SelectFormGroupComponent,
     SubjectDetailComponent,
     SubjectTeachersComponent,
     AddingSubjectComponent,
