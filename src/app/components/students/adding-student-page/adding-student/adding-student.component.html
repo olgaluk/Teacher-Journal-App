@@ -4,11 +4,15 @@
 <div class="panel">
   <form class="form-horizontal">
 
-    <app-input-form-group [(itemValue)]="name" [(itemInfo)]="nameInfo" itemName="Name"></app-input-form-group>
-    <app-input-form-group [(itemValue)]="lastName" [(itemInfo)]="lastNameInfo" itemName="Last name">
+    <app-input-form-group [(itemValue)]="name" [(itemInfo)]="nameInfo" itemName="Name"
+      (changeItemValue)="changeItemValue($event, 'name')"></app-input-form-group>
+    <app-input-form-group [(itemValue)]="lastName" [(itemInfo)]="lastNameInfo" itemName="Last name"
+      (changeItemValue)="changeItemValue($event, 'lastName')">
     </app-input-form-group>
-    <app-input-form-group [(itemValue)]="age" [(itemInfo)]="ageInfo" itemName="Age"></app-input-form-group>
-    <app-input-form-group [(itemValue)]="address" [(itemInfo)]="addressInfo" itemName="Address"></app-input-form-group>
+    <app-input-form-group [(itemValue)]="age" [(itemInfo)]="ageInfo" itemName="Age"
+      (changeItemValue)="changeItemValue($event, 'age')"></app-input-form-group>
+    <app-input-form-group [(itemValue)]="address" [(itemInfo)]="addressInfo" itemName="Address"
+      (changeItemValue)="changeItemValue($event, 'address')"></app-input-form-group>
 
     <div class="form-group">
       <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">

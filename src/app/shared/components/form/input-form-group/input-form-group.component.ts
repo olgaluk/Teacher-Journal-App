@@ -9,10 +9,9 @@ export class InputFormGroupComponent {
   @Input() itemValue: string | number;
   @Input() itemInfo: string;
   @Input() itemName: string;
-  @Output() itemValueChange = new EventEmitter<string | number>();
+  @Output() changeItemValue = new EventEmitter<any>();
 
-  onItemValueChange(model: string | number) {
-    this.itemValue = model;
-    this.itemValueChange.emit(model);
+  onItemValueChange(valueItem: any) {
+    this.changeItemValue.emit(valueItem);
   }
 }
