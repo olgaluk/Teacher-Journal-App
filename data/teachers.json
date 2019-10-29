@@ -6,8 +6,16 @@
     "subjects": [
       {
         "name": "mathematics",
-        "studentsId": [
-          0
+        "studentsInfo": [
+          {
+            "studentId": 0,
+            "marks": [
+              {
+                "date": "04/02",
+                "mark": 8
+              }
+            ]
+          }
         ]
       }
     ]
@@ -19,7 +27,7 @@
     "subjects": [
       {
         "name": "physics",
-        "studentsId": []
+        "studentsInfo": []
       }
     ]
   },
@@ -30,14 +38,38 @@
     "subjects": [
       {
         "name": "chemistry",
-        "studentsId": [
-          1
+        "studentsInfo": [
+          {
+            "studentId": 1,
+            "marks": [
+              {
+                "date": "04/02",
+                "mark": 5
+              }
+            ]
+          }
         ]
       },
       {
         "name": "biology",
-        "studentsId": [
-          4
+        "studentsInfo": [
+          {
+            "studentId": 4,
+            "marks": [
+              {
+                "date": "04/02",
+                "mark": 3
+              },
+              {
+                "date": "05/02",
+                "mark": 7
+              },
+              {
+                "date": "08/02",
+                "mark": 7
+              }
+            ]
+          }
         ]
       }
     ]
@@ -49,8 +81,20 @@
     "subjects": [
       {
         "name": "physics",
-        "studentsId": [
-          5
+        "studentsInfo": [
+          {
+            "studentId": 5,
+            "marks": [
+              {
+                "date": "04/02",
+                "mark": 3
+              },
+              {
+                "date": "05/02",
+                "mark": 7
+              }
+            ]
+          }
         ]
       }
     ]
@@ -62,7 +106,7 @@
     "subjects": [
       {
         "name": "chemistry",
-        "studentsId": []
+        "studentsInfo": []
       }
     ]
   },
@@ -73,9 +117,33 @@
     "subjects": [
       {
         "name": "biology",
-        "studentsId": [
-          2,
-          3
+        "studentsInfo": [
+          {
+            "studentId": 2,
+            "marks": [
+              {
+                "date": "04/02",
+                "mark": 6
+              },
+              {
+                "date": "05/02",
+                "mark": 7
+              }
+            ]
+          },
+          {
+            "studentId": 3,
+            "marks": [
+              {
+                "date": "05/02",
+                "mark": 4
+              },
+              {
+                "date": "09/02",
+                "mark": 7
+              }
+            ]
+          }
         ]
       }
     ]
