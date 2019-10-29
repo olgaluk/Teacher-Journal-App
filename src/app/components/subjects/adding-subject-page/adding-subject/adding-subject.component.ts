@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from '../../../../common/services/data.service';
 import { Router } from '@angular/router';
 
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+
 import { Teacher } from '../../../../common/entities/teacher';
+
+import { INFO_MESSAGE_FOR_SUBJECT } from '../../../../common/constants/info-message-for-subject';
+import { INFO_MESSAGE_FOR_CABINET } from '../../../../common/constants/info-message-for-cabinet';
 
 @Component({
   selector: 'app-adding-subject',
@@ -11,11 +16,28 @@ import { Teacher } from '../../../../common/entities/teacher';
 })
 export class AddingSubjectComponent implements OnInit {
 
+  @ViewChild(ModalComponent, { static: false })
+  private templateModalComponent: ModalComponent;
+
+  subject: string;
+  cabinet: number;
+  description: string;
+
+  subjectCorrectness: boolean = false;
+  cabinetCorrectness: boolean = false;
+
   subjectInfo: string = "";
   cabinetInfo: string = "";
 
+  subjectRegExp: any = /^[a-zA-Z/\s]+$/;
+  cabinetRegExp: any = /^[0-9]+$/;
+  firstLetterUppercaseRegExp: any = /^[A-Z]/;
+
   teachersAll: Teacher[] = [];
   buttonInfo: string = "Back to subject list";
+
+  messageForSubject: string[] = INFO_MESSAGE_FOR_SUBJECT;
+  messageForCabinet: string[] = INFO_MESSAGE_FOR_CABINET;
 
   constructor(private dataService: DataService, private router: Router) { }
 
@@ -27,35 +49,95 @@ export class AddingSubjectComponent implements OnInit {
     this.teachersAll = this.dataService.getDataTeachers();
   }
 
+  changeItemValue(valueItem: any, itemName: string) {
+    if (itemName === "subject") {
+      this.subject = valueItem;
+      this.checkSubjectCorrectness(valueItem);
+    }
+    if (itemName === "cabinet") {
+      this.cabinet = valueItem;
+      this.checkCabinetCorrectness(valueItem);
+    }
+    if (itemName === "description") {
+      this.description = valueItem;
+    }
+  }
+
+  checkSubjectCorrectness(valueItem: any): void {
+    if (!this.subjectRegExp.test(valueItem) && valueItem) {
+      this.subjectInfo = this.messageForSubject[0];
+      this.subjectCorrectness = false;
+    } else if (!this.firstLetterUppercaseRegExp.test(valueItem) && valueItem) {
+      this.subjectInfo = this.messageForSubject[1];
+      this.subjectCorrectness = false;
+    } else if (this.subjectRegExp.test(valueItem)
+      && this.firstLetterUppercaseRegExp.test(valueItem)) {
+      this.subjectInfo = "";
+      this.subjectCorrectness = true;
+    }
+  }
+
+  checkCabinetCorrectness(valueItem: any): void {
+    if (!this.cabinetRegExp.test(valueItem) && valueItem) {
+      this.cabinetInfo = this.messageForCabinet[0];
+      this.cabinetCorrectness = false;
+    } else if (this.cabinetRegExp.test(valueItem)) {
+      this.cabinetInfo = "";
+      this.cabinetCorrectness = true;
+    }
+  }
+
+  checkSubjectLengthCondition(subject: string): boolean {
+    if (!subject) {
+      this.subjectInfo = this.messageForSubject[4];
+      return false;
+    } else if (subject.length < 4) {
+      this.subjectInfo = this.messageForSubject[2];
+      return false;
+    } else if (subject.length > 15) {
+      this.subjectInfo = this.messageForSubject[3];
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  checkCabinetLengthCondition(cabinet: number): boolean {
+    if (!cabinet) {
+      this.cabinetInfo = this.messageForCabinet[3];
+      return false;
+    } else if (cabinet < 1) {
+      this.cabinetInfo = this.messageForCabinet[1];
+      return false;
+    } else if (cabinet > 20) {
+      this.cabinetInfo = this.messageForCabinet[2];
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   addNewSubject(
     subject: string,
     cabinet: number,
     teachersID: string[],
     description: string
   ): void {
-    const subjectNameRegExp = /[a-zA-Z]{4,15}/;
-    const cabinetRegExp = /[0-9]{1,2}/;
-    const messageAboutFilling = "Please fill in this field!";
-    const messageIncorrectly = "Incorrectly entered value!";
-    const messageForCabinet = "Please check the entered value!";
-    if (!subject || !cabinet) {
-      !subject ? this.subjectInfo = messageAboutFilling : this.subjectInfo = "";
-      !cabinet ? this.cabinetInfo = messageForCabinet : this.cabinetInfo = "";
-    } else if (!subjectNameRegExp.test(subject)) {
-      this.subjectInfo = messageIncorrectly;
-    } else if (!cabinetRegExp.test(cabinet.toString())) {
-      this.cabinetInfo = messageIncorrectly;
-    } else {
-      let descriptionNew: string;
-      description ? descriptionNew = description : descriptionNew = "";
-      let teachersIDNew: string[];
-      teachersID ? teachersIDNew = teachersID : teachersIDNew = [];
+    let descriptionNew: string;
+    description ? descriptionNew = description : descriptionNew = "";
+    let teachersIDNew: string[];
+    teachersID ? teachersIDNew = teachersID : teachersIDNew = [];
+
+    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(subject);
+    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(cabinet);
+
+    const conditionForAdding: boolean = (this.subjectCorrectness && subjectLengthCondition &&
+      this.cabinetCorrectness && cabinetLengthCondition);
+    if (conditionForAdding) {
       this.dataService.addDataNewSubject(subject, cabinet, teachersIDNew, descriptionNew);
       this.router.navigate(['/subjects']);
+    } else {
+      this.templateModalComponent.openModal();
     }
-  }
-
-  clearMessages(fieldName: string) {
-    this[fieldName] = "";
   }
 }

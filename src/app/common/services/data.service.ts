@@ -50,6 +50,19 @@ export class DataService {
     if (subject == null)
       return;
     this.dataSubjects.push(new Subject(subject, cabinet, teachersID, description));
+
+    if (teachersID.length) {
+      teachersID.map(id => {
+
+        this.dataTeachers.forEach((teacher) => {
+          if (teacher.id === id) teacher.subjects.push({
+            "name": subject,
+            "studentsInfo": []
+          });
+        });
+
+      });
+    }
   }
 
   getDataTeachersFromSubject(id: string) {
