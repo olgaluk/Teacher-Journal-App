@@ -20,6 +20,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { ButtonAddComponent } from './shared/components/button/button-add/button-add.component';
 import { InputFormGroupComponent } from './shared/components/form/input-form-group/input-form-group.component';
 import { SelectFormGroupComponent } from './shared/components/form/select-form-group/select-form-group.component';
+import { ModalComponent } from './shared/components/modal/modal.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -53,7 +54,8 @@ const routes: Routes = [
     SelectFormGroupComponent,
     SubjectDetailComponent,
     AddingSubjectComponent,
-    AddingStudentComponent
+    AddingStudentComponent,
+    ModalComponent
   ],
   declarations: [
     HomeComponent,
@@ -68,7 +70,8 @@ const routes: Routes = [
     SubjectDetailComponent,
     SubjectTeachersComponent,
     AddingSubjectComponent,
-    AddingStudentComponent
+    AddingStudentComponent,
+    ModalComponent
   ],
   providers: [DataService]
 })

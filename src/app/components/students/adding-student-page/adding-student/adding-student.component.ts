@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DataService } from '../../../../common/services/data.service';
 import { Router } from '@angular/router';
+
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 import { INFO_MESSAGE_FOR_NAME } from '../../../../common/constants/info-message-for-name';
 import { INFO_MESSAGE_FOR_LAST_NAME } from '../../../../common/constants/info-message-for-last-name';
@@ -13,6 +15,9 @@ import { INFO_MESSAGE_FOR_ADDRESS } from '../../../../common/constants/info-mess
   styleUrls: ['./adding-student.component.scss']
 })
 export class AddingStudentComponent {
+
+  @ViewChild(ModalComponent, { static: false })
+  private templateModalComponent: ModalComponent;
 
   name: string = "";
   lastName: string = "";
@@ -206,6 +211,8 @@ export class AddingStudentComponent {
     if (conditionForAdding) {
       this.dataService.addDataNewStudent(name, lastName, age, address);
       this.router.navigate(['/students']);
+    } else {
+      this.templateModalComponent.openModal();
     }
   }
 }

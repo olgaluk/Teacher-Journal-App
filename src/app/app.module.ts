@@ -6,16 +6,18 @@ import { AppComponent } from './root/app.component';
 
 import { NavComponent } from './components/panel/nav.component';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { ModalModule } from 'ngx-bootstrap/modal'
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent                    
+    NavComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ButtonsModule.forRoot()
+    ButtonsModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
