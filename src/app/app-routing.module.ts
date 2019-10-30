@@ -15,7 +15,7 @@ import { SubjectTeachersComponent } from './components/subjects/subject-page/sub
 import { AddingSubjectComponent } from './components/subjects/adding-subject-page/adding-subject/adding-subject.component';
 import { AddingStudentComponent } from './components/students/adding-student-page/adding-student/adding-student.component';
 
-import { NotFoundComponent } from './components/not-found/not-found.component';
+import { NotFoundPageComponent } from './components/not-found/not-found-page/not-found-page.component';
 
 import { ButtonAddComponent } from './shared/components/button/button-add/button-add.component';
 import { InputFormGroupComponent } from './shared/components/form/input-form-group/input-form-group.component';
@@ -29,10 +29,10 @@ const routes: Routes = [
   { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
   { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
   { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
-  { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent },
+  { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent, pathMatch: 'full' },
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundPageComponent }
 ];
 
 @NgModule({
@@ -48,7 +48,7 @@ const routes: Routes = [
     SubjectsTableComponent,
     StatisticComponent,
     ExportComponent,
-    NotFoundComponent,
+    NotFoundPageComponent,
     ButtonAddComponent,
     InputFormGroupComponent,
     SelectFormGroupComponent,
@@ -63,7 +63,7 @@ const routes: Routes = [
     SubjectsTableComponent,
     StatisticComponent,
     ExportComponent,
-    NotFoundComponent,
+    NotFoundPageComponent,
     ButtonAddComponent,
     InputFormGroupComponent,
     SelectFormGroupComponent,
