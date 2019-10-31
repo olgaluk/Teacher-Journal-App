@@ -21,6 +21,7 @@ import { ButtonAddComponent } from './shared/components/button/button-add/button
 import { InputFormGroupComponent } from './shared/components/form/input-form-group/input-form-group.component';
 import { SelectFormGroupComponent } from './shared/components/form/select-form-group/select-form-group.component';
 import { ModalComponent } from './shared/components/modal/modal.component';
+import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -55,7 +56,8 @@ const routes: Routes = [
     SubjectDetailComponent,
     AddingSubjectComponent,
     AddingStudentComponent,
-    ModalComponent
+    ModalComponent,
+    BreadcrumbsComponent
   ],
   declarations: [
     HomeComponent,
@@ -71,7 +73,8 @@ const routes: Routes = [
     SubjectTeachersComponent,
     AddingSubjectComponent,
     AddingStudentComponent,
-    ModalComponent
+    ModalComponent,
+    BreadcrumbsComponent
   ],
   providers: [DataService]
 })
