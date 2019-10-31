@@ -1,18 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { DataService } from '../../../../common/services/data.service';
 import { ActivatedRoute } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
 import { StudentNameAndMarks } from '../../../../common/entities/student-name-mark';
 
+import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
+
 @Component({
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
   styleUrls: ['./subject-detail.component.scss']
 })
-export class SubjectDetailComponent implements OnInit {
+export class SubjectDetailComponent implements OnInit, AfterViewChecked {
+
+  bsModalRef: BsModalRef;
+
   subject: string;
   idTeacher: string;
   subjectInfo: Subject;
@@ -21,7 +27,19 @@ export class SubjectDetailComponent implements OnInit {
   dates: string[] = [];
   buttonInfo: string = "Back to subject list";
 
-  constructor(private dataService: DataService, private activateRoute: ActivatedRoute) {
+  visibilitySaveButton: boolean = false;
+
+  markRegExp: any = /^[0-9]+$/;
+  dateRegExp: any = /^[0-9\/]+$/;
+
+  teacherTitle: string;
+  itemSelected: string = "";
+
+  constructor(
+    private dataService: DataService,
+    private activateRoute: ActivatedRoute,
+    private modalService: BsModalService
+  ) {
     this.idTeacher = activateRoute.snapshot.params['teacherId'];
     this.subject = activateRoute.snapshot.params['id'];
   }
@@ -32,8 +50,22 @@ export class SubjectDetailComponent implements OnInit {
     this.getStudentsFromTeacher(this.idTeacher, this.subject);
   }
 
+  ngAfterViewChecked() {
+    if (this.bsModalRef &&
+      this.itemSelected !== this.bsModalRef.content.itemSelected &&
+      this.bsModalRef.content.itemSelected) {
+      Promise.resolve(null).then((value) => {
+        let teacherSelected = this.bsModalRef.content.itemSelected;
+        this.itemSelected = teacherSelected;
+        this.teacherTitle = teacherSelected.split(" (id:")[0];
+        this.visibilitySaveButton = true;
+      })
+    }
+  }
+
   getTeacher(idTeacher: string): void {
     this.teacher = this.dataService.getDataTeacher(idTeacher);
+    this.teacherTitle = `${this.teacher.teacherName} ${this.teacher.teacherLastName}`;
   }
 
   getSubjectInfo(subject: string): void {
@@ -65,5 +97,41 @@ export class SubjectDetailComponent implements OnInit {
   getMark(student: StudentNameAndMarks, date: string): number | string {
     const mark = student.marks.find(mark => mark.date === date);
     return mark ? mark.mark : "";
+  }
+
+  addColumn(): void {
+    this.dates.push("");
+  }
+
+  checkContente(infoField: string, $event: any) {
+    this.visibilitySaveButton = true;
+    if (infoField === 'mark' && !this.markRegExp.test($event.target.innerText)) {
+      $event.target.innerText = $event.target.innerText.replace(/[^0-9]+/g, '');;
+    } else if (infoField === 'mark' && +$event.target.innerText === 10) {
+      $event.target.innerText = $event.target.innerText.slice(0, 2);
+    } else if (infoField === 'mark' && +$event.target.innerText > 10 && +$event.target.innerText !== 10) {
+      $event.target.innerText = $event.target.innerText.slice(0, 1);
+    }
+    if (infoField === 'date' && !this.dateRegExp.test($event.target.innerText)) {
+      $event.target.innerText = $event.target.innerText.replace(/[^0-9\/]+/g, '');
+    }
+  }
+
+  openModalWithComponent() {
+    const teachersInThisSubject: string[] = this.subjectInfo.teachersID;
+    const teachersExceptThisSubject: Teacher[] = this.dataService.getTeachersExceptThisSubject(teachersInThisSubject);
+    const listNameTeachers = teachersExceptThisSubject.map(teacher => `${teacher.teacherName} ${teacher.teacherLastName} (id: ${teacher.id})`);
+    const initialState = {
+      list: listNameTeachers,
+      title: 'Choose a new teacher:',
+      itemSelected: ''
+    };
+    this.bsModalRef = this.modalService.show(ModalContentComponent, { initialState });
+    this.bsModalRef.content.closeBtnName = 'Close';
+  }
+
+  saveChanges() {
+    this.dataService.addColumnForDate(this.idTeacher, this.subject);
+    this.getDates(this.students);
   }
 }

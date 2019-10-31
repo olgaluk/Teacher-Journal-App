@@ -22,6 +22,7 @@ import { InputFormGroupComponent } from './shared/components/form/input-form-gro
 import { SelectFormGroupComponent } from './shared/components/form/select-form-group/select-form-group.component';
 import { ModalComponent } from './shared/components/modal/modal.component';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs.component';
+import { ModalContentComponent } from './shared/components/modal-content/modal-content.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -33,7 +34,8 @@ const routes: Routes = [
   { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent, pathMatch: 'full' },
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
-  { path: '**', component: NotFoundPageComponent }
+  { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
+  { path: '**', redirectTo: '/nonexistent' }
 ];
 
 @NgModule({
@@ -57,7 +59,8 @@ const routes: Routes = [
     AddingSubjectComponent,
     AddingStudentComponent,
     ModalComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    ModalContentComponent
   ],
   declarations: [
     HomeComponent,
@@ -74,8 +77,10 @@ const routes: Routes = [
     AddingSubjectComponent,
     AddingStudentComponent,
     ModalComponent,
-    BreadcrumbsComponent
+    BreadcrumbsComponent,
+    ModalContentComponent
   ],
-  providers: [DataService]
+  providers: [DataService],
+  entryComponents: [ModalContentComponent]
 })
 export class AppRoutingModule { }

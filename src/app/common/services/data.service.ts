@@ -7,6 +7,8 @@ import { SUBJECTS } from '../constants/constants-subject';
 import { Teacher } from '../entities/teacher';
 import { TEACHER } from '../constants/constants-teacher';
 
+import { Mark } from '../entities/mark';
+
 export class DataService {
 
   private dataStudents: Student[] = STUDENTS;
@@ -95,5 +97,22 @@ export class DataService {
       }
     })
     return studentsInfoName;
+  }
+
+  addColumnForDate(idTeacher: string, subject: string) {
+    const teacherInfo = this.getDataTeacher(idTeacher);
+    const teacherInfoSubjects = teacherInfo.subjects;
+    const teacherInfoSubject = teacherInfoSubjects.forEach(subjectInfo => {
+      if (subjectInfo.name === subject && subjectInfo.studentsInfo.length) {
+        subjectInfo.studentsInfo.forEach(studentInfo => {
+          studentInfo.marks.push(new Mark("", null));
+        })
+      }
+    });
+  }
+
+  getTeachersExceptThisSubject(teachers: string[]) {
+    const teachersExceptThisSubject = this.dataTeachers.filter(teacher => !teachers.includes(teacher.id));
+    return teachersExceptThisSubject;
   }
 }
