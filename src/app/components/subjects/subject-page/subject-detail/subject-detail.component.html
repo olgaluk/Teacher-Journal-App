@@ -4,6 +4,8 @@
       <h2 class="text-center text-uppercase text-info">{{subject}}</h2>
     </div>
 
+    <div class="panel"></div>
+
     <div class="row">
       <h4
         class="text-center text-uppercase text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
@@ -29,8 +31,9 @@
         <th>Name</th>
         <th>Last Name</th>
         <th>Average Mark</th>
-        <th *ngFor="let date of dates">
-          <div contenteditable="true" (input)="checkContente('date', $event)">{{date}}</div>
+        <th *ngFor="let date of dates; let count = index">
+          <app-datepicker [valueDate]="date" [dates]="dates" (onChangedDate)="onChangedDate($event, count)">
+          </app-datepicker>
         </th>
       </tr>
     </thead>
@@ -39,8 +42,9 @@
         <td>{{student.studentName}}</td>
         <td>{{student.studentLastName}}</td>
         <td>{{getAverageMark(student)}}</td>
-        <td *ngFor="let date of dates">
-          <div contenteditable="true" (input)="checkContente('mark', $event)">{{getMark(student, date)}}</div>
+        <td *ngFor="let date of dates; let count = index">
+          <div contenteditable="true" (input)="checkContent($event, count)" (blur)="saveContent($event, count)">
+            {{getMark(student, date)}}</div>
         </td>
       </tr>
     </tbody>
@@ -50,7 +54,7 @@
 <div class="panel"></div>
 
 <div class="row">
-  <a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="/subjects">
+  <a routerLink="/subjects">
     <app-button-add [value]="buttonInfo"></app-button-add>
   </a>
 </div>

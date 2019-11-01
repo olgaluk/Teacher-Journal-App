@@ -23,6 +23,11 @@ import { SelectFormGroupComponent } from './shared/components/form/select-form-g
 import { ModalComponent } from './shared/components/modal/modal.component';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs.component';
 import { ModalContentComponent } from './shared/components/modal-content/modal-content.component';
+import { DatepickerComponent } from './shared/components/datepicker/datepicker.component';
+
+import { ExitSubjectDetailPageGuard } from './guards/exit.subject-detail-page.guard';
+
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -31,7 +36,12 @@ const routes: Routes = [
   { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
   { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
   { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
-  { path: 'subjects/:id/:teacherId', component: SubjectDetailComponent, pathMatch: 'full' },
+  {
+    path: 'subjects/:id/:teacherId',
+    component: SubjectDetailComponent,
+    pathMatch: 'full',
+    canDeactivate: [ExitSubjectDetailPageGuard]
+  },
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
   { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
@@ -42,7 +52,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes),
     CommonModule,
-    FormsModule
+    FormsModule,
+    BsDatepickerModule.forRoot()
   ],
   exports: [
     RouterModule,
@@ -60,7 +71,8 @@ const routes: Routes = [
     AddingStudentComponent,
     ModalComponent,
     BreadcrumbsComponent,
-    ModalContentComponent
+    ModalContentComponent,
+    DatepickerComponent
   ],
   declarations: [
     HomeComponent,
@@ -78,9 +90,10 @@ const routes: Routes = [
     AddingStudentComponent,
     ModalComponent,
     BreadcrumbsComponent,
-    ModalContentComponent
+    ModalContentComponent,
+    DatepickerComponent
   ],
-  providers: [DataService],
+  providers: [DataService, ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]
 })
 export class AppRoutingModule { }

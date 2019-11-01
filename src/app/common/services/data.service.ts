@@ -99,13 +99,13 @@ export class DataService {
     return studentsInfoName;
   }
 
-  addColumnForDate(idTeacher: string, subject: string) {
+  addColumnForDate(idTeacher: string, subject: string, dates: string[]) {
     const teacherInfo = this.getDataTeacher(idTeacher);
     const teacherInfoSubjects = teacherInfo.subjects;
     const teacherInfoSubject = teacherInfoSubjects.forEach(subjectInfo => {
       if (subjectInfo.name === subject && subjectInfo.studentsInfo.length) {
         subjectInfo.studentsInfo.forEach(studentInfo => {
-          studentInfo.marks.push(new Mark("", null));
+          studentInfo.marks.push(new Mark(dates[dates.length - 1], null));
         })
       }
     });

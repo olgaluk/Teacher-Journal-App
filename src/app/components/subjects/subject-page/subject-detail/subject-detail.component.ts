@@ -3,6 +3,9 @@ import { DataService } from '../../../../common/services/data.service';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
+import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
+import { Observable } from "rxjs";
+
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
@@ -15,7 +18,8 @@ import { ModalContentComponent } from '../../../../shared/components/modal-conte
   templateUrl: './subject-detail.component.html',
   styleUrls: ['./subject-detail.component.scss']
 })
-export class SubjectDetailComponent implements OnInit, AfterViewChecked {
+export class SubjectDetailComponent implements OnInit, AfterViewChecked, ComponentCanDeactivate {
+  saved: boolean = false;
 
   bsModalRef: BsModalRef;
 
@@ -63,6 +67,19 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  canDeactivate(): boolean | Observable<boolean> {
+
+    if (!this.saved && this.visibilitySaveButton) {
+      return confirm(
+        `If you leave the page without saving the changes, they will be lost. 
+      Are you sure you want to leave the page without saving the changes?`
+      );
+    }
+    else {
+      return true;
+    }
+  }
+
   getTeacher(idTeacher: string): void {
     this.teacher = this.dataService.getDataTeacher(idTeacher);
     this.teacherTitle = `${this.teacher.teacherName} ${this.teacher.teacherLastName}`;
@@ -101,20 +118,21 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked {
 
   addColumn(): void {
     this.dates.push("");
+    this.visibilitySaveButton = true;
   }
 
-  checkContente(infoField: string, $event: any) {
+  checkContent($event: any, count: number) {
     this.visibilitySaveButton = true;
-    if (infoField === 'mark' && !this.markRegExp.test($event.target.innerText)) {
+    if (!this.markRegExp.test($event.target.innerText)) {
       $event.target.innerText = $event.target.innerText.replace(/[^0-9]+/g, '');;
-    } else if (infoField === 'mark' && +$event.target.innerText === 10) {
+    } else if (+$event.target.innerText === 10) {
       $event.target.innerText = $event.target.innerText.slice(0, 2);
-    } else if (infoField === 'mark' && +$event.target.innerText > 10 && +$event.target.innerText !== 10) {
+    } else if (+$event.target.innerText > 10 && +$event.target.innerText !== 10) {
       $event.target.innerText = $event.target.innerText.slice(0, 1);
     }
-    if (infoField === 'date' && !this.dateRegExp.test($event.target.innerText)) {
-      $event.target.innerText = $event.target.innerText.replace(/[^0-9\/]+/g, '');
-    }
+  }
+
+  saveContent($event: any, count: number) {
   }
 
   openModalWithComponent() {
@@ -130,8 +148,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked {
     this.bsModalRef.content.closeBtnName = 'Close';
   }
 
+  onChangedDate(value: string, count: number) {
+    if (!this.dates.includes(value) && value) {
+      this.dates[count] = value;
+    }
+  }
+
   saveChanges() {
-    this.dataService.addColumnForDate(this.idTeacher, this.subject);
+    this.dataService.addColumnForDate(this.idTeacher, this.subject, this.dates);
     this.getDates(this.students);
+    this.saved = true;
   }
 }

@@ -7,17 +7,19 @@ import { AppComponent } from './root/app.component';
 import { NavComponent } from './components/panel/nav.component';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent    
+    NavComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ButtonsModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BrowserAnimationsModule    
   ],
   providers: [],
   bootstrap: [AppComponent]
