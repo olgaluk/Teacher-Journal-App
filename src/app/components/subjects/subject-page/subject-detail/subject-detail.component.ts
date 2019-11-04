@@ -124,8 +124,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .filter(mark => mark);
     return +((studentMarks
       .reduce((acc, mark) => acc + mark, 0)
-      / studentMarks.length)
-      .toFixed(1));
+      / studentMarks.length));
   }
 
   getDates(studentsInfo: StudentMark[]) {

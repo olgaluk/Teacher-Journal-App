@@ -36,7 +36,6 @@ export class BreadcrumbsComponent implements OnInit {
         }
 
         const addingBreadcrumbs = breadcrumbsLabelList
-          .map(label => { if (label) return label[0].toUpperCase() + label.slice(1) })
           .map((label, index) => {
             return {
               url: breadcrumbLinksList[index],
@@ -46,7 +45,7 @@ export class BreadcrumbsComponent implements OnInit {
 
         addingBreadcrumbs.splice(0, 1, {
           url: "",
-          label: "Main"
+          label: "main"
         });
 
         this.breadcrumbs = addingBreadcrumbs;

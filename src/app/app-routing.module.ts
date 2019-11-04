@@ -45,6 +45,7 @@ const routes: Routes = [
   { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
   { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
+  { path: 'main', redirectTo: '/', pathMatch: 'full' },
   { path: '**', redirectTo: '/nonexistent' }
 ];
 

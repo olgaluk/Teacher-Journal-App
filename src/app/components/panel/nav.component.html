@@ -1,37 +1,9 @@
 <nav>
   <ul>
-    <li>
-      <a routerLink="/">
+    <li *ngFor="let routerLink of routerLinks">
+      <a routerLink="{{routerLink}}">
         <button type="button" class="btn btn-primary">
-          Main
-        </button>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/students">
-        <button type="button" class="btn btn-primary">
-          Students
-        </button>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/subjects">
-        <button type="button" class="btn btn-primary">
-          Subjects
-        </button>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/statistics">
-        <button type="button" class="btn btn-primary">
-          Statistics
-        </button>
-      </a>
-    </li>
-    <li>
-      <a routerLink="/export">
-        <button type="button" class="btn btn-primary">
-          Export
+          {{ routerLink | slice:1:2 | uppercase }}{{ routerLink | slice:2 | lowercase }}
         </button>
       </a>
     </li>

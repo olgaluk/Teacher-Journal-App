@@ -1,15 +1,15 @@
 <div class="container-marks">
   <div class="page-header">
     <div class="row">
-      <h2 class="text-center text-uppercase text-info">{{subject}}</h2>
+      <h2 class="text-center text-info">{{subject | uppercase}}</h2>
     </div>
 
     <div class="panel"></div>
 
     <div class="row">
       <h4
-        class="text-center text-uppercase text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
-        Teacher: {{teacherTitle}}</h4>
+        class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
+        Teacher: {{teacherTitle | uppercase}}</h4>
       <button type="button" (click)="openModalWithComponent()"
         class="btn btn-info col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Change
         teacher</button>
@@ -42,7 +42,7 @@
       <tr *ngFor="let student of students">
         <td>{{student.name}}</td>
         <td>{{student.lastName}}</td>
-        <td>{{getAverageMark(student.id)}}</td>
+        <td>{{getAverageMark(student.id) | number:'.1-1'}}</td>
         <td *ngFor="let date of dates">
           <div contenteditable="true" (input)="checkContent($event)" (blur)="saveContent($event, date, student.id)">
             {{getMark(student.id, date)}}</div>

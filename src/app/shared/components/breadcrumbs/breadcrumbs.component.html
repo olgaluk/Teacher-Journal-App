@@ -1,5 +1,5 @@
 <ol class="breadcrumb">
   <li *ngFor='let breadcrumb of breadcrumbs'>
-    <a class="lead" [routerLink]='[breadcrumb.url]' routerLinkActive='active'>{{ breadcrumb.label }}</a>
+    <a class="lead" [routerLink]='[breadcrumb.url]' routerLinkActive='active'>{{ breadcrumb.label | slice:0:1 | uppercase }}{{ breadcrumb.label| slice:1 | lowercase }}</a>
   </li>
 </ol>
