@@ -8,6 +8,7 @@ import { Teacher } from '../entities/teacher';
 import { TEACHER } from '../constants/constants-teacher';
 
 import { Mark } from '../entities/mark';
+import { StudentMark } from '../entities/student-mark';
 
 export class DataService {
 
@@ -83,32 +84,51 @@ export class DataService {
     return this.dataSubjects.find(subjectItem => subjectItem.subject === subject);
   }
 
-  getDataStudentsFromTeacher(idTeacher: string, subject: string) {
-    const teacherInfo = this.getDataTeacher(idTeacher);
-    const teacherInfoSubjects = teacherInfo.subjects;
-    const teacherInfoSubject = teacherInfoSubjects.find(subjectInfo => subjectInfo.name === subject);
-    const studentsInfoName = teacherInfoSubject.studentsInfo.map(studentMarks => {
-      const studentId = studentMarks.studentId;
-      const student = this.getDataStudent(studentId);
+  addNewDateForMarks(idTeacher: string, newIdTeacher: string, subject: string,
+    newStudentsInfo: StudentMark[]
+  ) {
+    const studentsInfo = newStudentsInfo.map(studentInfo => {
       return {
-        "studentName": student.name,
-        "studentLastName": student.lastName,
-        "marks": studentMarks.marks
-      }
-    })
-    return studentsInfoName;
-  }
-
-  addColumnForDate(idTeacher: string, subject: string, dates: string[]) {
-    const teacherInfo = this.getDataTeacher(idTeacher);
-    const teacherInfoSubjects = teacherInfo.subjects;
-    const teacherInfoSubject = teacherInfoSubjects.forEach(subjectInfo => {
-      if (subjectInfo.name === subject && subjectInfo.studentsInfo.length) {
-        subjectInfo.studentsInfo.forEach(studentInfo => {
-          studentInfo.marks.push(new Mark(dates[dates.length - 1], null));
-        })
+        "studentId": studentInfo.studentId,
+        "marks": studentInfo.marks.map(mark => mark)
       }
     });
+
+    const teacher = this.getDataTeacher(idTeacher);
+    if (idTeacher === newIdTeacher) {
+      teacher.subjects.forEach(subjectInfo => {
+        if (subjectInfo.name === subject) {
+          subjectInfo.studentsInfo = studentsInfo;
+        }
+      });
+    } else {
+      let numberSubject: number;
+      teacher.subjects.forEach((subjectInfo, index) => {
+        if (subjectInfo.name === subject) {
+          numberSubject = index;
+        }
+      });
+      teacher.subjects.splice(numberSubject, 1);
+      const newTeacher = this.getDataTeacher(newIdTeacher);
+      newTeacher.subjects.push({
+        "name": subject,
+        studentsInfo
+      });
+      const subjectInfo = this.getDataSubjectInfo(subject);
+      subjectInfo.teachersID.splice(subjectInfo.teachersID.indexOf(idTeacher), 1, newIdTeacher);
+      const studentsId = studentsInfo.map(studentInfo => studentInfo.studentId);
+      this.dataStudents.forEach(student => {
+        if (studentsId.includes(student.id)) {
+
+          student.subject.forEach(subjectInfo => {
+            if (subjectInfo.name === subject && subjectInfo.teacherId === idTeacher) {
+              subjectInfo.teacherId = newIdTeacher;
+            }
+          });
+
+        }
+      });
+    }
   }
 
   getTeachersExceptThisSubject(teachers: string[]) {

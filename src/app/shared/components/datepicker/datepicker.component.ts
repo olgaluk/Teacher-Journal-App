@@ -9,6 +9,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 export class DatepickerComponent implements OnInit {
   @Input() valueDate: string;
   @Input() dates: string[];
+  @Output() onChangedDate = new EventEmitter<string>();
 
   bsConfig: Partial<BsDatepickerConfig>;
   date: Date | string;
@@ -43,7 +44,6 @@ export class DatepickerComponent implements OnInit {
     return newConvertDate;
   }
 
-  @Output() onChangedDate = new EventEmitter<string>();
   onValueChange(value: any): void {
     let newDate = '';
     if (value) {
