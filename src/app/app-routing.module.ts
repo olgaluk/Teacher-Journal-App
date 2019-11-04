@@ -5,10 +5,14 @@ import { FormsModule } from '@angular/forms';
 
 import { DataService } from './common/services/data.service';
 
+import { SortPipe } from './common/pipes/sort.pipe';
+import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
+
 import { HomeComponent } from './components/home/home.component';
 import { StudentsTableComponent } from './components/students/student-page/students-table/students-table.component';
 import { SubjectsTableComponent } from './components/subjects/subject-page/subjects-table/subjects-table.component';
-import { StatisticComponent } from './components/statistics/statistic-page/statistic.component';
+import { StatisticPageComponent } from './components/statistics/statistic-page/statistic-page.component';
+import { StatisticStudentsPageComponent } from './components/statistics/statistic-students-page/statistic-students-page.component';
 import { ExportComponent } from './components/export/export.component';
 import { SubjectDetailComponent } from './components/subjects/subject-page/subject-detail/subject-detail.component';
 import { SubjectTeachersComponent } from './components/subjects/subject-page/subject-teachers/subject-teachers.component';
@@ -42,7 +46,8 @@ const routes: Routes = [
     pathMatch: 'full',
     canDeactivate: [ExitSubjectDetailPageGuard]
   },
-  { path: 'statistics', component: StatisticComponent, pathMatch: 'full' },
+  { path: 'statistics', component: StatisticPageComponent , pathMatch: 'full' },
+  { path: 'statistics/students', component: StatisticStudentsPageComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
   { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
   { path: 'main', redirectTo: '/', pathMatch: 'full' },
@@ -61,7 +66,7 @@ const routes: Routes = [
     HomeComponent,
     StudentsTableComponent,
     SubjectsTableComponent,
-    StatisticComponent,
+    StatisticPageComponent ,
     ExportComponent,
     NotFoundPageComponent,
     ButtonAddComponent,
@@ -73,13 +78,16 @@ const routes: Routes = [
     ModalComponent,
     BreadcrumbsComponent,
     ModalContentComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    SortPipe,
+    AverageMarkPipe,
+    StatisticStudentsPageComponent
   ],
   declarations: [
     HomeComponent,
     StudentsTableComponent,
     SubjectsTableComponent,
-    StatisticComponent,
+    StatisticPageComponent ,
     ExportComponent,
     NotFoundPageComponent,
     ButtonAddComponent,
@@ -92,7 +100,10 @@ const routes: Routes = [
     ModalComponent,
     BreadcrumbsComponent,
     ModalContentComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    SortPipe,
+    AverageMarkPipe,
+    StatisticStudentsPageComponent
   ],
   providers: [DataService, ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]

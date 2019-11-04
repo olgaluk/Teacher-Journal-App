@@ -135,14 +135,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .reduce((acc, currentMarks) => acc.concat(currentMarks), []);
     dates = Array.from(new Set(dates));
 
+
     if (dates.includes("")) {
       dates.splice(dates.indexOf(""), 1);
       dates
-        .sort((str1, str2) => +str1.split('/')[1] - +str2.split('/')[1]);
+        .sort((str1, str2) => this.compareDates(str1, str2));
       dates.push("");
     } else {
       dates
-        .sort((str1, str2) => +str1.split('/')[1] - +str2.split('/')[1]);
+        .sort((str1, str2) => this.compareDates(str1, str2));
     }
     this.dates = dates;
   }
@@ -152,6 +153,14 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .find(studentInfo => studentInfo.studentId === studentId);
     const markInfo = student.marks.find(mark => mark.date === date);
     return markInfo ? markInfo.mark : "";
+  }
+
+  compareDates(str1: string, str2: string): number {
+    if (+str1.split('/')[1] < +str2.split('/')[1]) { return -1; }
+    else if (+str1.split('/')[1] === +str2.split('/')[1] && +str1.split('/')[0] <= +str2.split('/')[0]) { return -1; }
+    else if (+str1.split('/')[1] === +str2.split('/')[1] && +str1.split('/')[0] > +str2.split('/')[0]) { return 1; }
+    else if (+str1.split('/')[1] > +str2.split('/')[1]) { return 1; }
+    else { return 0; }
   }
 
   addColumn(): void {

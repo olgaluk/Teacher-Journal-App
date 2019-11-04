@@ -137,4 +137,29 @@ export class DataService {
     const teachersExceptThisSubject = this.dataTeachers.filter(teacher => !teachers.includes(teacher.id));
     return teachersExceptThisSubject;
   }
+
+  getDataAllStudentMarks() {
+    const students = this.getDataStudents();
+    const studentsInfo = students.map(student => {
+      const studentMarksAll = student.subject.map(subjectInfo => {
+        const teacher = this.getDataTeacher(subjectInfo.teacherId);
+        const studentMarks = teacher.subjects
+          .find(subject => subject.name === subjectInfo.name)
+          .studentsInfo
+          .find(studentInfo => studentInfo.studentId === student.id)
+          .marks.map(markInfo => markInfo.mark);
+
+        return studentMarks;
+      });
+      return {
+        "studentName": student.name,
+        "studentLastName": student.lastName,
+        "studentAllMarks": studentMarksAll
+          .map(mark => mark)
+          .reduce((acc, currentValue) => acc.concat(currentValue), [])
+      };
+
+    });
+    return studentsInfo;
+  }
 }
