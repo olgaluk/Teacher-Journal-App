@@ -1,0 +1,73 @@
+<div class="container-marks">
+  <div class="page-header">
+    <div class="row">
+      <h2 class="text-center text-uppercase text-info">{{subject}}</h2>
+    </div>
+
+    <div class="panel"></div>
+
+    <div class="row">
+      <h4
+        class="text-center text-uppercase text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
+        Teacher: {{teacherTitle}}</h4>
+      <button type="button" (click)="openModalWithComponent()"
+        class="btn btn-info col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Change
+        teacher</button>
+    </div>
+
+    <div class="row">
+      <h4 class="text-center text-uppercase text-info">Cabinet: {{subjectInfo.cabinet}}</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" (click)="addColumn()"
+      class="btn btn-info col-sm-offset-4 col-sm-4 col-md-offset-5 col-md-2 col-lg-offset-8 col-lg-2">Add new
+      column</button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr class="text-info text-uppercase">
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Average Mark</th>
+        <th *ngFor="let date of dates; let count = index">
+          <app-datepicker [valueDate]="date" [dates]="dates" (onChangedDate)="onChangedDate($event, count)">
+          </app-datepicker>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students">
+        <td>{{student.name}}</td>
+        <td>{{student.lastName}}</td>
+        <td>{{getAverageMark(student.id)}}</td>
+        <td *ngFor="let date of dates">
+          <div contenteditable="true" (input)="checkContent($event)" (blur)="saveContent($event, date, student.id)">
+            {{getMark(student.id, date)}}</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="panel"></div>
+
+<div class="row">
+  <a routerLink="/subjects">
+    <app-button-add [value]="buttonInfo"></app-button-add>
+  </a>
+</div>
+
+<div class="panel"></div>
+
+<div class="row">
+  <button type="button" *ngIf="visibilitySaveButton" (click)="saveChanges()"
+    class="btn btn-danger col-sm-offset-4 col-sm-4 col-md-offset-5 col-md-2 col-lg-offset-8 col-lg-2">Save
+    changes</button>
+</div>
+
+<app-modal>
+  <h3 class="text-info">Please fill in the fields with dates. Date cannot be empty.</h3>
+</app-modal>
