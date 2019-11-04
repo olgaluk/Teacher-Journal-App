@@ -5,13 +5,12 @@
   width: 80wh;
   height: 70vh;
   margin: 10px auto;
-  border: 2px dotted rgb(93, 0, 214);
-  border-radius: 10px;
-  background: linear-gradient(to top, rgb(154, 224, 252) 20%, rgb(206, 234, 238) 50%, rgb(120, 172, 250) 80%);
+  box-shadow: inset 0px 0px 20px 80px #ffffff;
+  background-color: #dbfdff;
   p {
     font-size: 2em;
     font-style: italic;
     font-weight: 900;
-    color: rgb(6, 6, 104);
+    color: #060668;
   }
 }

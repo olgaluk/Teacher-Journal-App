@@ -90,7 +90,9 @@ export class DataService {
     const studentsInfo = newStudentsInfo.map(studentInfo => {
       return {
         "studentId": studentInfo.studentId,
-        "marks": studentInfo.marks.map(mark => mark)
+        "marks": studentInfo.marks.map(mark => {
+          return { "date": mark.date, "mark": mark.mark };
+        })
       }
     });
 

@@ -80,14 +80,12 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   }
 
   canDeactivate(): boolean | Observable<boolean> {
-
     if (!this.saved && this.visibilitySaveButton) {
       return confirm(
         `If you leave the page without saving the changes, they will be lost.
       Are you sure you want to leave the page without saving the changes?`
       );
-    }
-    else {
+    } else {
       return true;
     }
   }
@@ -100,9 +98,11 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.studentsInfo = studentsInfo.map(studentInfo => {
       return {
         "studentId": studentInfo.studentId,
-        "marks": studentInfo.marks.map(mark => mark)
+        "marks": studentInfo.marks.map(mark => {
+          return { "date": mark.date, "mark": mark.mark };
+        })
       }
-    })
+    });
     this.teacherTitle = `${this.teacher.teacherName} ${this.teacher.teacherLastName}`;
   }
 
@@ -123,7 +123,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .map(markInfo => markInfo.mark)
       .filter(mark => mark);
     return +((studentMarks
-      .reduce((acc, mark) => acc + mark)
+      .reduce((acc, mark) => acc + mark, 0)
       / studentMarks.length)
       .toFixed(1));
   }
@@ -258,13 +258,24 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     if (this.dates.includes("")) {
       this.templateModalComponent.openModal();
     } else {
+      const studentsInfo = this.studentsInfo.map(studentInfo => {
+        return {
+          "studentId": studentInfo.studentId,
+          "marks": studentInfo.marks.map(mark => {
+            return { "date": mark.date, "mark": mark.mark };
+          })
+        }
+      });
       this.dataService.addNewDateForMarks(
         this.idTeacher,
         this.newIdTeacher,
         this.subject,
-        this.studentsInfo);
+        studentsInfo);
       this.saved = true;
-      this.router.navigate(['subjects']);
+      this.router.navigate([`subjects/${this.subject}/${this.newIdTeacher}`]);
+      this.visibilitySaveButton = false;
+      this.saved = false;
+      alert("Changes saved successfully!");
     }
   }
 }
