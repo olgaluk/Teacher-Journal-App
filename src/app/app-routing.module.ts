@@ -9,6 +9,7 @@ import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
 
 import { HighlightingMarkDirective } from './common/directives/highlighting-mark.directive';
+import { OutputAllMarksDirective } from './common/directives/output-all-marks.directive';
 
 import { HomeComponent } from './components/home/home.component';
 import { StudentsTableComponent } from './components/students/student-page/students-table/students-table.component';
@@ -84,7 +85,8 @@ const routes: Routes = [
     SortPipe,
     AverageMarkPipe,
     StatisticStudentsPageComponent,
-    HighlightingMarkDirective
+    HighlightingMarkDirective,
+    OutputAllMarksDirective
   ],
   declarations: [
     HomeComponent,
@@ -107,7 +109,8 @@ const routes: Routes = [
     SortPipe,
     AverageMarkPipe,
     StatisticStudentsPageComponent,
-    HighlightingMarkDirective
+    HighlightingMarkDirective,
+    OutputAllMarksDirective
   ],
   providers: [DataService, ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]

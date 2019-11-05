@@ -22,7 +22,7 @@
         <td>{{ counter + 1 }}</td>
         <td>{{ student.studentName }}</td>
         <td>{{ student.studentLastName }}</td>
-        <td>{{ student.studentAllMarks | averageMark | number:'.1-1' }}</td>
+        <td [appOutputAllMarks]="student.studentAllMarks.join('  ,  ')">{{ student.studentAllMarks | averageMark | number:'.1-1' }}</td>
       </tr>
     </tbody>
   </table>
