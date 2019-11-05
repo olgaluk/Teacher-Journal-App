@@ -116,15 +116,13 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     })
   }
 
-  getAverageMark(studentId: number): number {
+  getStudentMarks(studentId: number): number[] {
     const student = this.studentsInfo
       .find(studentInfo => studentInfo.studentId === studentId);
     const studentMarks: number[] = student.marks
       .map(markInfo => markInfo.mark)
-      .filter(mark => mark);
-    return +((studentMarks
-      .reduce((acc, mark) => acc + mark, 0)
-      / studentMarks.length));
+      .filter(mark => mark !== null);
+    return studentMarks;
   }
 
   getDates(studentsInfo: StudentMark[]) {

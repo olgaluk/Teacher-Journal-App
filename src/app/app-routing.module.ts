@@ -5,8 +5,10 @@ import { FormsModule } from '@angular/forms';
 
 import { DataService } from './common/services/data.service';
 
-import { SortPipe } from './common/pipes/sort.pipe';
+import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
+
+import { HighlightingMarkDirective } from './common/directives/highlighting-mark.directive';
 
 import { HomeComponent } from './components/home/home.component';
 import { StudentsTableComponent } from './components/students/student-page/students-table/students-table.component';
@@ -46,7 +48,7 @@ const routes: Routes = [
     pathMatch: 'full',
     canDeactivate: [ExitSubjectDetailPageGuard]
   },
-  { path: 'statistics', component: StatisticPageComponent , pathMatch: 'full' },
+  { path: 'statistics', component: StatisticPageComponent, pathMatch: 'full' },
   { path: 'statistics/students', component: StatisticStudentsPageComponent, pathMatch: 'full' },
   { path: 'export', component: ExportComponent, pathMatch: 'full' },
   { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
@@ -66,7 +68,7 @@ const routes: Routes = [
     HomeComponent,
     StudentsTableComponent,
     SubjectsTableComponent,
-    StatisticPageComponent ,
+    StatisticPageComponent,
     ExportComponent,
     NotFoundPageComponent,
     ButtonAddComponent,
@@ -81,13 +83,14 @@ const routes: Routes = [
     DatepickerComponent,
     SortPipe,
     AverageMarkPipe,
-    StatisticStudentsPageComponent
+    StatisticStudentsPageComponent,
+    HighlightingMarkDirective
   ],
   declarations: [
     HomeComponent,
     StudentsTableComponent,
     SubjectsTableComponent,
-    StatisticPageComponent ,
+    StatisticPageComponent,
     ExportComponent,
     NotFoundPageComponent,
     ButtonAddComponent,
@@ -103,7 +106,8 @@ const routes: Routes = [
     DatepickerComponent,
     SortPipe,
     AverageMarkPipe,
-    StatisticStudentsPageComponent
+    StatisticStudentsPageComponent,
+    HighlightingMarkDirective
   ],
   providers: [DataService, ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]
