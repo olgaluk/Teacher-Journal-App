@@ -9,15 +9,18 @@ export class HighlightingMarkDirective implements AfterContentChecked {
 
   @Input('appHighlightingMark') mark: number;
 
-  ngAfterContentChecked () {
+  ngAfterContentChecked() {
     this.highlight(this.mark);
   }
 
   private highlight(mark: number) {
-    if (mark < 5) {
-      this.renderer.setStyle(this.elementRef.nativeElement, "backgroundColor", "#b6fbfd");
+    const parentElementRef = this.renderer.parentNode(this.elementRef.nativeElement);
+    if (!mark) {
+      this.renderer.setStyle(parentElementRef, "backgroundColor", "#ffffff");
+    } else if (mark < 5) {
+      this.renderer.setStyle(parentElementRef, "backgroundColor", "#b6fbfd");
     } else {
-      this.renderer.setStyle(this.elementRef.nativeElement, "backgroundColor", "#c8fdcc");
+      this.renderer.setStyle(parentElementRef, "backgroundColor", "#c8fdcc");
     }
   }
 }

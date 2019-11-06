@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <title>JSON Server</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1><a href="db">db</a></h1>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js"
+    integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+  <script>
+    $(function () {
+      $.get('db').then(function (data) {
+        $('#resources').empty();
+        $.each(data, function (key, value) {
+          $('#resources')
+            .append('<li><a href="' + key + '">' + key + '</a></li>');
+        })
+      })
+    })
+  </script>
+</body>
+
+</html>

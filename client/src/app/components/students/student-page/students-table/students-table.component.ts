@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../../../common/services/data.service';
+import { HttpService } from '../../../../common/services/http.service';
 
 import { Student } from '../../../../common/entities/student';
 
@@ -13,13 +13,13 @@ export class StudentsTableComponent implements OnInit {
   students: Student[] = [];
   buttonInfo: string = "Add new student";
 
-  constructor(private dataService: DataService) { }
+  constructor(private httpService: HttpService) { }
 
   ngOnInit(): void {
     this.getStudents();
   }
 
   getStudents(): void {
-    this.students = this.dataService.getDataStudents();
+    this.httpService.getStudents().subscribe((data: Student[]) => this.students = data);
   }
 }

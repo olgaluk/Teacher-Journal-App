@@ -36,6 +36,8 @@ import { ExitSubjectDetailPageGuard } from './guards/exit.subject-detail-page.gu
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+import { HttpService } from './common/services/http.service';
+
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
@@ -112,7 +114,7 @@ const routes: Routes = [
     HighlightingMarkDirective,
     OutputAllMarksDirective
   ],
-  providers: [DataService, ExitSubjectDetailPageGuard],
+  providers: [DataService, ExitSubjectDetailPageGuard, HttpService],
   entryComponents: [ModalContentComponent]
 })
 export class AppRoutingModule { }

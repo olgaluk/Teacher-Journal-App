@@ -17,12 +17,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let student of (students | sort); let counter = index;"
-        [appHighlightingMark]="student.studentAllMarks | averageMark | number:'.1-1'">
+      <tr *ngFor="let student of (students | sort); let counter = index;">
         <td>{{ counter + 1 }}</td>
         <td>{{ student.studentName }}</td>
         <td>{{ student.studentLastName }}</td>
-        <td [appOutputAllMarks]="student.studentAllMarks.join('  ,  ')">{{ student.studentAllMarks | averageMark | number:'.1-1' }}</td>
+        <td [appHighlightingMark]="student.studentAllMarks | averageMark | number:'.1-1'"
+          [appOutputAllMarks]="student.studentAllMarks.join('  ,  ')">
+          {{ student.studentAllMarks | averageMark | number:'.1-1' }}</td>
       </tr>
     </tbody>
   </table>
