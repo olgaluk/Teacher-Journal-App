@@ -1,25 +1,15 @@
-import { StudentSubjects } from './student-subjects';
+import { AcademicPerformance } from './academicPerformance';
 
 export class Student {
-  id: number;
-  name: string;
-  lastName: string;
-  age: number;
-  address: string;
-  subject: StudentSubjects[];
+  academicPerformance: AcademicPerformance[];
 
   constructor(
-    id: number,
-    name: string,
-    lastName: string,
-    age: number,
-    address: string
+    public id: number,
+    public name: string,
+    public lastName: string,
+    public age: number,
+    public address: string
   ) {
-    this.id = id;
-    this.name = name;
-    this.lastName = lastName;
-    this.age = age;
-    this.address = address;
-    this.subject = [];
+    this.academicPerformance = [];
   }
 }

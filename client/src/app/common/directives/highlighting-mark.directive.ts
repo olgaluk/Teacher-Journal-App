@@ -15,7 +15,7 @@ export class HighlightingMarkDirective implements AfterContentChecked {
 
   private highlight(mark: number) {
     const parentElementRef = this.renderer.parentNode(this.elementRef.nativeElement);
-    if (!mark) {
+    if (!mark && mark !== 0) {
       this.renderer.setStyle(parentElementRef, "backgroundColor", "#ffffff");
     } else if (mark < 5) {
       this.renderer.setStyle(parentElementRef, "backgroundColor", "#b6fbfd");

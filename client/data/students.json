@@ -4,11 +4,21 @@
     "name": "Cooper",
     "lastName": "Hurley",
     "age": 21,
-    "address": "Hicks Street, 522 ",
-    "subject": [
+    "address": "Hicks Street, 522",
+    "academicPerformance": [
       {
-        "name": "mathematics",
-        "teacherId": "00"
+        "subjectId": 2,
+        "teacherId": 2,
+        "marks": [
+          {
+            "date": "Sat Nov 09 2019 02:14:39 GMT+0300",
+            "value": 5
+          },
+          {
+            "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+            "value": 3
+          }
+        ]
       }
     ]
   },
@@ -17,11 +27,21 @@
     "name": "Walters",
     "lastName": "Carver",
     "age": 17,
-    "address": "Brooklyn Road, 396 ",
-    "subject": [
+    "address": "Brooklyn Road, 396",
+    "academicPerformance": [
       {
-        "name": "chemistry",
-        "teacherId": "02"
+        "subjectId": 1,
+        "teacherId": 1,
+        "marks": [
+          {
+            "date": "Sat Nov 01 2019 02:14:39 GMT+0300",
+            "value": 8
+          },
+          {
+            "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+            "value": 4
+          }
+        ]
       }
     ]
   },
@@ -30,11 +50,21 @@
     "name": "John",
     "lastName": "Morton",
     "age": 18,
-    "address": "Huron Street, 651 ",
-    "subject": [
+    "address": "Huron Street, 651",
+    "academicPerformance": [
       {
-        "name": "biology",
-        "teacherId": "05"
+        "subjectId": 0,
+        "teacherId": 0,
+        "marks": [
+          {
+            "date": "Sat Nov 02 2019 02:14:39 GMT+0300",
+            "value": 6
+          },
+          {
+            "date": "Sat Nov 06 2019 02:14:39 GMT+0300",
+            "value": 2
+          }
+        ]
       }
     ]
   },
@@ -43,11 +73,21 @@
     "name": "Leblanc",
     "lastName": "Graves",
     "age": 21,
-    "address": "Bergen Avenue, 170 ",
-    "subject": [
+    "address": "Bergen Avenue, 170",
+    "academicPerformance": [
       {
-        "name": "biology",
-        "teacherId": "05"
+        "subjectId": 3,
+        "teacherId": 3,
+        "marks": [
+          {
+            "date": "Sat Nov 01 2019 02:14:39 GMT+0300",
+            "value": 8
+          },
+          {
+            "date": "Sat Nov 04 2019 02:14:39 GMT+0300",
+            "value": 6
+          }
+        ]
       }
     ]
   },
@@ -56,11 +96,21 @@
     "name": "Castillo",
     "lastName": "Avila",
     "age": 20,
-    "address": "Albany Avenue, 942 ",
-    "subject": [
+    "address": "Albany Avenue, 942",
+    "academicPerformance": [
       {
-        "name": "biology",
-        "teacherId": "02"
+        "subjectId": 3,
+        "teacherId": 3,
+        "marks": [
+          {
+            "date": "Sat Nov 03 2019 02:14:39 GMT+0300",
+            "value": 10
+          },
+          {
+            "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+            "value": 4
+          }
+        ]
       }
     ]
   },
@@ -69,11 +119,21 @@
     "name": "Lakeisha",
     "lastName": "Newton",
     "age": 20,
-    "address": "Heyward Street, 598 ",
-    "subject": [
+    "address": "Heyward Street, 598",
+    "academicPerformance": [
       {
-        "name": "physics",
-        "teacherId": "03"
+        "subjectId": 0,
+        "teacherId": 0,
+        "marks": [
+          {
+            "date": "Sat Nov 09 2019 02:14:39 GMT+0300",
+            "value": 7
+          },
+          {
+            "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+            "value": 3
+          }
+        ]
       }
     ]
   }

@@ -1,18 +1,9 @@
 export class Subject {
-  subject: string;
-  cabinet: number;
-  description: string;
-  teachersID: string[];
-
   constructor(
-    subject: string,
-    cabinet: number,
-    teachersID: string[],
-    description: string
-  ) {
-    this.subject = subject;
-    this.cabinet = cabinet;
-    this.description = description;
-    this.teachersID = teachersID;
-  }
+    public id: number,
+    public name: string,
+    public teachersID: number[],
+    public cabinet: number,
+    public description: string
+  ) { }
 }

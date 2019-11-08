@@ -1,151 +1,32 @@
 [
   {
-    "id": "00",
-    "teacherName": "Alfreda",
-    "teacherLastName": "Vega",
-    "subjects": [
-      {
-        "name": "mathematics",
-        "studentsInfo": [
-          {
-            "studentId": 0,
-            "marks": [
-              {
-                "date": "04/02/2019",
-                "mark": 8
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "id": 0,
+    "name": "Alfreda",
+    "lastName": "Vega"
   },
   {
-    "id": "01",
-    "teacherName": "Rodriguez",
-    "teacherLastName": "Shannon",
-    "subjects": [
-      {
-        "name": "physics",
-        "studentsInfo": []
-      }
-    ]
+    "id": 1,
+    "name": "Rodriguez",
+    "lastName": "Shannon"
   },
   {
-    "id": "02",
-    "teacherName": "Burton",
-    "teacherLastName": "Castro",
-    "subjects": [
-      {
-        "name": "chemistry",
-        "studentsInfo": [
-          {
-            "studentId": 1,
-            "marks": [
-              {
-                "date": "04/02/2019",
-                "mark": 5
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "name": "biology",
-        "studentsInfo": [
-          {
-            "studentId": 4,
-            "marks": [
-              {
-                "date": "04/02/2019",
-                "mark": 3
-              },
-              {
-                "date": "05/02/2019",
-                "mark": 7
-              },
-              {
-                "date": "08/02/2019",
-                "mark": 7
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "id": 2,
+    "name": "Burton",
+    "lastName": "Castro"
   },
   {
-    "id": "03",
-    "teacherName": "Weber",
-    "teacherLastName": "Carson",
-    "subjects": [
-      {
-        "name": "physics",
-        "studentsInfo": [
-          {
-            "studentId": 5,
-            "marks": [
-              {
-                "date": "04/02/2019",
-                "mark": 3
-              },
-              {
-                "date": "05/02/2019",
-                "mark": 7
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "id": 3,
+    "name": "Weber",
+    "lastName": "Carson"
   },
   {
-    "id": "04",
-    "teacherName": "Albert",
-    "teacherLastName": "Vinson",
-    "subjects": [
-      {
-        "name": "chemistry",
-        "studentsInfo": []
-      }
-    ]
+    "id": 4,
+    "name": "Albert",
+    "lastName": "Vinson"
   },
   {
-    "id": "05",
+    "id": 5,
     "teacherName": "Lynda",
-    "teacherLastName": "Mays",
-    "subjects": [
-      {
-        "name": "biology",
-        "studentsInfo": [
-          {
-            "studentId": 2,
-            "marks": [
-              {
-                "date": "04/02/2019",
-                "mark": 6
-              },
-              {
-                "date": "05/02/2019",
-                "mark": 7
-              }
-            ]
-          },
-          {
-            "studentId": 3,
-            "marks": [
-              {
-                "date": "05/02/2019",
-                "mark": 4
-              },
-              {
-                "date": "09/02/2019",
-                "mark": 3
-              }
-            ]
-          }
-        ]
-      }
-    ]
+    "teacherLastName": "Mays"
   }
 ]
