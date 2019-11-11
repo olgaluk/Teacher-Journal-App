@@ -27,8 +27,8 @@
     },
     {
       "id": 5,
-      "teacherName": "Lynda",
-      "teacherLastName": "Mays"
+      "name": "Lynda",
+      "lastName": "Mays"
     }
   ]
 }

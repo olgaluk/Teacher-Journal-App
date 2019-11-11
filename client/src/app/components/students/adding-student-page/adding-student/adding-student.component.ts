@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { DataService } from '../../../../common/services/data.service';
 import { Router } from '@angular/router';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -48,8 +47,8 @@ export class AddingStudentComponent {
 
   buttonInfo: string = "Back to student list";
 
-  constructor(private dataService: DataService, private router: Router) { }
-
+  constructor(private router: Router) { }
+/*
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "name") {
       this.name = valueItem;
@@ -214,5 +213,5 @@ export class AddingStudentComponent {
     } else {
       this.templateModalComponent.openModal();
     }
-  }
+  }*/
 }

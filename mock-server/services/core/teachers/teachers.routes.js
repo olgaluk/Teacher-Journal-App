@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.use(jsonServer.rewriter({
   '/teachers': '/teachers',
-  '/teacher/:id': '/teacher/:id'
+  '/teacher/:id': '/teacher/:id',
+  '/teachers/other': '/teachers/other'
 }));
 
 module.exports = router;

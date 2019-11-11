@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataService } from '../../../../common/services/data.service';
+
 import { Router } from '@angular/router';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -39,12 +39,12 @@ export class AddingSubjectComponent implements OnInit {
   messageForSubject: string[] = INFO_MESSAGE_FOR_SUBJECT;
   messageForCabinet: string[] = INFO_MESSAGE_FOR_CABINET;
 
-  constructor(private dataService: DataService, private router: Router) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.getTeachers();
+    //this.getTeachers();
   }
-
+/*
   getTeachers(): void {
     this.teachersAll = this.dataService.getDataTeachers();
   }
@@ -139,5 +139,5 @@ export class AddingSubjectComponent implements OnInit {
     } else {
       this.templateModalComponent.openModal();
     }
-  }
+  }*/
 }

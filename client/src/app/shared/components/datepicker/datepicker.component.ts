@@ -22,15 +22,15 @@ export class DatepickerComponent implements OnInit {
 
   ngOnInit() {
     if (this.valueDate) {
-      this.date = this.convert(this.valueDate);
+      this.date = new Date(this.valueDate);
     } else {
       this.date = '';
     }
 
     if (this.dates.length) {
-      this.dates.forEach(dateInfo => {
-        if (dateInfo) {
-          this.datesFormatDate.push(this.convert(dateInfo));
+      this.dates.forEach(date => {
+        if (date) {
+          this.datesFormatDate.push(new Date(date));
         }
       })
     }
@@ -38,25 +38,10 @@ export class DatepickerComponent implements OnInit {
     this.disabledDates = this.datesFormatDate;
   }
 
-  convert(valueDate: string): Date {
-    const dateParts = valueDate.split('/');
-    const newConvertDate = new Date(+dateParts[2], +dateParts[1] - 1, +dateParts[0]);
-    return newConvertDate;
-  }
-
   onValueChange(value: any): void {
     let newDate = '';
     if (value) {
-      const year = value.getFullYear();
-      let month = value.getMonth() + 1;
-      let dt = value.getDate();
-      if (dt < 10) {
-        dt = '0' + dt;
-      }
-      if (month < 10) {
-        month = '0' + month;
-      }
-      newDate = dt + '/' + month + '/' + year;
+      newDate = value.toDateString();
     }
     this.onChangedDate.emit(newDate);
   }

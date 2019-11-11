@@ -7,7 +7,8 @@ import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-p
 import { Observable } from "rxjs";
 
 import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
-import { StudentsTableService } from '../../../../common/services/students-table.service';
+import { StudentsTableService } from '../../../../common/services/students/students-table.service';
+import { SubjectInfoService } from '../../../../common/services/subjects/subject-info.service';
 
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
@@ -21,7 +22,11 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 @Component({
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
-  providers: [SubjectsTableService, StudentsTableService],
+  providers: [
+    SubjectsTableService,
+    StudentsTableService,
+    SubjectInfoService
+  ],
   styleUrls: ['./subject-detail.component.scss']
 })
 export class SubjectDetailComponent implements OnInit, AfterViewChecked, ComponentCanDeactivate {
@@ -34,7 +39,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   visibilitySaveButton: boolean = false;
   buttonInfo: string = "Back to subject list";
   markRegExp: any = /^[0-9]+$/;
-  dateRegExp: any = /^[0-9\/]+$/;
 
   teacherTitle: string;
   itemSelected: string = "";
@@ -46,39 +50,40 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   subject: Subject;
   teacher: Teacher;
   students: Student[] = [];
-  dates: Date[] = [];
+  dates: string[] = [];
 
   constructor(
     private subjectsTableService: SubjectsTableService,
     private studentsTableService: StudentsTableService,
+    private subjectInfoService: SubjectInfoService,
     private activateRoute: ActivatedRoute,
     private modalService: BsModalService,
     private router: Router
   ) {
-    this.teacherId = activateRoute.snapshot.params['teacherId'];
-    this.newTeacherId = activateRoute.snapshot.params['teacherId'];
+    this.teacherId = +activateRoute.snapshot.params['teacherId'];
+    this.newTeacherId = +activateRoute.snapshot.params['teacherId'];
     this.subjectName = activateRoute.snapshot.params['subjectName'];
   }
 
   ngOnInit() {
     this.getTeacher(this.teacherId);
     this.getSubject(this.subjectName);
-    //this.getDates(this.students);
   }
 
   ngAfterViewChecked() {
-    /*if (this.bsModalRef &&
+    if (this.bsModalRef &&
       this.itemSelected !== this.bsModalRef.content.itemSelected &&
       this.bsModalRef.content.itemSelected) {
       Promise.resolve(null).then((value) => {
         let teacherSelected = this.bsModalRef.content.itemSelected;
         this.itemSelected = teacherSelected;
         this.teacherTitle = teacherSelected.split(" (id:")[0];
-        this.newIdTeacher = teacherSelected.split(" (id: ")[1];
-        this.newIdTeacher = this.newIdTeacher.split(")")[0];
+        let newTeacherId = teacherSelected.split(" (id: ")[1];
+        newTeacherId = newTeacherId.split(")")[0];
+        this.newTeacherId = +newTeacherId;
         this.visibilitySaveButton = true;
       })
-    }*/
+    }
   }
 
   canDeactivate(): boolean | Observable<boolean> {
@@ -114,66 +119,85 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   ): void {
     this.studentsTableService
       .getStudentsBySubjectAndTeacher(teacherId, subjectId)
-      .subscribe((students: Student[]) => this.students = students);
+      .subscribe((students: Student[]) => {
+        this.students = students;
+        this.getDates(students, teacherId, subjectId);
+      });
+  }
+
+  getDates(
+    students: Student[],
+    teacherId: number,
+    subjectId: number
+  ): void {
+    this.dates = this.subjectInfoService
+      .getDates(students, teacherId, subjectId);
   }
 
   getStudentMarks(studentId: number): number[] {
-    const student = this.studentsInfo
-      .find(studentInfo => studentInfo.studentId === studentId);
-    const studentMarks: number[] = student.marks
-      .map(markInfo => markInfo.mark)
-      .filter(mark => mark !== null);
-    return studentMarks;
-  }
-
-  getDates(studentsInfo: StudentMark[]) {
-    let dates: string[] = studentsInfo
-      .map(studentInfo => {
-        return studentInfo.marks.map(mark => mark.date);
-      })
-      .reduce((acc, currentMarks) => acc.concat(currentMarks), []);
-    dates = Array.from(new Set(dates));
-
-
-    if (dates.includes("")) {
-      dates.splice(dates.indexOf(""), 1);
-      dates
-        .sort((str1, str2) => this.compareDates(str1, str2));
-      dates.push("");
-    } else {
-      dates
-        .sort((str1, str2) => this.compareDates(str1, str2));
-    }
-    this.dates = dates;
+    return this.subjectInfoService
+      .getStudentMarks(studentId, this.subject.id, this.teacherId, this.students);
   }
 
   getMark(studentId: number, date: string): number | string {
-    const student = this.studentsInfo
-      .find(studentInfo => studentInfo.studentId === studentId);
-    const markInfo = student.marks.find(mark => mark.date === date);
-    return markInfo ? markInfo.mark : "";
-  }
-
-  compareDates(str1: string, str2: string): number {
-    if (+str1.split('/')[1] < +str2.split('/')[1]) { return -1; }
-    else if (+str1.split('/')[1] === +str2.split('/')[1] && +str1.split('/')[0] <= +str2.split('/')[0]) { return -1; }
-    else if (+str1.split('/')[1] === +str2.split('/')[1] && +str1.split('/')[0] > +str2.split('/')[0]) { return 1; }
-    else if (+str1.split('/')[1] > +str2.split('/')[1]) { return 1; }
-    else { return 0; }
+    return this.subjectInfoService
+      .getMark(studentId, date, this.subject.id, this.teacherId, this.students);
   }
 
   addColumn(): void {
     if (this.dates[this.dates.length - 1]) {
-      this.studentsInfo = this.studentsInfo
-        .map(studentInfo => {
-          const student = studentInfo;
-          student.marks.push(new Mark("", null));
-          return student;
+      this.students = this.students
+        .map(student => {
+          const newStudent = student;
+
+          newStudent.academicPerformance
+            .map(studentInfo => {
+              const newStudentInfo = studentInfo;
+              if (studentInfo.subjectId === this.subject.id
+                && studentInfo.teacherId === this.teacherId) {
+                newStudentInfo.marks.push(new Mark("", NaN))
+              }
+              return newStudentInfo;
+            });
+
+          return newStudent;
         })
-      this.getDates(this.studentsInfo);
+
+      this.getDates(this.students, this.teacherId, this.subject.id);
     }
 
     this.visibilitySaveButton = true;
+  }
+
+  onChangedDate(value: string, count: number) {
+    if (!this.dates.includes(value) && value) {
+      const oldDate: string = this.dates[count];
+      this.students = this.students.map(student => {
+        const newStudent = student;
+
+        newStudent.academicPerformance
+          .map(studentInfo => {
+            const newStudentInfo = studentInfo;
+            if (studentInfo.subjectId === this.subject.id
+              && studentInfo.teacherId === this.teacherId) {
+
+              studentInfo.marks.map(mark => {
+                const newMark = mark;
+                if (mark.date === oldDate) {
+                  newMark.date = value;
+                  this.visibilitySaveButton = true;
+                }
+                return newMark;
+              });
+
+            }
+            return newStudentInfo;
+          });
+
+        return newStudent;
+      });
+      this.getDates(this.students, this.teacherId, this.subject.id);
+    }
   }
 
   checkContent($event: any) {
@@ -187,102 +211,90 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  addDate(date: string, studentId: number): void {
-    this.studentsInfo
-      .forEach(studentInfo => {
-        if (studentInfo.studentId === studentId) {
-          studentInfo.marks.push(new Mark(date, null))
-        }
-      });
-  }
-
   saveContent($event: any, date: string, studentId: number): void {
-    let mark: number | null = null;
-    $event.target.innerText ? mark = +$event.target.innerText : mark = null;
-    $event.target.innerText = mark;
-    const studentIncludeDate: boolean = this.studentsInfo
-      .find(student => student.studentId === studentId)
+    let markValue: number;
+    $event.target.innerText ? markValue = +$event.target.innerText : markValue = NaN;
+    if (markValue) $event.target.innerText = markValue;
+    if (!markValue) $event.target.innerText = "";
+    const studentIncludeDate: boolean = this.students
+      .find(student => student.id === studentId)
+      .academicPerformance
+      .find(studentInfo => studentInfo.subjectId === this.subject.id
+        && studentInfo.teacherId === this.teacherId)
       .marks
-      .some(markInfo => markInfo.date === date);
+      .some(mark => mark.date === date);
     if (!studentIncludeDate) this.addDate(date, studentId);
 
-    this.studentsInfo = this.studentsInfo.map(studentInfo => {
-      let newStudentInfo: StudentMark = studentInfo;
+    this.students = this.students.map(student => {
+      let newStudent: Student = student;
 
-      if (studentInfo.studentId === studentId) {
-        const newMarks = studentInfo.marks.map(markInfo => {
-          let newMarkInfo = markInfo;
-          if (markInfo.date === date) {
-            newMarkInfo.mark = mark;
-          }
-          return newMarkInfo;
-        });
+      if (student.id === studentId) {
+        newStudent.academicPerformance
+          .map(studentInfo => {
+            const newStudentInfo = studentInfo;
+            if (studentInfo.subjectId === this.subject.id
+              && studentInfo.teacherId === this.teacherId) {
 
-        newStudentInfo.marks = newMarks;
+              studentInfo.marks.map(mark => {
+                const newMark = mark;
+                if (mark.date === date) {
+                  newMark.value = markValue;
+                  this.visibilitySaveButton = true;
+                }
+                return newMark;
+              });
+
+            }
+            return newStudentInfo;
+          });
       }
 
-      return newStudentInfo;
+      return newStudent;
     });
-    this.getDates(this.studentsInfo);
+    this.getDates(this.students, this.teacherId, this.subject.id);
+  }
+
+  addDate(date: string, studentId: number): void {
+    this.students
+      .find(student => student.id === studentId)
+      .academicPerformance
+      .find(studentInfo => studentInfo.subjectId === this.subject.id
+        && studentInfo.teacherId === this.teacherId)
+      .marks
+      .push(new Mark(date, NaN));
   }
 
   openModalWithComponent() {
-    const teachersInThisSubject: string[] = this.subjectInfo.teachersID;
-    const teachersExceptThisSubject: Teacher[] = this.dataService.getTeachersExceptThisSubject(teachersInThisSubject);
-    const listNameTeachers = teachersExceptThisSubject.map(teacher => `${teacher.teacherName} ${teacher.teacherLastName} (id: ${teacher.id})`);
-    const initialState = {
-      list: listNameTeachers,
-      title: 'Choose a new teacher:',
-      itemSelected: ''
-    };
-    this.bsModalRef = this.modalService.show(ModalContentComponent, { initialState });
-    this.bsModalRef.content.closeBtnName = 'Close';
-  }
-
-  onChangedDate(value: string, count: number) {
-    if (!this.dates.includes(value) && value) {
-      const oldDate: string = this.dates[count];
-      this.studentsInfo = this.studentsInfo.map(studentInfo => {
-        let newStudentInfo: StudentMark = studentInfo;
-
-        const newMarks = studentInfo.marks.map(markInfo => {
-          let newMarkInfo = markInfo;
-          if (markInfo.date === oldDate) {
-            this.visibilitySaveButton = true;
-            newMarkInfo.date = value;
-          }
-          return newMarkInfo;
-        });
-
-        newStudentInfo.marks = newMarks;
-        return newStudentInfo;
+    const teachersIdBySubject: number[] = this.subject.teachersID;
+    this.subjectsTableService
+      .getTeachersFromOtherSubject(teachersIdBySubject)
+      .subscribe((teachers: Teacher[]) => {
+        const listNameTeachers = teachers.map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher.id})`);
+        const initialState = {
+          list: listNameTeachers,
+          title: 'Choose a new teacher:',
+          itemSelected: ''
+        };
+        this.bsModalRef = this.modalService.show(ModalContentComponent, { initialState });
+        this.bsModalRef.content.closeBtnName = 'Close';
       });
-      this.getDates(this.studentsInfo);
-    }
   }
 
   saveChanges() {
     if (this.dates.includes("")) {
       this.templateModalComponent.openModal();
     } else {
-      const studentsInfo = this.studentsInfo.map(studentInfo => {
-        return {
-          "studentId": studentInfo.studentId,
-          "marks": studentInfo.marks.map(mark => {
-            return { "date": mark.date, "mark": mark.mark };
-          })
-        }
-      });
-      this.dataService.addNewDateForMarks(
-        this.idTeacher,
-        this.newIdTeacher,
-        this.subject,
-        studentsInfo);
-      this.saved = true;
-      this.router.navigate([`subjects/${this.subject}/${this.newIdTeacher}`]);
+      this.subjectsTableService
+        .saveChanges(
+          this.teacherId,
+          this.newTeacherId,
+          this.subject,
+          this.students);
+      this.saved = true;      
+      alert("Changes saved successfully!");
+      this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
       this.visibilitySaveButton = false;
       this.saved = false;
-      alert("Changes saved successfully!");
     }
   }
 }

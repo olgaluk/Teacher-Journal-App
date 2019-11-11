@@ -7,10 +7,10 @@ export class AverageMarkPipe implements PipeTransform {
 
   transform(value: any, ...args: any[]): any {
     const marks = value
-      .filter(mark => mark !== null);
+      .filter(mark => !isNaN(mark));
     if (marks.length) {
       return (marks
-        .reduce((acc, currentMark) => acc + currentMark, 0) / value.length);
+        .reduce((acc, currentMark) => acc + currentMark, 0) / marks.length);
     } else {
       return "";
     }

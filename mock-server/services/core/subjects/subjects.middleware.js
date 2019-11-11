@@ -16,5 +16,10 @@ module.exports = (server) => {
     res.json(subject);
   });
 
+  router.delete('/subjects/:subjectId/:teacherId', (req, res) => {
+    const { subjectId, teacherId } = req.params;
+    const subjects = server.db.get('subjects');
+  })
+
   return router;
 };

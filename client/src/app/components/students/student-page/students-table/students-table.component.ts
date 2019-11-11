@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StudentsTableService } from '../../../../common/services/students-table.service';
+import { StudentsTableService } from '../../../../common/services/students/students-table.service';
 
 import { Student } from '../../../../common/entities/student';
 

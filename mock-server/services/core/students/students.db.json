@@ -12,11 +12,11 @@
           "teacherId": 2,
           "marks": [
             {
-              "date": "Sat Nov 09 2019 02:14:39 GMT+0300",
+              "date": "Wed Nov 06 2019",
               "value": 5
             },
             {
-              "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+              "date": "Thu Nov 07 2019",
               "value": 3
             }
           ]
@@ -35,11 +35,11 @@
           "teacherId": 1,
           "marks": [
             {
-              "date": "Sat Nov 01 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 02 2019",
               "value": 8
             },
             {
-              "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+              "date": "Thu Nov 07 2019",
               "value": 4
             }
           ]
@@ -58,11 +58,11 @@
           "teacherId": 0,
           "marks": [
             {
-              "date": "Sat Nov 02 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 02 2019",
               "value": 6
             },
             {
-              "date": "Sat Nov 06 2019 02:14:39 GMT+0300",
+              "date": "Wed Nov 06 2019",
               "value": 2
             }
           ]
@@ -81,11 +81,11 @@
           "teacherId": 3,
           "marks": [
             {
-              "date": "Sat Nov 01 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 02 2019",
               "value": 8
             },
             {
-              "date": "Sat Nov 04 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 09 2019",
               "value": 6
             }
           ]
@@ -104,11 +104,11 @@
           "teacherId": 3,
           "marks": [
             {
-              "date": "Sat Nov 03 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 02 2019",
               "value": 10
             },
             {
-              "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+              "date": "Thu Nov 07 2019",
               "value": 4
             }
           ]
@@ -127,11 +127,11 @@
           "teacherId": 0,
           "marks": [
             {
-              "date": "Sat Nov 09 2019 02:14:39 GMT+0300",
+              "date": "Sat Nov 09 2019",
               "value": 7
             },
             {
-              "date": "Sat Nov 07 2019 02:14:39 GMT+0300",
+              "date": "Thu Nov 07 2019",
               "value": 3
             }
           ]

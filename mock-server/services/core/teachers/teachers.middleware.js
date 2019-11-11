@@ -22,5 +22,16 @@ module.exports = (server) => {
     res.json(teacher);
   });
 
+  router.get('/teachers/other', (req, res) => {
+    let { teachersID } = req.query;
+    teachersID = teachersID
+      .split(',')
+      .map(teacherID => +teacherID);
+    const teachers = server.db.getState().teachers;
+    const teachersList = teachers.filter(teacher =>
+      !teachersID.includes(teacher.id));
+    res.json(teachersList);
+  })
+
   return router;
 };
