@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { DataService } from './common/services/data.service';
+//import { DataService } from './common/services/data.service';
 
 import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
@@ -36,8 +36,6 @@ import { ExitSubjectDetailPageGuard } from './guards/exit.subject-detail-page.gu
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
-import { HttpService } from './common/services/http.service';
-
 const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
@@ -46,7 +44,7 @@ const routes: Routes = [
   { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
   { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
   {
-    path: 'subjects/:id/:teacherId',
+    path: 'subjects/:subjectName/:teacherId',
     component: SubjectDetailComponent,
     pathMatch: 'full',
     canDeactivate: [ExitSubjectDetailPageGuard]
@@ -114,7 +112,7 @@ const routes: Routes = [
     HighlightingMarkDirective,
     OutputAllMarksDirective
   ],
-  providers: [DataService, ExitSubjectDetailPageGuard, HttpService],
+  providers: [ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]
 })
 export class AppRoutingModule { }

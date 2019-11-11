@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../../../common/services/data.service';
 
 @Component({
   selector: 'app-statistic-students-page',
@@ -8,15 +7,11 @@ import { DataService } from '../../../common/services/data.service';
 })
 export class StatisticStudentsPageComponent implements OnInit {
   visibilityRatingButton: boolean = false;
-  students: any;
+  students: any = [];
 
-  constructor(
-    private dataService: DataService,
-  ) { }
+  constructor( ) { }
 
-  ngOnInit() {
-    this.students = this.dataService.getDataAllStudentMarks();
-  }
+  ngOnInit() { }
 
   changeVisibilityRating() {
     this.visibilityRatingButton = !this.visibilityRatingButton;

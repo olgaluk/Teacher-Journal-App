@@ -1,0 +1,34 @@
+{
+  "teachers": [
+    {
+      "id": 0,
+      "name": "Alfreda",
+      "lastName": "Vega"
+    },
+    {
+      "id": 1,
+      "name": "Rodriguez",
+      "lastName": "Shannon"
+    },
+    {
+      "id": 2,
+      "name": "Burton",
+      "lastName": "Castro"
+    },
+    {
+      "id": 3,
+      "name": "Weber",
+      "lastName": "Carson"
+    },
+    {
+      "id": 4,
+      "name": "Albert",
+      "lastName": "Vinson"
+    },
+    {
+      "id": 5,
+      "teacherName": "Lynda",
+      "teacherLastName": "Mays"
+    }
+  ]
+}

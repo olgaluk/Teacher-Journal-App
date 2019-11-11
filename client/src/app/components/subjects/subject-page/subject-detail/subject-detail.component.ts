@@ -1,16 +1,18 @@
 import { Component, OnInit, AfterViewChecked, ViewChild } from '@angular/core';
-import { DataService } from '../../../../common/services/data.service';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
 import { Observable } from "rxjs";
 
+import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
+import { StudentsTableService } from '../../../../common/services/students-table.service';
+
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
 
-import { StudentMark } from '../../../../common/entities/student-mark';
 import { Mark } from '../../../../common/entities/mark';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
@@ -19,6 +21,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 @Component({
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
+  providers: [SubjectsTableService, StudentsTableService],
   styleUrls: ['./subject-detail.component.scss']
 })
 export class SubjectDetailComponent implements OnInit, AfterViewChecked, ComponentCanDeactivate {
@@ -36,36 +39,35 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   teacherTitle: string;
   itemSelected: string = "";
 
-  subject: string;
-  idTeacher: string;
-  newIdTeacher: string;
+  subjectName: string;
+  teacherId: number;
+  newTeacherId: number;
 
-  studentsInfo: StudentMark[] = [];
-  subjectInfo: Subject;
+  subject: Subject;
   teacher: Teacher;
   students: Student[] = [];
-  dates: string[] = [];
+  dates: Date[] = [];
 
   constructor(
-    private dataService: DataService,
+    private subjectsTableService: SubjectsTableService,
+    private studentsTableService: StudentsTableService,
     private activateRoute: ActivatedRoute,
     private modalService: BsModalService,
     private router: Router
   ) {
-    this.idTeacher = activateRoute.snapshot.params['teacherId'];
-    this.newIdTeacher = activateRoute.snapshot.params['teacherId'];
-    this.subject = activateRoute.snapshot.params['id'];
+    this.teacherId = activateRoute.snapshot.params['teacherId'];
+    this.newTeacherId = activateRoute.snapshot.params['teacherId'];
+    this.subjectName = activateRoute.snapshot.params['subjectName'];
   }
 
   ngOnInit() {
-    this.getTeacher(this.idTeacher);
-    this.getSubjectInfo(this.subject);
-    this.getStudentsById(this.studentsInfo);
-    this.getDates(this.studentsInfo);
+    this.getTeacher(this.teacherId);
+    this.getSubject(this.subjectName);
+    //this.getDates(this.students);
   }
 
   ngAfterViewChecked() {
-    if (this.bsModalRef &&
+    /*if (this.bsModalRef &&
       this.itemSelected !== this.bsModalRef.content.itemSelected &&
       this.bsModalRef.content.itemSelected) {
       Promise.resolve(null).then((value) => {
@@ -76,7 +78,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         this.newIdTeacher = this.newIdTeacher.split(")")[0];
         this.visibilitySaveButton = true;
       })
-    }
+    }*/
   }
 
   canDeactivate(): boolean | Observable<boolean> {
@@ -90,30 +92,29 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  getTeacher(idTeacher: string): void {
-    const teacherInfo: Teacher = this.dataService.getDataTeacher(idTeacher);
-    this.teacher = teacherInfo;
-    const studentsInfo = teacherInfo.subjects
-      .find(subject => subject.name === this.subject).studentsInfo;
-    this.studentsInfo = studentsInfo.map(studentInfo => {
-      return {
-        "studentId": studentInfo.studentId,
-        "marks": studentInfo.marks.map(mark => {
-          return { "date": mark.date, "mark": mark.mark };
-        })
-      }
-    });
-    this.teacherTitle = `${this.teacher.teacherName} ${this.teacher.teacherLastName}`;
+  getTeacher(teacherId: number): void {
+    this.subjectsTableService.getTeacherById(teacherId)
+      .subscribe((teacher: Teacher) => {
+        this.teacher = teacher;
+        this.teacherTitle = `${teacher.name} ${teacher.lastName}`;
+      });
   }
 
-  getSubjectInfo(subject: string): void {
-    this.subjectInfo = this.dataService.getDataSubjectInfo(subject);
+  getSubject(subjectName: string): void {
+    this.subjectsTableService.getSubjectByName(subjectName)
+      .subscribe((subject: Subject) => {
+        this.subject = subject;
+        this.getStudentsBySubjectAndTeacher(this.teacherId, subject.id);
+      });
   }
 
-  getStudentsById(studentsInfo: StudentMark[]) {
-    this.students = studentsInfo.map(student => {
-      return this.dataService.getDataStudent(student.studentId);
-    })
+  getStudentsBySubjectAndTeacher(
+    teacherId: number,
+    subjectId: number
+  ): void {
+    this.studentsTableService
+      .getStudentsBySubjectAndTeacher(teacherId, subjectId)
+      .subscribe((students: Student[]) => this.students = students);
   }
 
   getStudentMarks(studentId: number): number[] {
