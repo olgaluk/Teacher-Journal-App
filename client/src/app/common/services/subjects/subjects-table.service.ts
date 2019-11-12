@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -9,7 +9,8 @@ import { Student } from '../../entities/student';
 
 @Injectable()
 export class SubjectsTableService {
-  url = 'http://localhost:3004';
+  url: string = 'http://localhost:3004';
+  headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient) { }
 
@@ -40,9 +41,28 @@ export class SubjectsTableService {
     return this.http.get<Teacher[]>(url, options);
   }
 
-  deleteTeacherFromSubject(subjectId: number, teacherId: number): Observable<{}> {
-    const url = `${this.url}/subjects/${subjectId}/${teacherId}`;
-    return this.http.delete(url);
+  updateTeachersFromSubject(
+    subjectId: number,
+    teacherId: number,
+    newTeacherId: number
+  ): Observable<{}> {
+    const url = `${this.url}/subjects`;
+    let params = new HttpParams()
+      .set('subjectId', `${subjectId}`)
+      .set('teacherId', `${teacherId}`)
+      .set('newTeacherId', `${newTeacherId}`);
+    const options = { params: params };
+    return this.http.put(url, options);
+  }
+
+  updateStudentsFromSubject(
+    students: Student[]
+  ): Observable<{}> {
+    const url = `${this.url}/students`;
+    let params = new HttpParams()
+      .set('newStudents', JSON.stringify(students))
+    const options = { params: params };
+    return this.http.put(url, options);
   }
 
   saveChanges(
@@ -51,7 +71,8 @@ export class SubjectsTableService {
     subject: Subject,
     students: Student[]) {
     if (teacherId !== newTeacherId) {
-      this.deleteTeacherFromSubject(subject.id, teacherId).subscribe();
+      this.updateTeachersFromSubject(subject.id, teacherId, newTeacherId).subscribe();
     }
+    this.updateStudentsFromSubject(students).subscribe();
   }
 }

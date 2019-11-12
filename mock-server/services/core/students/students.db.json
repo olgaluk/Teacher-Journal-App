@@ -35,12 +35,20 @@
           "teacherId": 1,
           "marks": [
             {
-              "date": "Sat Nov 02 2019",
-              "value": 8
+              "date": "Thu Nov 28 2019",
+              "value": 3
             },
             {
               "date": "Thu Nov 07 2019",
-              "value": 4
+              "value": 3
+            },
+            {
+              "date": "Fri Nov 01 2019",
+              "value": 3
+            },
+            {
+              "date": "Tue Nov 19 2019",
+              "value": 2
             }
           ]
         }

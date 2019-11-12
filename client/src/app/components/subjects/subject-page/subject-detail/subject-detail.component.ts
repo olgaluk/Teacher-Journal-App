@@ -284,15 +284,29 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     if (this.dates.includes("")) {
       this.templateModalComponent.openModal();
     } else {
+      const students = this.students.map(student => {
+        student.academicPerformance
+          .map(studentInfo => {
+
+            if (studentInfo.subjectId === this.subject.id
+              && studentInfo.teacherId === this.teacherId) {
+              studentInfo.teacherId = this.newTeacherId;
+            }
+            return studentInfo;
+          });
+
+        return student;
+      });
+
       this.subjectsTableService
         .saveChanges(
           this.teacherId,
           this.newTeacherId,
           this.subject,
-          this.students);
-      this.saved = true;      
+          students);
+      this.saved = true;
       alert("Changes saved successfully!");
-      this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
+      this.router.navigate([`subjects`]);
       this.visibilitySaveButton = false;
       this.saved = false;
     }
