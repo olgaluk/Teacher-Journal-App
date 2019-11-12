@@ -3,8 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-//import { DataService } from './common/services/data.service';
-
 import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
 

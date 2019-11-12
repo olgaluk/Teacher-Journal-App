@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
 import { Student } from '../../entities/student';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/x-www-form-urlencoded',
+  })
+};
 
 @Injectable()
 export class StudentsTableService {
@@ -13,7 +19,7 @@ export class StudentsTableService {
 
   getStudents(): Observable<Student[]> {
     const url = `${this.url}/students`;
-    return this.http.get<Student[]>(url);
+    return this.http.get<Student[]>(url, httpOptions);
   }
 
   getStudentsBySubjectAndTeacher(
