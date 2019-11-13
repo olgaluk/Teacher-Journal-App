@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { StudentsTableService } from '../../../../common/services/students/students-table.service';
+
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 import { INFO_MESSAGE_FOR_NAME } from '../../../../common/constants/info-message-for-name';
@@ -11,6 +13,7 @@ import { INFO_MESSAGE_FOR_ADDRESS } from '../../../../common/constants/info-mess
 @Component({
   selector: 'app-adding-student',
   templateUrl: './adding-student.component.html',
+  providers: [StudentsTableService],
   styleUrls: ['./adding-student.component.scss']
 })
 export class AddingStudentComponent {
@@ -47,8 +50,11 @@ export class AddingStudentComponent {
 
   buttonInfo: string = "Back to student list";
 
-  constructor(private router: Router) { }
-/*
+  constructor(
+    private router: Router,
+    private studentsTableService: StudentsTableService
+  ) { }
+
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "name") {
       this.name = valueItem;
@@ -208,10 +214,13 @@ export class AddingStudentComponent {
       this.ageCorrectness && ageRestrictionsCondition &&
       this.addressCorrectness && addressLengthCondition);
     if (conditionForAdding) {
-      this.dataService.addDataNewStudent(name, lastName, age, address);
-      this.router.navigate(['/students']);
+      this.studentsTableService.addNewStudent(name, lastName, age, address)
+        .subscribe(() => {
+          alert('Student created');
+          this.router.navigate(['/students']);
+        });
     } else {
       this.templateModalComponent.openModal();
     }
-  }*/
+  }
 }

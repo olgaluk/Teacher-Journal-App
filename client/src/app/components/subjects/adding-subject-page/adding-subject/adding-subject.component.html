@@ -12,8 +12,8 @@
     <div class="form-group">
       <label class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Select teachers:</label>
       <select multiple class="col-sm-9 col-md-7 col-lg-5" name="teachersID" [(ngModel)]="teachersID">
-        <option *ngFor="let teacher of teachersAll" [value]="teacher.id">
-          {{teacher.teacherName}} {{teacher.teacherLastName}}
+        <option *ngFor="let teacher of teachersAll" [value]="teacher._id">
+          {{teacher.name}} {{teacher.lastName}}
         </option>
       </select>
     </div>

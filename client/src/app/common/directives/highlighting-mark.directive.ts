@@ -18,9 +18,9 @@ export class HighlightingMarkDirective implements AfterContentChecked {
     if (!mark && mark !== 0) {
       this.renderer.setStyle(parentElementRef, "backgroundColor", "#ffffff");
     } else if (mark < 5) {
-      this.renderer.setStyle(parentElementRef, "backgroundColor", "#b6fbfd");
+      this.renderer.setStyle(parentElementRef, "backgroundColor", "#b3f3fc");
     } else {
-      this.renderer.setStyle(parentElementRef, "backgroundColor", "#c8fdcc");
+      this.renderer.setStyle(parentElementRef, "backgroundColor", "#cdfcb3");
     }
   }
 }

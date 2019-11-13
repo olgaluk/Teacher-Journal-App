@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
+import { StudentMarksPipe } from './common/pipes/student-marks/student-marks.pipe';
 
 import { HighlightingMarkDirective } from './common/directives/highlighting-mark.directive';
 import { OutputAllMarksDirective } from './common/directives/output-all-marks.directive';
@@ -82,6 +83,7 @@ const routes: Routes = [
     DatepickerComponent,
     SortPipe,
     AverageMarkPipe,
+    StudentMarksPipe,
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
     OutputAllMarksDirective
@@ -106,6 +108,7 @@ const routes: Routes = [
     DatepickerComponent,
     SortPipe,
     AverageMarkPipe,
+    StudentMarksPipe,
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
     OutputAllMarksDirective

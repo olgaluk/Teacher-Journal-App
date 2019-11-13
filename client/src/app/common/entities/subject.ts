@@ -1,8 +1,8 @@
 export class Subject {
   constructor(
-    public id: number,
+    public _id: string,
     public name: string,
-    public teachersID: number[],
+    public teachersID: string[],
     public cabinet: number,
     public description: string
   ) { }

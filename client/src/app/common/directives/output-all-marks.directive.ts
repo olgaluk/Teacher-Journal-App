@@ -16,15 +16,16 @@ export class OutputAllMarksDirective {
     private renderer: Renderer2
   ) { }
 
-  @Input('appOutputAllMarks') marksInfo: string;
+  @Input('appOutputAllMarks') marks: number[];
 
-  @HostListener("mouseenter") onMouseEnter() {
-    this.renderer.setAttribute(this.elementRef.nativeElement, "title", this.marksInfo);
-    this.renderer.setStyle(this.elementRef.nativeElement, "opacity", "0.5");
+  @HostListener('mouseenter') onMouseEnter() {
+    const info = this.marks.join(' ,  ');
+    this.renderer.setAttribute(this.elementRef.nativeElement, 'title', info);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'color', '#6103a3');
   }
 
-  @HostListener("mouseleave") onMouseLeave() {
-    this.renderer.setAttribute(this.elementRef.nativeElement, "title", "");
-    this.renderer.setStyle(this.elementRef.nativeElement, "opacity", "1");
+  @HostListener('mouseleave') onMouseLeave() {
+    this.renderer.setAttribute(this.elementRef.nativeElement, 'title', '');
+    this.renderer.setStyle(this.elementRef.nativeElement, 'color', '#000000');
   }
 }

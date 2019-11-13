@@ -44,8 +44,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   itemSelected: string = "";
 
   subjectName: string;
-  teacherId: number;
-  newTeacherId: number;
+  teacherId: string;
+  newTeacherId: string;
 
   subject: Subject;
   teacher: Teacher;
@@ -60,8 +60,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     private modalService: BsModalService,
     private router: Router
   ) {
-    this.teacherId = +activateRoute.snapshot.params['teacherId'];
-    this.newTeacherId = +activateRoute.snapshot.params['teacherId'];
+    this.teacherId = activateRoute.snapshot.params['teacherId'];
+    this.newTeacherId = activateRoute.snapshot.params['teacherId'];
     this.subjectName = activateRoute.snapshot.params['subjectName'];
   }
 
@@ -79,8 +79,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         this.itemSelected = teacherSelected;
         this.teacherTitle = teacherSelected.split(" (id:")[0];
         let newTeacherId = teacherSelected.split(" (id: ")[1];
-        newTeacherId = newTeacherId.split(")")[0];
-        this.newTeacherId = +newTeacherId;
+        this.newTeacherId = newTeacherId.split(")")[0];
         this.visibilitySaveButton = true;
       })
     }
@@ -97,7 +96,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  getTeacher(teacherId: number): void {
+  getTeacher(teacherId: string): void {
     this.subjectsTableService.getTeacherById(teacherId)
       .subscribe((teacher: Teacher) => {
         this.teacher = teacher;
@@ -109,13 +108,13 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.subjectsTableService.getSubjectByName(subjectName)
       .subscribe((subject: Subject) => {
         this.subject = subject;
-        this.getStudentsBySubjectAndTeacher(this.teacherId, subject.id);
+        this.getStudentsBySubjectAndTeacher(this.teacherId, subject._id);
       });
   }
 
   getStudentsBySubjectAndTeacher(
-    teacherId: number,
-    subjectId: number
+    teacherId: string,
+    subjectId: string
   ): void {
     this.studentsTableService
       .getStudentsBySubjectAndTeacher(teacherId, subjectId)
@@ -127,21 +126,21 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   getDates(
     students: Student[],
-    teacherId: number,
-    subjectId: number
+    teacherId: string,
+    subjectId: string
   ): void {
     this.dates = this.subjectInfoService
       .getDates(students, teacherId, subjectId);
   }
 
-  getStudentMarks(studentId: number): number[] {
+  getStudentMarks(studentId: string): number[] {
     return this.subjectInfoService
-      .getStudentMarks(studentId, this.subject.id, this.teacherId, this.students);
+      .getStudentMarks(studentId, this.subject._id, this.teacherId, this.students);
   }
 
-  getMark(studentId: number, date: string): number | string {
+  getMark(studentId: string, date: string): number | string {
     return this.subjectInfoService
-      .getMark(studentId, date, this.subject.id, this.teacherId, this.students);
+      .getMark(studentId, date, this.subject._id, this.teacherId, this.students);
   }
 
   addColumn(): void {
@@ -153,7 +152,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
           newStudent.academicPerformance
             .map(studentInfo => {
               const newStudentInfo = studentInfo;
-              if (studentInfo.subjectId === this.subject.id
+              if (studentInfo.subjectId === this.subject._id
                 && studentInfo.teacherId === this.teacherId) {
                 newStudentInfo.marks.push(new Mark("", NaN))
               }
@@ -163,7 +162,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
           return newStudent;
         })
 
-      this.getDates(this.students, this.teacherId, this.subject.id);
+      this.getDates(this.students, this.teacherId, this.subject._id);
     }
 
     this.visibilitySaveButton = true;
@@ -178,7 +177,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         newStudent.academicPerformance
           .map(studentInfo => {
             const newStudentInfo = studentInfo;
-            if (studentInfo.subjectId === this.subject.id
+            if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
 
               studentInfo.marks.map(mark => {
@@ -196,7 +195,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
         return newStudent;
       });
-      this.getDates(this.students, this.teacherId, this.subject.id);
+      this.getDates(this.students, this.teacherId, this.subject._id);
     }
   }
 
@@ -211,15 +210,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  saveContent($event: any, date: string, studentId: number): void {
+  saveContent($event: any, date: string, studentId: string): void {
     let markValue: number;
     $event.target.innerText ? markValue = +$event.target.innerText : markValue = NaN;
     if (markValue) $event.target.innerText = markValue;
     if (!markValue) $event.target.innerText = "";
     const studentIncludeDate: boolean = this.students
-      .find(student => student.id === studentId)
+      .find(student => student._id === studentId)
       .academicPerformance
-      .find(studentInfo => studentInfo.subjectId === this.subject.id
+      .find(studentInfo => studentInfo.subjectId === this.subject._id
         && studentInfo.teacherId === this.teacherId)
       .marks
       .some(mark => mark.date === date);
@@ -228,11 +227,11 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.students = this.students.map(student => {
       let newStudent: Student = student;
 
-      if (student.id === studentId) {
+      if (student._id === studentId) {
         newStudent.academicPerformance
           .map(studentInfo => {
             const newStudentInfo = studentInfo;
-            if (studentInfo.subjectId === this.subject.id
+            if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
 
               studentInfo.marks.map(mark => {
@@ -251,25 +250,25 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
       return newStudent;
     });
-    this.getDates(this.students, this.teacherId, this.subject.id);
+    this.getDates(this.students, this.teacherId, this.subject._id);
   }
 
-  addDate(date: string, studentId: number): void {
+  addDate(date: string, studentId: string): void {
     this.students
-      .find(student => student.id === studentId)
+      .find(student => student._id === studentId)
       .academicPerformance
-      .find(studentInfo => studentInfo.subjectId === this.subject.id
+      .find(studentInfo => studentInfo.subjectId === this.subject._id
         && studentInfo.teacherId === this.teacherId)
       .marks
       .push(new Mark(date, NaN));
   }
 
   openModalWithComponent() {
-    const teachersIdBySubject: number[] = this.subject.teachersID;
+    const teachersIdBySubject: string[] = this.subject.teachersID;
     this.subjectsTableService
       .getTeachersFromOtherSubject(teachersIdBySubject)
       .subscribe((teachers: Teacher[]) => {
-        const listNameTeachers = teachers.map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher.id})`);
+        const listNameTeachers = teachers.map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher._id})`);
         const initialState = {
           list: listNameTeachers,
           title: 'Choose a new teacher:',
@@ -288,7 +287,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         student.academicPerformance
           .map(studentInfo => {
 
-            if (studentInfo.subjectId === this.subject.id
+            if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
               studentInfo.teacherId = this.newTeacherId;
             }

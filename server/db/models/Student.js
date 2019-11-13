@@ -20,7 +20,7 @@ const Student = new mongoose.Schema({
   },
   academicPerformance: {
     type: Array,
-    required: true,
+    required: false,
   },
 });
 

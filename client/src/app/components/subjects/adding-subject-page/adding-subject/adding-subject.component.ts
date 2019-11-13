@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
 
 import { Router } from '@angular/router';
 
@@ -12,6 +13,7 @@ import { INFO_MESSAGE_FOR_CABINET } from '../../../../common/constants/info-mess
 @Component({
   selector: 'app-adding-subject',
   templateUrl: './adding-subject.component.html',
+  providers: [SubjectsTableService],
   styleUrls: ['./adding-subject.component.scss']
 })
 export class AddingSubjectComponent implements OnInit {
@@ -39,14 +41,20 @@ export class AddingSubjectComponent implements OnInit {
   messageForSubject: string[] = INFO_MESSAGE_FOR_SUBJECT;
   messageForCabinet: string[] = INFO_MESSAGE_FOR_CABINET;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private subjectsTableService: SubjectsTableService
+  ) { }
 
   ngOnInit(): void {
-    //this.getTeachers();
+    this.getTeachers();
   }
-/*
+
   getTeachers(): void {
-    this.teachersAll = this.dataService.getDataTeachers();
+    this.subjectsTableService.getTeachers()
+      .subscribe((teachers: Teacher[]) => {
+        this.teachersAll = teachers;
+      });
   }
 
   changeItemValue(valueItem: any, itemName: string) {
@@ -67,11 +75,7 @@ export class AddingSubjectComponent implements OnInit {
     if (!this.subjectRegExp.test(valueItem) && valueItem) {
       this.subjectInfo = this.messageForSubject[0];
       this.subjectCorrectness = false;
-    } else if (!this.firstLetterUppercaseRegExp.test(valueItem) && valueItem) {
-      this.subjectInfo = this.messageForSubject[1];
-      this.subjectCorrectness = false;
-    } else if (this.subjectRegExp.test(valueItem)
-      && this.firstLetterUppercaseRegExp.test(valueItem)) {
+    } else if (this.subjectRegExp.test(valueItem)) {
       this.subjectInfo = "";
       this.subjectCorrectness = true;
     }
@@ -123,10 +127,10 @@ export class AddingSubjectComponent implements OnInit {
     teachersID: string[],
     description: string
   ): void {
-    let descriptionNew: string;
-    description ? descriptionNew = description : descriptionNew = "";
-    let teachersIDNew: string[];
-    teachersID ? teachersIDNew = teachersID : teachersIDNew = [];
+    let newDescription: string;
+    description ? newDescription = description : newDescription = "";
+    let newTeachersID: string[];
+    teachersID ? newTeachersID = teachersID : newTeachersID = [];
 
     const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(subject);
     const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(cabinet);
@@ -134,10 +138,10 @@ export class AddingSubjectComponent implements OnInit {
     const conditionForAdding: boolean = (this.subjectCorrectness && subjectLengthCondition &&
       this.cabinetCorrectness && cabinetLengthCondition);
     if (conditionForAdding) {
-      this.dataService.addDataNewSubject(subject, cabinet, teachersIDNew, descriptionNew);
-      this.router.navigate(['/subjects']);
+      this.subjectsTableService.addNewSubject(subject, cabinet, newTeachersID, newDescription)
+        .subscribe(() => this.router.navigate(['/subjects']));
     } else {
       this.templateModalComponent.openModal();
     }
-  }*/
+  }
 }

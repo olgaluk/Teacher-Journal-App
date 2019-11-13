@@ -4,8 +4,8 @@ export class AcademicPerformance {
   marks: Mark[];
 
   constructor(
-    public subjectId: number,
-    public teacherId: number
+    public subjectId: string,
+    public teacherId: string
   ) {
     this.marks = [];
   }

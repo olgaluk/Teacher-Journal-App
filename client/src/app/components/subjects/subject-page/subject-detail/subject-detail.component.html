@@ -41,11 +41,11 @@
       <tr *ngFor="let student of students">
         <td>{{ student.name }}</td>
         <td>{{ student.lastName }}</td>
-        <td>{{ getStudentMarks(student.id) | averageMark | number:'.1-1' }}</td>
+        <td>{{ getStudentMarks(student._id) | averageMark | number:'.1-1' }}</td>
         <td *ngFor="let date of dates">
-          <div [appHighlightingMark]="getMark(student.id, date)" contenteditable="true" (input)="checkContent($event)"
-            (blur)="saveContent($event, date, student.id)">
-            {{ getMark(student.id, date) }}</div>
+          <div [appHighlightingMark]="getMark(student._id, date)" contenteditable="true" (input)="checkContent($event)"
+            (blur)="saveContent($event, date, student._id)">
+            {{ getMark(student._id, date) }}</div>
         </td>
       </tr>
     </tbody>

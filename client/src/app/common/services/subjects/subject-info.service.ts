@@ -7,8 +7,8 @@ export class SubjectInfoService {
 
   getDates(
     students: Student[],
-    teacherId: number,
-    subjectId: number
+    teacherId: string,
+    subjectId: string
   ): string[] {
     let dates = [];
     students
@@ -40,14 +40,14 @@ export class SubjectInfoService {
   }
 
   getStudentMarks(
-    studentId: number,
-    subjectId: number,
-    teacherId: number,
+    studentId: string,
+    subjectId: string,
+    teacherId: string,
     students: Student[]
   ): number[] {
     let marks = [];
     const student = students
-      .find(student => student.id === studentId);
+      .find(student => student._id === studentId);
     student.academicPerformance
       .forEach(studentInfo => {
         if (studentInfo.subjectId === subjectId
@@ -60,15 +60,15 @@ export class SubjectInfoService {
   }
 
   getMark(
-    studentId: number,
+    studentId: string,
     date: string,
-    subjectId: number,
-    teacherId: number,
+    subjectId: string,
+    teacherId: string,
     students: Student[]
   ): number | string {
     let markValue;
     const student = students
-      .find(studentInfo => studentInfo.id === studentId);
+      .find(student => student._id === studentId);
     student.academicPerformance
       .forEach(studentInfo => {
         if (studentInfo.subjectId === subjectId
@@ -81,6 +81,6 @@ export class SubjectInfoService {
         }
       });
 
-    return markValue ? markValue : "";
+    return !isNaN(markValue) ? markValue : "";
   }
 }

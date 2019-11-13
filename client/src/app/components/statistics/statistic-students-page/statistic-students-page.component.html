@@ -19,11 +19,11 @@
     <tbody>
       <tr *ngFor="let student of (students | sort); let counter = index;">
         <td>{{ counter + 1 }}</td>
-        <td>{{ student.studentName }}</td>
-        <td>{{ student.studentLastName }}</td>
-        <td [appHighlightingMark]="student.studentAllMarks | averageMark | number:'.1-1'"
-          [appOutputAllMarks]="student.studentAllMarks.join('  ,  ')">
-          {{ student.studentAllMarks | averageMark | number:'.1-1' }}</td>
+        <td>{{ student.name }}</td>
+        <td>{{ student.lastName }}</td>
+        <td [appHighlightingMark]="student.academicPerformance | studentMarks | averageMark | number:'.1-1'"
+          [appOutputAllMarks]="student.academicPerformance | studentMarks">
+          {{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
       </tr>
     </tbody>
   </table>

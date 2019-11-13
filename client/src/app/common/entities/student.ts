@@ -4,7 +4,7 @@ export class Student {
   academicPerformance: AcademicPerformance[];
 
   constructor(
-    public id: number,
+    public _id: string,
     public name: string,
     public lastName: string,
     public age: number,
