@@ -1,6 +1,10 @@
 <div class="page-header">
   <h2 class="text-center text-uppercase text-info">List of students:</h2>
 </div>
+<div class="row panel">
+  <app-search (searchStudents)="searchStudents($event)"></app-search>
+</div>
+
 <table class="table table-bordered table-striped">
   <thead>
     <tr class="text-info text-uppercase">

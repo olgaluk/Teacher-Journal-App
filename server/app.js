@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const MONGODB_URI = "mongodb+srv://olgaluk:111@gettingstarted-w5aal.mongodb.net/journal?retryWrites=true&w=majority";
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
   .then(() => {
     console.log('Connected to database!');
   })
@@ -22,6 +22,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const path = require('path');
 const cors = require('./utils/cors');
 
+app.use(cors);
 app.use(express.static(path.join(__dirname, '/html')));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,8 +35,6 @@ app.use((err, req, res, next) => {
   if (err) res.status(500).send('Something broke!');
   next();
 });
-
-app.use(cors);
 
 const students = require('./routes/students');
 const subjects = require('./routes/subjects');

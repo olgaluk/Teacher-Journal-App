@@ -24,4 +24,8 @@ export class StudentsTableComponent implements OnInit {
     this.studentsTableService.getStudents()
       .subscribe((students: Student[]) => this.students = students);
   }
+
+  searchStudents($event: any) {
+    const value = $event;
+  }
 }

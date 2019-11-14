@@ -56,7 +56,7 @@ exports.student_replacement_put = (req, res) => {
   const { students } = req.body;
   const studentsParse = JSON.parse(students);
   const performancePromises = studentsParse.map(student => {
-    return Student.update(
+    return Student.updateOne(
       { _id: student._id },
       { academicPerformance: student.academicPerformance },
       { upsert: false }

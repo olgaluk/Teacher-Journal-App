@@ -20,6 +20,7 @@ import { SubjectDetailComponent } from './components/subjects/subject-page/subje
 import { SubjectTeachersComponent } from './components/subjects/subject-page/subject-teachers/subject-teachers.component';
 import { AddingSubjectComponent } from './components/subjects/adding-subject-page/adding-subject/adding-subject.component';
 import { AddingStudentComponent } from './components/students/adding-student-page/adding-student/adding-student.component';
+import { SearchComponent } from './components/students/student-page/search/search.component';
 
 import { NotFoundPageComponent } from './components/not-found/not-found-page/not-found-page.component';
 
@@ -77,6 +78,7 @@ const routes: Routes = [
     SubjectDetailComponent,
     AddingSubjectComponent,
     AddingStudentComponent,
+    SearchComponent,
     ModalComponent,
     BreadcrumbsComponent,
     ModalContentComponent,
@@ -102,6 +104,7 @@ const routes: Routes = [
     SubjectTeachersComponent,
     AddingSubjectComponent,
     AddingStudentComponent,
+    SearchComponent,
     ModalComponent,
     BreadcrumbsComponent,
     ModalContentComponent,
