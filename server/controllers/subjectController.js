@@ -47,5 +47,28 @@ exports.subject_find_get = (req, res) => {
       console.log(err);
       res.status(500).send('Internal Server Error');
     });
+};
 
+exports.teacher_replacement_put = (req, res) => {
+  const { _id, teacherId, newTeacherId } = req.body;
+
+  Subject.update({ _id }, { $pull: { teachersID: teacherId } })  
+    .then((result) => {
+      if (result) {
+        return Subject.update({ _id }, { $addToSet: { teachersID: newTeacherId } });
+      } else {
+        res.status(412).send('Precondition Failed');
+      }
+    })
+    .then((result) => {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(412).send('Precondition Failed');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
 };

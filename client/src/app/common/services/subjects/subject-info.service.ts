@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Student } from '../../entities/student';
+import { Mark } from '../../entities/mark';
 
 @Injectable()
 export class SubjectInfoService {
@@ -39,26 +40,6 @@ export class SubjectInfoService {
     return dates;
   }
 
-  getStudentMarks(
-    studentId: string,
-    subjectId: string,
-    teacherId: string,
-    students: Student[]
-  ): number[] {
-    let marks = [];
-    const student = students
-      .find(student => student._id === studentId);
-    student.academicPerformance
-      .forEach(studentInfo => {
-        if (studentInfo.subjectId === subjectId
-          && studentInfo.teacherId === teacherId) {
-          studentInfo.marks.forEach(mark => marks.push(mark.value));
-        }
-      });
-
-    return marks;
-  }
-
   getMark(
     studentId: string,
     date: string,
@@ -82,5 +63,28 @@ export class SubjectInfoService {
       });
 
     return !isNaN(markValue) ? markValue : "";
+  }
+
+  addNewColumn(
+    students: Student[],
+    teacherId: string,
+    subjectId: string
+  ): Student[] {
+    const newStudents = JSON.parse(JSON.stringify(students));
+    newStudents
+      .map(student => {
+        student.academicPerformance
+          .map(studentInfo => {
+            if (studentInfo.subjectId === subjectId
+              && studentInfo.teacherId === teacherId) {
+              studentInfo.marks.push(new Mark("", NaN))
+            }
+            return studentInfo;
+          });
+
+        return student;
+      });
+
+    return newStudents;
   }
 }

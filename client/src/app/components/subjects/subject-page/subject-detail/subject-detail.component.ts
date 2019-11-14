@@ -67,7 +67,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   ngOnInit() {
     this.getTeacher(this.teacherId);
-    this.getSubject(this.subjectName);
   }
 
   ngAfterViewChecked() {
@@ -101,6 +100,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .subscribe((teacher: Teacher) => {
         this.teacher = teacher;
         this.teacherTitle = `${teacher.name} ${teacher.lastName}`;
+        this.getSubject(this.subjectName);
       });
   }
 
@@ -133,11 +133,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .getDates(students, teacherId, subjectId);
   }
 
-  getStudentMarks(studentId: string): number[] {
-    return this.subjectInfoService
-      .getStudentMarks(studentId, this.subject._id, this.teacherId, this.students);
-  }
-
   getMark(studentId: string, date: string): number | string {
     return this.subjectInfoService
       .getMark(studentId, date, this.subject._id, this.teacherId, this.students);
@@ -145,23 +140,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   addColumn(): void {
     if (this.dates[this.dates.length - 1]) {
-      this.students = this.students
-        .map(student => {
-          const newStudent = student;
-
-          newStudent.academicPerformance
-            .map(studentInfo => {
-              const newStudentInfo = studentInfo;
-              if (studentInfo.subjectId === this.subject._id
-                && studentInfo.teacherId === this.teacherId) {
-                newStudentInfo.marks.push(new Mark("", NaN))
-              }
-              return newStudentInfo;
-            });
-
-          return newStudent;
-        })
-
+      this.students = this.subjectInfoService
+        .addNewColumn(this.students, this.teacherId, this.subject._id);
       this.getDates(this.students, this.teacherId, this.subject._id);
     }
 
@@ -180,14 +160,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
             if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
 
-              studentInfo.marks.map(mark => {
-                const newMark = mark;
-                if (mark.date === oldDate) {
-                  newMark.date = value;
-                  this.visibilitySaveButton = true;
-                }
-                return newMark;
-              });
+              newStudentInfo.marks = studentInfo.marks
+                .map(mark => {
+                  const newMark = mark;
+                  if (mark.date === oldDate) {
+                    newMark.date = value;
+                    this.visibilitySaveButton = true;
+                  }
+                  return newMark;
+                });
 
             }
             return newStudentInfo;
@@ -213,8 +194,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   saveContent($event: any, date: string, studentId: string): void {
     let markValue: number;
     $event.target.innerText ? markValue = +$event.target.innerText : markValue = NaN;
-    if (markValue) $event.target.innerText = markValue;
-    if (!markValue) $event.target.innerText = "";
+    if (markValue || markValue === 0) $event.target.innerText = markValue;
+    if (isNaN(markValue)) $event.target.innerText = "";
     const studentIncludeDate: boolean = this.students
       .find(student => student._id === studentId)
       .academicPerformance
@@ -234,7 +215,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
             if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
 
-              studentInfo.marks.map(mark => {
+              newStudentInfo.marks = studentInfo.marks.map(mark => {
                 const newMark = mark;
                 if (mark.date === date) {
                   newMark.value = markValue;
@@ -268,7 +249,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.subjectsTableService
       .getTeachersFromOtherSubject(teachersIdBySubject)
       .subscribe((teachers: Teacher[]) => {
-        const listNameTeachers = teachers.map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher._id})`);
+        const listNameTeachers = teachers
+          .map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher._id})`);
         const initialState = {
           list: listNameTeachers,
           title: 'Choose a new teacher:',
@@ -290,6 +272,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
             if (studentInfo.subjectId === this.subject._id
               && studentInfo.teacherId === this.teacherId) {
               studentInfo.teacherId = this.newTeacherId;
+
+              studentInfo.marks = studentInfo.marks
+                .map(mark => {
+                  if (isNaN(mark.value) || mark.value == null) {
+                    return null;
+                  }
+                  return mark;
+                })
+                .filter(mark => mark);
             }
             return studentInfo;
           });
@@ -302,12 +293,13 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
           this.teacherId,
           this.newTeacherId,
           this.subject,
-          students);
-      this.saved = true;
-      alert("Changes saved successfully!");
-      this.router.navigate([`subjects`]);
-      this.visibilitySaveButton = false;
-      this.saved = false;
+          students).subscribe(() => {
+            this.saved = true;
+            alert("Changes saved successfully!");
+            this.router.navigate([`subjects/${this.subjectName}`]);
+            this.visibilitySaveButton = false;
+            this.saved = false;
+          });
     }
   }
 }

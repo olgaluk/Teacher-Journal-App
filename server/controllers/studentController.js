@@ -51,3 +51,28 @@ exports.students_by_teacher_get = (req, res) => {
       res.status(500).send('Internal Server Error');
     });
 };
+
+exports.student_replacement_put = (req, res) => {
+  const { students } = req.body;
+  const studentsParse = JSON.parse(students);
+  const performancePromises = studentsParse.map(student => {
+    return Student.update(
+      { _id: student._id },
+      { academicPerformance: student.academicPerformance },
+      { upsert: false }
+    );
+  });
+
+  Promise.all(performancePromises)
+    .then((result) => {
+      if (result) {
+        res.status(200).send(result);
+      } else {
+        res.status(412).send('Precondition Failed');
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
+};

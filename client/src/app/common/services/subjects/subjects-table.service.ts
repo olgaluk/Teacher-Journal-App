@@ -74,32 +74,27 @@ export class SubjectsTableService {
     newTeacherId: string
   ): Observable<{}> {
     const url = `${this.url}/subjects`;
-    let params = new HttpParams()
-      .set('subjectId', `${subjectId}`)
-      .set('teacherId', `${teacherId}`)
-      .set('newTeacherId', `${newTeacherId}`);
-    const options = { headers: httpOptions.headers, params: params };
-    return this.http.put(url, options);
+    const body = { _id: subjectId, teacherId, newTeacherId };
+    return this.http.put(url, body, options);
   }
 
   updateStudentsFromSubject(
     students: Student[]
   ): Observable<{}> {
     const url = `${this.url}/students`;
-    let params = new HttpParams()
-      .set('newStudents', JSON.stringify(students))
-    const options = { params: params };
-    return this.http.put(url, options);
+    const body = { students: JSON.stringify(students) };
+    return this.http.put(url, body, options);
   }
 
   saveChanges(
     teacherId: string,
     newTeacherId: string,
     subject: Subject,
-    students: Student[]) {
+    students: Student[]): Observable<{}> {
     if (teacherId !== newTeacherId) {
-      this.updateTeachersFromSubject(subject._id, teacherId, newTeacherId).subscribe();
+      this.updateTeachersFromSubject(subject._id, teacherId, newTeacherId)
+        .subscribe();
     }
-    this.updateStudentsFromSubject(students).subscribe();
+    return this.updateStudentsFromSubject(students);
   }
 }
