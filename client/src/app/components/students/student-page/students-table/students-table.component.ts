@@ -25,7 +25,9 @@ export class StudentsTableComponent implements OnInit {
       .subscribe((students: Student[]) => this.students = students);
   }
 
-  searchStudents($event: any) {
-    const value = $event;
+  searchStudents(name: string) {
+    const studentsName = name.trim();
+    this.studentsTableService.getStudentsByName(studentsName)
+      .subscribe((students: Student[]) => this.students = students);
   }
 }

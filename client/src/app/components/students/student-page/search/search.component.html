@@ -1,15 +1,18 @@
 <div class="row panel">
-  <form class="form-inline col-xs-offset-0 col-xs-11 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
-    <div class="form-group col-xs-8 col-md-8 col-lg-7">
-      <div class="input-group col-xs-12 col-md-12 col-lg-12">
+  <form
+    class="form-inline col-xs-offset-0 col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-3 col-lg-6">
+    <div class="form-group col-xs-8 col-sm-6 col-md-6 col-lg-6">
+      <div class="input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div (click)="findStudent()" class="input-group-addon search-icon">
           <i class="fa fa-search fa-fw" aria-hidden="true"></i>
         </div>
         <input type="text" class="form-control" placeholder="Search" (input)="checkEnteredValue($event)"
-          autocomplete="off">
+          value="{{searchValue}}" autocomplete="off">
       </div>
     </div>
     <button type="button" (click)="findStudent()"
-      class="btn btn-primary col-xs-offset-0 col-xs-4 col-md-offset-1 col-md-3 col-lg-offset-1 col-lg-4">Search</button>
+      class="btn btn-primary col-xs-offset-0 col-xs-2 col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Search</button>
+    <button type="button" (click)="reset()"
+      class="btn btn-primary col-xs-offset-0 col-xs-2 col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Reset</button>
   </form>
 </div>

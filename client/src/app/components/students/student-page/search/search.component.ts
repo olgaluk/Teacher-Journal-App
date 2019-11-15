@@ -31,4 +31,9 @@ export class SearchComponent {
   findStudent(): void {
     this.searchStudents.emit(this.searchValue);
   }
+
+  reset(): void {
+    this.searchValue = '';
+    this.findStudent();
+  }
 }

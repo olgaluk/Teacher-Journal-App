@@ -50,4 +50,12 @@ export class StudentsTableService {
     const url = `${this.url}/students`;
     return this.http.post<''>(url, body, options);
   }
+
+  getStudentsByName(studentsName: string): Observable<Student[]> {
+    const url = `${this.url}/students/search`;
+    let params = new HttpParams()
+      .set('studentsName', `${studentsName}`);
+    const options = { headers: httpOptions.headers, params: params };
+    return this.http.get<Student[]>(url, options);
+  }
 }
