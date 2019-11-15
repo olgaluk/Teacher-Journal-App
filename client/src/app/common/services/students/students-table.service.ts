@@ -1,21 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
 import { Student } from '../../entities/student';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  })
-};
-
-const options = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
 
 @Injectable()
 export class StudentsTableService {
@@ -25,7 +13,7 @@ export class StudentsTableService {
 
   getStudents(): Observable<Student[]> {
     const url = `${this.url}/students`;
-    return this.http.get<Student[]>(url, httpOptions);
+    return this.http.get<Student[]>(url);
   }
 
   getStudentsBySubjectAndTeacher(
@@ -36,7 +24,7 @@ export class StudentsTableService {
     let params = new HttpParams()
       .set('subjectId', `${subjectId}`)
       .set('teacherId', `${teacherId}`);
-    const options = { headers: httpOptions.headers, params: params };
+    const options = { params: params };
     return this.http.get<Student[]>(url, options);
   }
 
@@ -48,14 +36,14 @@ export class StudentsTableService {
   ): Observable<{}> {
     const body = { name, lastName, age, address, academicPerformance: [] };
     const url = `${this.url}/students`;
-    return this.http.post<''>(url, body, options);
+    return this.http.post<''>(url, body);
   }
 
   getStudentsByName(studentsName: string): Observable<Student[]> {
     const url = `${this.url}/students/search`;
     let params = new HttpParams()
       .set('studentsName', `${studentsName}`);
-    const options = { headers: httpOptions.headers, params: params };
+    const options = { params: params };
     return this.http.get<Student[]>(url, options);
   }
 }

@@ -1,23 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
 import { Subject } from '../../entities/subject';
 import { Teacher } from '../../entities/teacher';
 import { Student } from '../../entities/student';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/x-www-form-urlencoded',
-  })
-};
-
-const options = {
-  headers: new HttpHeaders({
-    'Content-Type': 'application/json'
-  })
-};
 
 @Injectable()
 export class SubjectsTableService {
@@ -27,17 +15,17 @@ export class SubjectsTableService {
 
   getSubjects(): Observable<Subject[]> {
     const url = `${this.url}/subjects`;
-    return this.http.get<Subject[]>(url, httpOptions);
+    return this.http.get<Subject[]>(url);
   }
 
   getSubjectByName(subjectName: string): Observable<Subject> {
     const url = `${this.url}/subjects/${subjectName}`;
-    return this.http.get<Subject>(url, httpOptions);
+    return this.http.get<Subject>(url);
   }
 
   getTeachers(): Observable<Teacher[]> {
     const url = `${this.url}/teachers`;
-    return this.http.get<Teacher[]>(url, httpOptions);
+    return this.http.get<Teacher[]>(url);
   }
 
   getTeachersListById(teachersID: string[]): Observable<Teacher[]> {
@@ -48,7 +36,7 @@ export class SubjectsTableService {
 
   getTeacherById(teacherId: string): Observable<Teacher> {
     const url = `${this.url}/teachers/id/${teacherId}`;
-    return this.http.get<Teacher>(url, httpOptions);
+    return this.http.get<Teacher>(url);
   }
 
   getTeachersFromOtherSubject(teachersIdBySubject: string[]): Observable<Teacher[]> {
@@ -65,7 +53,7 @@ export class SubjectsTableService {
   ): Observable<{}> {
     const body = { name: subjectName, cabinet: cabinet, teachersID: newTeachersID, description: newDescription };
     const url = `${this.url}/subjects`;
-    return this.http.post<''>(url, body, options);
+    return this.http.post<''>(url, body);
   }
 
   updateTeachersFromSubject(
@@ -75,7 +63,7 @@ export class SubjectsTableService {
   ): Observable<{}> {
     const url = `${this.url}/subjects`;
     const body = { _id: subjectId, teacherId, newTeacherId };
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   updateStudentsFromSubject(
@@ -83,7 +71,7 @@ export class SubjectsTableService {
   ): Observable<{}> {
     const url = `${this.url}/students`;
     const body = { students: JSON.stringify(students) };
-    return this.http.put(url, body, options);
+    return this.http.put(url, body);
   }
 
   saveChanges(

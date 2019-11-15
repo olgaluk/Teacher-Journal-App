@@ -10,6 +10,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HttpClientModule }   from '@angular/common/http';
+import { httpInterceptorProviders } from './common/http-interceptors/index';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import { HttpClientModule }   from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
