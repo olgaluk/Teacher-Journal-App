@@ -15,7 +15,7 @@ import { httpInterceptorProviders } from './common/http-interceptors/index';
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent                     
+    NavComponent                   
   ],
   imports: [
     BrowserModule,

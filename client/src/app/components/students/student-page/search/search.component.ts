@@ -10,21 +10,11 @@ export class SearchComponent {
   @Output() searchStudents = new EventEmitter<any>();
 
   checkEnteredValue($event: any): void {
-    const correctValue = this.deleteCharacters($event.target.value);
-    $event.target.value = correctValue;
-    this.searchValue = correctValue;
-  }
-
-  deleteCharacters(string: string): string {
-    let value: any = string;
-    value = value
-      .replace(/[0-9.*+-?^${}()|[\]\\]/g, '')
-      .split(' ');
-    if (!value.length) return '';
-    if (value.length === 1) return value[0];
-    if (value.length >= 2) {
-      value[0] = value[0] + ' ';
-      return value.join('');
+    if (!((($event.keyCode >= 65) && ($event.keyCode <= 90)) || ($event.keyCode < 48))) {
+      $event.returnValue = false;
+    }
+    if ($event.keyCode === 32) {
+      $event.returnValue = $event.target.value.match(/\s{1,}/g) === null;
     }
   }
 

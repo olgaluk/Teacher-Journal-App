@@ -20,7 +20,7 @@ exports.student_create_post = (req, res) => {
 exports.students_info_get = (req, res) => {
   Student.find()
     .then((result) => {
-      if (result) {
+      if (result.length) {
         res.status(200).send(result);
       } else {
         res.status(412).send('Precondition Failed');
@@ -39,7 +39,6 @@ exports.students_by_teacher_get = (req, res) => {
     .find({}, 'academicPerformance')
     .find({ 'academicPerformance.teacherId': teacherId, 'academicPerformance.subjectId': subjectId })
     .then((result) => {
-      if (!result.length) res.status(200).send(result);
       const studentsId = result.map(infoStudent => infoStudent._id);
       return Student.find({ _id: { $in: studentsId } });
     })

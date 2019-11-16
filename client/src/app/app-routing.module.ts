@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -21,6 +21,7 @@ import { SubjectTeachersComponent } from './components/subjects/subject-page/sub
 import { AddingSubjectComponent } from './components/subjects/adding-subject-page/adding-subject/adding-subject.component';
 import { AddingStudentComponent } from './components/students/adding-student-page/adding-student/adding-student.component';
 import { SearchComponent } from './components/students/student-page/search/search.component';
+import { NotificationSelfClosingComponent } from './shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { NotFoundPageComponent } from './components/not-found/not-found-page/not-found-page.component';
 
@@ -36,30 +37,11 @@ import { ExitSubjectDetailPageGuard } from './guards/exit.subject-detail-page.gu
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
-const routes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
-  { path: 'students/adding', component: AddingStudentComponent, pathMatch: 'full' },
-  { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
-  { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
-  { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
-  {
-    path: 'subjects/:subjectName/:teacherId',
-    component: SubjectDetailComponent,
-    pathMatch: 'full',
-    canDeactivate: [ExitSubjectDetailPageGuard]
-  },
-  { path: 'statistics', component: StatisticPageComponent, pathMatch: 'full' },
-  { path: 'statistics/students', component: StatisticStudentsPageComponent, pathMatch: 'full' },
-  { path: 'export', component: ExportComponent, pathMatch: 'full' },
-  { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
-  { path: 'main', redirectTo: '/', pathMatch: 'full' },
-  { path: '**', redirectTo: '/nonexistent' }
-];
+import { ROUTES } from "./app.routers";
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(ROUTES),
     CommonModule,
     FormsModule,
     BsDatepickerModule.forRoot()
@@ -88,7 +70,8 @@ const routes: Routes = [
     StudentMarksPipe,
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
-    OutputAllMarksDirective
+    OutputAllMarksDirective,
+    NotificationSelfClosingComponent
   ],
   declarations: [
     HomeComponent,
@@ -114,7 +97,8 @@ const routes: Routes = [
     StudentMarksPipe,
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
-    OutputAllMarksDirective
+    OutputAllMarksDirective,
+    NotificationSelfClosingComponent
   ],
   providers: [ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]

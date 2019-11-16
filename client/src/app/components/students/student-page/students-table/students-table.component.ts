@@ -9,8 +9,7 @@ import { Student } from '../../../../common/entities/student';
   providers: [StudentsTableService],
   styleUrls: ['./students-table.component.scss']
 })
-export class StudentsTableComponent implements OnInit {
-
+export class StudentsTableComponent implements OnInit {  
   students: Student[] = [];
   buttonInfo: string = "Add new student";
 

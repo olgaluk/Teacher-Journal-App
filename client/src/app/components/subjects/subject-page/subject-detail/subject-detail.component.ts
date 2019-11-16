@@ -18,6 +18,8 @@ import { Mark } from '../../../../common/entities/mark';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { NotificationSelfClosingComponent }
+  from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 @Component({
   selector: 'app-subject-detail',
@@ -32,6 +34,9 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 export class SubjectDetailComponent implements OnInit, AfterViewChecked, ComponentCanDeactivate {
   @ViewChild(ModalComponent, { static: false })
   private templateModalComponent: ModalComponent;
+
+  @ViewChild(NotificationSelfClosingComponent, { static: false })
+  private notification: NotificationSelfClosingComponent;
 
   saved: boolean = false;
 
@@ -148,7 +153,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.visibilitySaveButton = true;
   }
 
-  onChangedDate(value: string, count: number) {
+  onChangedDate(value: string, count: number): void {
     if (!this.dates.includes(value) && value) {
       const oldDate: string = this.dates[count];
       this.students = this.students.map(student => {
@@ -180,7 +185,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  checkContent($event: any) {
+  checkContent($event: any): void {
     this.visibilitySaveButton = true;
     if (!this.markRegExp.test($event.target.innerText)) {
       $event.target.innerText = $event.target.innerText.replace(/[^0-9]+/g, '');;
@@ -244,7 +249,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .push(new Mark(date, NaN));
   }
 
-  openModalWithComponent() {
+  openModalWithComponent(): void {
     const teachersIdBySubject: string[] = this.subject.teachersID;
     this.subjectsTableService
       .getTeachersFromOtherSubject(teachersIdBySubject)
@@ -261,7 +266,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       });
   }
 
-  saveChanges() {
+  saveChanges(): void {
     if (this.dates.includes("")) {
       this.templateModalComponent.openModal();
     } else {
@@ -294,9 +299,11 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
           this.newTeacherId,
           this.subject,
           students).subscribe(() => {
+            this.notification.openNotification();
             this.saved = true;
-            alert("Changes saved successfully!");
-            this.router.navigate([`subjects/${this.subjectName}`]);
+            this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
+            this.teacherId = this.newTeacherId;
+            this.getTeacher(this.teacherId);
             this.visibilitySaveButton = false;
             this.saved = false;
           });

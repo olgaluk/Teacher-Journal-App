@@ -10,11 +10,7 @@ exports.teachers_from_subject_get = (req, res, next) => {
 
     Teacher.find({ _id: { $in: id } })
       .then((result) => {
-        if (result) {
-          res.status(200).send(result);
-        } else {
-          res.status(412).send('Precondition Failed');
-        }
+        res.status(200).send(result);
       })
       .catch((err) => {
         console.log(err);
@@ -26,11 +22,7 @@ exports.teachers_from_subject_get = (req, res, next) => {
 exports.teachers_list_get = (req, res) => {
   Teacher.find()
     .then((result) => {
-      if (result) {
-        res.status(200).send(result);
-      } else {
-        res.status(412).send('Precondition Failed');
-      }
+      res.status(200).send(result);
     })
     .catch((err) => {
       console.log(err);

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError, forkJoin } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { Subject } from '../../entities/subject';
 import { Teacher } from '../../entities/teacher';
@@ -20,29 +21,49 @@ export class SubjectsTableService {
 
   getSubjectByName(subjectName: string): Observable<Subject> {
     const url = `${this.url}/subjects/${subjectName}`;
-    return this.http.get<Subject>(url);
+    return this.http.get<Subject>(url).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   getTeachers(): Observable<Teacher[]> {
     const url = `${this.url}/teachers`;
-    return this.http.get<Teacher[]>(url);
+    return this.http.get<Teacher[]>(url).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   getTeachersListById(teachersID: string[]): Observable<Teacher[]> {
     const options = { params: new HttpParams().set('teachersID', JSON.stringify(teachersID)) };
     const url = `${this.url}/teachers`;
-    return this.http.get<Teacher[]>(url, options);
+    return this.http.get<Teacher[]>(url, options).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   getTeacherById(teacherId: string): Observable<Teacher> {
     const url = `${this.url}/teachers/id/${teacherId}`;
-    return this.http.get<Teacher>(url);
+    return this.http.get<Teacher>(url).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   getTeachersFromOtherSubject(teachersIdBySubject: string[]): Observable<Teacher[]> {
     const options = { params: new HttpParams().set('teachersID', JSON.stringify(teachersIdBySubject)) };
     const url = `${this.url}/teachers/other`;
-    return this.http.get<Teacher[]>(url, options);
+    return this.http.get<Teacher[]>(url, options).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   addNewSubject(
@@ -53,7 +74,11 @@ export class SubjectsTableService {
   ): Observable<{}> {
     const body = { name: subjectName, cabinet: cabinet, teachersID: newTeachersID, description: newDescription };
     const url = `${this.url}/subjects`;
-    return this.http.post<''>(url, body);
+    return this.http.post<''>(url, body).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
   }
 
   updateTeachersFromSubject(
@@ -80,9 +105,20 @@ export class SubjectsTableService {
     subject: Subject,
     students: Student[]): Observable<{}> {
     if (teacherId !== newTeacherId) {
-      this.updateTeachersFromSubject(subject._id, teacherId, newTeacherId)
-        .subscribe();
+      return forkJoin([
+        this.updateStudentsFromSubject(students),
+        this.updateTeachersFromSubject(subject._id, teacherId, newTeacherId)        
+      ]).pipe(
+        catchError(err => {
+          console.log('message:', err.statusText);
+          return throwError(err);
+        }));
+    } else {
+      return this.updateStudentsFromSubject(students).pipe(
+        catchError(err => {
+          console.log('message:', err.statusText);
+          return throwError(err);
+        }));
     }
-    return this.updateStudentsFromSubject(students);
   }
 }
