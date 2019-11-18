@@ -1,22 +1,25 @@
+<app-notification-self-closing header="Info" description="Student created!"></app-notification-self-closing>
+
 <div class="page-header">
   <h2 class="text-center text-uppercase text-info">Add new student:</h2>
 </div>
 <div class="panel">
   <form class="form-horizontal">
 
-    <app-input-form-group [(itemValue)]="name" [(itemInfo)]="nameInfo" itemName="Name"
-      (changeItemValue)="changeItemValue($event, 'name')"></app-input-form-group>
-    <app-input-form-group [(itemValue)]="lastName" [(itemInfo)]="lastNameInfo" itemName="Last name"
-      (changeItemValue)="changeItemValue($event, 'lastName')">
+    <app-input-form-group [(itemInfo)]="nameInfo" itemName="Name" (changeItemValue)="changeItemValue($event, 'name')"
+      dataType="only letters" maxLength="10"></app-input-form-group>
+    <app-input-form-group [(itemInfo)]="lastNameInfo" itemName="Last name"
+      (changeItemValue)="changeItemValue($event, 'lastName')" dataType="only letters" maxLength="10">
     </app-input-form-group>
-    <app-input-form-group [(itemValue)]="age" [(itemInfo)]="ageInfo" itemName="Age"
-      (changeItemValue)="changeItemValue($event, 'age')"></app-input-form-group>
-    <app-input-form-group [(itemValue)]="address" [(itemInfo)]="addressInfo" itemName="Address"
-      (changeItemValue)="changeItemValue($event, 'address')"></app-input-form-group>
+    <app-input-form-group [(itemInfo)]="ageInfo" itemName="Age" (changeItemValue)="changeItemValue($event, 'age')"
+      dataType="only numbers" maxLength="2"></app-input-form-group>
+    <app-input-form-group [(itemInfo)]="addressInfo" itemName="Address"
+      (changeItemValue)="changeItemValue($event, 'address')" dataType="only numbers, letters and spaces" maxLength="30">
+    </app-input-form-group>
 
     <div class="form-group">
       <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
-        <button type="button" (click)="addNewStudent(name, lastName, age, address)" class="btn btn-info">ADD</button>
+        <button type="button" (click)="addNewStudent()" class="btn btn-info">ADD</button>
       </div>
     </div>
   </form>

@@ -6,9 +6,8 @@
         <div (click)="findStudent()" class="input-group-addon search-icon">
           <i class="fa fa-search fa-fw" aria-hidden="true"></i>
         </div>
-        <input (keydown)="checkEnteredValue($event)" name="searchValue" [(ngModel)]="searchValue"
-          [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Search"
-          autocomplete="off">
+        <input type="text" class="form-control" placeholder="Search" (keydown)="checkEnteredValue($event)"
+          name="searchValue" [(ngModel)]="searchValue" [ngModelOptions]="{standalone: true}" autocomplete="off">
       </div>
     </div>
     <button type="button" (click)="findStudent()"

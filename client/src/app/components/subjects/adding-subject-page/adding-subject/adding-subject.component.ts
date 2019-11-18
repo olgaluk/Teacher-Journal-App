@@ -4,6 +4,8 @@ import { SubjectsTableService } from '../../../../common/services/subjects/subje
 import { Router } from '@angular/router';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { NotificationSelfClosingComponent }
+  from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { Teacher } from '../../../../common/entities/teacher';
 
@@ -21,19 +23,15 @@ export class AddingSubjectComponent implements OnInit {
   @ViewChild(ModalComponent, { static: false })
   private templateModalComponent: ModalComponent;
 
-  subject: string;
+  @ViewChild(NotificationSelfClosingComponent, { static: false })
+  private notification: NotificationSelfClosingComponent;
+
+  subject: string = '';
   cabinet: number;
-  description: string;
+  description: string = '';
 
-  subjectCorrectness: boolean = false;
-  cabinetCorrectness: boolean = false;
-
-  subjectInfo: string = "";
-  cabinetInfo: string = "";
-
-  subjectRegExp: any = /^[a-zA-Z/\s]+$/;
-  cabinetRegExp: any = /^[0-9]+$/;
-  firstLetterUppercaseRegExp: any = /^[A-Z]/;
+  subjectInfo: string = '';
+  cabinetInfo: string = '';
 
   teachersAll: Teacher[] = [];
   buttonInfo: string = "Back to subject list";
@@ -59,35 +57,14 @@ export class AddingSubjectComponent implements OnInit {
 
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "subject") {
+      if (valueItem) valueItem.toLowerCase();
       this.subject = valueItem;
-      this.checkSubjectCorrectness(valueItem);
     }
     if (itemName === "cabinet") {
-      this.cabinet = valueItem;
-      this.checkCabinetCorrectness(valueItem);
+      this.cabinet = +valueItem;
     }
     if (itemName === "description") {
       this.description = valueItem;
-    }
-  }
-
-  checkSubjectCorrectness(valueItem: any): void {
-    if (!this.subjectRegExp.test(valueItem) && valueItem) {
-      this.subjectInfo = this.messageForSubject[0];
-      this.subjectCorrectness = false;
-    } else if (this.subjectRegExp.test(valueItem)) {
-      this.subjectInfo = "";
-      this.subjectCorrectness = true;
-    }
-  }
-
-  checkCabinetCorrectness(valueItem: any): void {
-    if (!this.cabinetRegExp.test(valueItem) && valueItem) {
-      this.cabinetInfo = this.messageForCabinet[0];
-      this.cabinetCorrectness = false;
-    } else if (this.cabinetRegExp.test(valueItem)) {
-      this.cabinetInfo = "";
-      this.cabinetCorrectness = true;
     }
   }
 
@@ -97,9 +74,6 @@ export class AddingSubjectComponent implements OnInit {
       return false;
     } else if (subject.length < 4) {
       this.subjectInfo = this.messageForSubject[2];
-      return false;
-    } else if (subject.length > 15) {
-      this.subjectInfo = this.messageForSubject[3];
       return false;
     } else {
       return true;
@@ -113,33 +87,27 @@ export class AddingSubjectComponent implements OnInit {
     } else if (cabinet < 1) {
       this.cabinetInfo = this.messageForCabinet[1];
       return false;
-    } else if (cabinet > 20) {
-      this.cabinetInfo = this.messageForCabinet[2];
-      return false;
     } else {
       return true;
     }
   }
 
   addNewSubject(
-    subject: string,
-    cabinet: number,
-    teachersID: string[],
-    description: string
+    teachersID: string[]
   ): void {
-    let newDescription: string;
-    description ? newDescription = description : newDescription = "";
     let newTeachersID: string[];
     teachersID ? newTeachersID = teachersID : newTeachersID = [];
 
-    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(subject);
-    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(cabinet);
+    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(this.subject);
+    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(this.cabinet);
 
-    const conditionForAdding: boolean = (this.subjectCorrectness && subjectLengthCondition &&
-      this.cabinetCorrectness && cabinetLengthCondition);
+    const conditionForAdding: boolean = (subjectLengthCondition && cabinetLengthCondition);
     if (conditionForAdding) {
-      this.subjectsTableService.addNewSubject(subject, cabinet, newTeachersID, newDescription)
-        .subscribe(() => this.router.navigate(['/subjects']));
+      this.subjectsTableService.addNewSubject(this.subject, this.cabinet, newTeachersID, this.description)
+        .subscribe(() => {
+          this.notification.openNotification();
+          setTimeout(() => this.router.navigate(['/subjects']), 4000);
+        });
     } else {
       this.templateModalComponent.openModal();
     }

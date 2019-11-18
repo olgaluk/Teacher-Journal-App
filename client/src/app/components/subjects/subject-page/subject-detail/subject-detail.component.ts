@@ -185,22 +185,9 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  checkContent($event: any): void {
-    this.visibilitySaveButton = true;
-    if (!this.markRegExp.test($event.target.innerText)) {
-      $event.target.innerText = $event.target.innerText.replace(/[^0-9]+/g, '');;
-    } else if (+$event.target.innerText === 10) {
-      $event.target.innerText = $event.target.innerText.slice(0, 2);
-    } else if (+$event.target.innerText > 10 && +$event.target.innerText !== 10) {
-      $event.target.innerText = $event.target.innerText.slice(0, 1);
-    }
-  }
-
-  saveContent($event: any, date: string, studentId: string): void {
+  saveContent(inputValue: string, date: string, studentId: string): void {
     let markValue: number;
-    $event.target.innerText ? markValue = +$event.target.innerText : markValue = NaN;
-    if (markValue || markValue === 0) $event.target.innerText = markValue;
-    if (isNaN(markValue)) $event.target.innerText = "";
+    inputValue ? markValue = +inputValue : markValue = NaN;
     const studentIncludeDate: boolean = this.students
       .find(student => student._id === studentId)
       .academicPerformance

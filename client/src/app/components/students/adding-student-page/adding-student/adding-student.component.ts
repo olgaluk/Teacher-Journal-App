@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { StudentsTableService } from '../../../../common/services/students/students-table.service';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { NotificationSelfClosingComponent }
+  from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { INFO_MESSAGE_FOR_NAME } from '../../../../common/constants/info-message-for-name';
 import { INFO_MESSAGE_FOR_LAST_NAME } from '../../../../common/constants/info-message-for-last-name';
@@ -21,27 +23,18 @@ export class AddingStudentComponent {
   @ViewChild(ModalComponent, { static: false })
   private templateModalComponent: ModalComponent;
 
+  @ViewChild(NotificationSelfClosingComponent, { static: false })
+  private notification: NotificationSelfClosingComponent;
+
   name: string = "";
   lastName: string = "";
   age: number;
   address: string = "";
 
-  nameCorrectness: boolean = false;
-  lastNameCorrectness: boolean = false;
-  ageCorrectness: boolean = false;
-  addressCorrectness: boolean = false;
-
   nameInfo: string = "";
   lastNameInfo: string = "";
   ageInfo: string = "";
   addressInfo: string = "";
-
-  nameRegExp: any = /^[a-zA-Z/\s]+$/;
-  spaceRegExp: any = /\s/;
-  firstLetterUppercaseRegExp: any = /^[A-Z]/;
-  lastNameRegExp: any = /^[a-zA-Z-/\s]+$/;
-  ageRegExp: any = /^[0-9/\s]+$/;
-  addressRegExp: any = /^[a-zA-Z0-9,/\s]+$/;
 
   messageForName: string[] = INFO_MESSAGE_FOR_NAME;
   messageForLastName: string[] = INFO_MESSAGE_FOR_LAST_NAME;
@@ -58,83 +51,15 @@ export class AddingStudentComponent {
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "name") {
       this.name = valueItem;
-      this.checkNameCorrectness(valueItem);
     }
     if (itemName === "lastName") {
       this.lastName = valueItem;
-      this.checkLastNameCorrectness(valueItem);
     }
     if (itemName === "age") {
-      this.age = valueItem;
-      this.checkAgeCorrectness(valueItem);
+      this.age = +valueItem;
     }
     if (itemName === "address") {
-      this.address = valueItem;
-      this.checkAddressCorrectness(valueItem);
-    }
-  }
-
-  checkNameCorrectness(valueItem: any): void {
-    if (!this.nameRegExp.test(valueItem) && valueItem) {
-      this.nameInfo = this.messageForName[0];
-      this.nameCorrectness = false;
-    } else if (this.spaceRegExp.test(valueItem) && valueItem) {
-      this.nameInfo = this.messageForName[1];
-      this.nameCorrectness = false;
-    } else if (!this.firstLetterUppercaseRegExp.test(valueItem) && valueItem) {
-      this.nameInfo = this.messageForName[2];
-      this.nameCorrectness = false;
-    } else if (!this.spaceRegExp.test(valueItem) &&
-      ((this.nameRegExp.test(valueItem)
-        && this.firstLetterUppercaseRegExp.test(valueItem)) || !valueItem)) {
-      this.nameInfo = "";
-      this.nameCorrectness = true;
-    }
-  }
-
-  checkLastNameCorrectness(valueItem: any): void {
-    if (!this.lastNameRegExp.test(valueItem) && valueItem) {
-      this.lastNameInfo = this.messageForLastName[0];
-      this.lastNameCorrectness = false;
-    } else if (this.spaceRegExp.test(valueItem) && valueItem) {
-      this.lastNameInfo = this.messageForLastName[1];
-      this.lastNameCorrectness = false;
-    } else if (!this.firstLetterUppercaseRegExp.test(valueItem) && valueItem) {
-      this.lastNameInfo = this.messageForLastName[2];
-      this.lastNameCorrectness = false;
-    } else if (!this.spaceRegExp.test(valueItem) &&
-      ((this.lastNameRegExp.test(valueItem)
-        && this.firstLetterUppercaseRegExp.test(valueItem)) || !valueItem)) {
-      this.lastNameInfo = "";
-      this.lastNameCorrectness = true;
-    }
-  }
-
-  checkAgeCorrectness(valueItem: any): void {
-    if (!this.ageRegExp.test(valueItem) && valueItem) {
-      this.ageInfo = this.messageForAge[0];
-      this.ageCorrectness = false;
-    } else if (this.spaceRegExp.test(valueItem) && valueItem) {
-      this.ageInfo = this.messageForAge[1];
-      this.ageCorrectness = false;
-    } else if (!this.spaceRegExp.test(valueItem) &&
-      (this.ageRegExp.test(valueItem) || !valueItem)) {
-      this.ageInfo = "";
-      this.ageCorrectness = true;
-    }
-  }
-
-  checkAddressCorrectness(valueItem: any): void {
-    if (!this.addressRegExp.test(valueItem) && valueItem) {
-      this.addressInfo = this.messageForAddress[0];
-      this.addressCorrectness = false;
-    } else if (!this.firstLetterUppercaseRegExp.test(valueItem) && valueItem) {
-      this.addressInfo = this.messageForAddress[1];
-      this.addressCorrectness = false;
-    } else if (this.addressRegExp.test(valueItem)
-      && this.firstLetterUppercaseRegExp.test(valueItem)) {
-      this.addressInfo = "";
-      this.addressCorrectness = true;
+      this.address = valueItem.trim();
     }
   }
 
@@ -144,9 +69,6 @@ export class AddingStudentComponent {
       return false;
     } else if (name.length < 2) {
       this.nameInfo = this.messageForName[3];
-      return false;
-    } else if (name.length > 15) {
-      this.nameInfo = this.messageForName[4];
       return false;
     } else {
       return true;
@@ -159,9 +81,6 @@ export class AddingStudentComponent {
       return false;
     } else if (lastName.length < 2) {
       this.lastNameInfo = this.messageForLastName[3];
-      return false;
-    } else if (lastName.length > 20) {
-      this.lastNameInfo = this.messageForLastName[4];
       return false;
     } else {
       return true;
@@ -190,34 +109,24 @@ export class AddingStudentComponent {
     } else if (address.length < 6) {
       this.addressInfo = this.messageForAddress[2];
       return false;
-    } else if (address.length > 30) {
-      this.addressInfo = this.messageForAddress[3];
-      return false;
     } else {
       return true;
     }
   }
 
-  addNewStudent(
-    name: string,
-    lastName: string,
-    age: number | null,
-    address: string
-  ): void {
-    const nameLengthCondition: boolean = this.checkNameLengthCondition(name);
-    const lastNameLengthCondition: boolean = this.checkLastNameLengthCondition(lastName);
-    const ageRestrictionsCondition: boolean = this.checkAgeRestrictionsCondition(age);
-    const addressLengthCondition: boolean = this.checkAddressLengthCondition(address);
+  addNewStudent(): void {
+    const nameLengthCondition: boolean = this.checkNameLengthCondition(this.name);
+    const lastNameLengthCondition: boolean = this.checkLastNameLengthCondition(this.lastName);
+    const ageRestrictionsCondition: boolean = this.checkAgeRestrictionsCondition(this.age);
+    const addressLengthCondition: boolean = this.checkAddressLengthCondition(this.address);
 
-    const conditionForAdding: boolean = (this.nameCorrectness && nameLengthCondition &&
-      this.lastNameCorrectness && lastNameLengthCondition &&
-      this.ageCorrectness && ageRestrictionsCondition &&
-      this.addressCorrectness && addressLengthCondition);
+    const conditionForAdding: boolean = (nameLengthCondition && lastNameLengthCondition &&
+      ageRestrictionsCondition && addressLengthCondition);
     if (conditionForAdding) {
-      this.studentsTableService.addNewStudent(name, lastName, age, address)
+      this.studentsTableService.addNewStudent(this.name, this.lastName, this.age, this.address)
         .subscribe(() => {
-          alert('Student created');
-          this.router.navigate(['/students']);
+          this.notification.openNotification();
+          setTimeout(() => this.router.navigate(['/students']), 4000);
         });
     } else {
       this.templateModalComponent.openModal();
