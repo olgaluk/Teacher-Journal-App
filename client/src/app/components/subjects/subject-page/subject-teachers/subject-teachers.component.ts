@@ -13,10 +13,8 @@ import { Teacher } from '../../../../common/entities/teacher';
   styleUrls: ['./subject-teachers.component.scss']
 })
 export class SubjectTeachersComponent implements OnInit {
-
   subjectName: string;
   teachers: Teacher[] = [];
-  buttonInfo: string = "Back to subject list";
 
   constructor(private subjectsTableService: SubjectsTableService, private activateRoute: ActivatedRoute) {
     this.subjectName = activateRoute.snapshot.params['id'];

@@ -1,6 +1,6 @@
 export class Mark {
   constructor(
     public date: string,
-    public value: number
+    public value: number | null
   ) { }
 }

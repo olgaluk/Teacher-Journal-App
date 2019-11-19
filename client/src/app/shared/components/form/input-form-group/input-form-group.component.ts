@@ -25,6 +25,10 @@ export class InputFormGroupComponent implements OnInit {
     if (this.itemValue) this.inputValue = this.itemValue;
   }
 
+  reset(): void {
+    this.inputValue = '';
+  }
+
   onItemValueChange($event: any): void {
     this.itemInfo = '';
     if (this.dataType === 'only letters') {
@@ -44,6 +48,14 @@ export class InputFormGroupComponent implements OnInit {
         .split(' ')
         .join('');
     }
+    if (this.dataType === 'mark') {
+      this.inputValue = $event.target.value = $event.target.value
+        .replace(/[^0-9]/g, '')
+        .split(' ')
+        .join('');
+      this.inputValue = $event.target.value =
+        +$event.target.value > 10 ? '10' : $event.target.value;
+    }
     if (this.dataType === 'only numbers, letters and spaces') {
       this.inputValue = $event.target.value = $event.target.value
         .replace(/[^A-Za-z0-9 .,]/g, '')
@@ -60,6 +72,7 @@ export class InputFormGroupComponent implements OnInit {
         .replace(/\s{2,}/g, ' ')
         .split(' ')
         .map(name => name !== '' ? name[0].toUpperCase() + name.slice(1).toLowerCase() : name)
+        .filter((item, index) => !(index > 1))
         .join(' ');
     }
 

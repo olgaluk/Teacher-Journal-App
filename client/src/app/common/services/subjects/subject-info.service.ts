@@ -62,7 +62,7 @@ export class SubjectInfoService {
         }
       });
 
-    return !isNaN(markValue) ? markValue : "";
+    return markValue !== null ? markValue : "";
   }
 
   addNewColumn(
@@ -77,7 +77,7 @@ export class SubjectInfoService {
           .map(studentInfo => {
             if (studentInfo.subjectId === subjectId
               && studentInfo.teacherId === teacherId) {
-              studentInfo.marks.push(new Mark("", NaN))
+              studentInfo.marks.push(new Mark("", null))
             }
             return studentInfo;
           });

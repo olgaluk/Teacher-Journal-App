@@ -11,8 +11,6 @@ import { Student } from '../../../../common/entities/student';
 })
 export class StudentsTableComponent implements OnInit {  
   students: Student[] = [];
-  buttonInfo: string = "Add new student";
-
   constructor(private studentsTableService: StudentsTableService) { }
 
   ngOnInit(): void {

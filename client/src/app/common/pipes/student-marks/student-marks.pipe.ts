@@ -12,7 +12,7 @@ export class StudentMarksPipe implements PipeTransform {
       .map(studentPerformance => studentPerformance.marks)
       .reduce((acc, marks) => acc.concat(marks), [])
       .map(mark => mark.value)
-      .filter(mark => !isNaN(mark));
+      .filter(mark => mark !== null);
     return marks;
   }
 

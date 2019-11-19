@@ -10,10 +10,7 @@ import { Subject } from '../../../../common/entities/subject';
   styleUrls: ['./subjects-table.component.scss']
 })
 export class SubjectsTableComponent implements OnInit {
-
   subjects: Subject[] = [];
-  buttonInfo: string = "Add new subject";
-
   constructor(private subjectsTableService: SubjectsTableService) { }
 
   ngOnInit(): void {

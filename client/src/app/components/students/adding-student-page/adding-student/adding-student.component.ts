@@ -36,12 +36,10 @@ export class AddingStudentComponent {
   ageInfo: string = "";
   addressInfo: string = "";
 
-  messageForName: string[] = INFO_MESSAGE_FOR_NAME;
-  messageForLastName: string[] = INFO_MESSAGE_FOR_LAST_NAME;
-  messageForAge: string[] = INFO_MESSAGE_FOR_AGE;
-  messageForAddress: string[] = INFO_MESSAGE_FOR_ADDRESS;
-
-  buttonInfo: string = "Back to student list";
+  messageForName: any = INFO_MESSAGE_FOR_NAME;
+  messageForLastName: any = INFO_MESSAGE_FOR_LAST_NAME;
+  messageForAge: any = INFO_MESSAGE_FOR_AGE;
+  messageForAddress: any = INFO_MESSAGE_FOR_ADDRESS;
 
   constructor(
     private router: Router,
@@ -65,63 +63,67 @@ export class AddingStudentComponent {
 
   checkNameLengthCondition(name: string): boolean {
     if (!name) {
-      this.nameInfo = this.messageForName[5];
+      this.nameInfo = this.messageForName.emptyField;
       return false;
-    } else if (name.length < 2) {
-      this.nameInfo = this.messageForName[3];
-      return false;
-    } else {
-      return true;
     }
+    if (name.length < 2) {
+      this.nameInfo = this.messageForName.lengthBottomLine;
+      return false;
+    }
+    return true;
   }
 
   checkLastNameLengthCondition(lastName: string): boolean {
     if (!lastName) {
-      this.lastNameInfo = this.messageForLastName[5];
+      this.lastNameInfo = this.messageForLastName.emptyField;
       return false;
-    } else if (lastName.length < 2) {
-      this.lastNameInfo = this.messageForLastName[3];
-      return false;
-    } else {
-      return true;
     }
+    if (lastName.length < 2) {
+      this.lastNameInfo = this.messageForLastName.lengthBottomLine;
+      return false;
+    }
+    return true;
   }
 
   checkAgeRestrictionsCondition(age: number | null): boolean {
-    if (!age) {
-      this.ageInfo = this.messageForAge[4];
+    if (!age && age !== 0) {
+      this.ageInfo = this.messageForAge.emptyField;
       return false;
-    } else if (age < 17) {
-      this.ageInfo = this.messageForAge[2];
-      return false;
-    } else if (age > 24) {
-      this.ageInfo = this.messageForAge[3];
-      return false;
-    } else {
-      return true;
     }
+    if (age < 17) {
+      this.ageInfo = this.messageForAge.valueBottomLine;
+      return false;
+    }
+    if (age > 24) {
+      this.ageInfo = this.messageForAge.valueTopLine;
+      return false;
+    }
+    return true;
   }
 
   checkAddressLengthCondition(address: string): boolean {
     if (!address) {
-      this.addressInfo = this.messageForAddress[4];
+      this.addressInfo = this.messageForAddress.emptyField;
       return false;
-    } else if (address.length < 6) {
-      this.addressInfo = this.messageForAddress[2];
-      return false;
-    } else {
-      return true;
     }
+    if (address.length < 6) {
+      this.addressInfo = this.messageForAddress.valueBottomLine;
+      return false;
+    }
+    return true;
   }
 
-  addNewStudent(): void {
+  checkNewStudentParameters(): boolean {
     const nameLengthCondition: boolean = this.checkNameLengthCondition(this.name);
     const lastNameLengthCondition: boolean = this.checkLastNameLengthCondition(this.lastName);
     const ageRestrictionsCondition: boolean = this.checkAgeRestrictionsCondition(this.age);
     const addressLengthCondition: boolean = this.checkAddressLengthCondition(this.address);
-
-    const conditionForAdding: boolean = (nameLengthCondition && lastNameLengthCondition &&
+    return (nameLengthCondition && lastNameLengthCondition &&
       ageRestrictionsCondition && addressLengthCondition);
+  }
+
+  addNewStudent(): void {
+    const conditionForAdding: boolean = this.checkNewStudentParameters();
     if (conditionForAdding) {
       this.studentsTableService.addNewStudent(this.name, this.lastName, this.age, this.address)
         .subscribe(() => {

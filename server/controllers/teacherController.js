@@ -8,7 +8,7 @@ exports.teachers_from_subject_get = (req, res, next) => {
     const { teachersID } = req.query;
     const id = JSON.parse(teachersID);
 
-    Teacher.find({ _id: { $in: id } })
+    Teacher.find({ id: { $in: id } })
       .then((result) => {
         res.status(200).send(result);
       })
@@ -32,9 +32,9 @@ exports.teachers_list_get = (req, res) => {
 
 
 exports.teacher_by_id_get = (req, res) => {
-  const _id = req.params[0];
+  const id = req.params[0];
 
-  Teacher.findOne({ _id })
+  Teacher.findOne({ id })
     .then((result) => {
       if (result) {
         res.status(200).send(result);
@@ -52,7 +52,7 @@ exports.teachers_from_other_subjects_get = (req, res) => {
   const { teachersID } = req.query;
   const id = JSON.parse(teachersID);
 
-  Teacher.find({ _id: { $nin: id } })
+  Teacher.find({ id: { $nin: id } })
     .then((result) => {
       if (result) {
         res.status(200).send(result);

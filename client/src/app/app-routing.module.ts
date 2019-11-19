@@ -27,7 +27,6 @@ import { NotFoundPageComponent } from './components/not-found/not-found-page/not
 
 import { ButtonAddComponent } from './shared/components/button/button-add/button-add.component';
 import { InputFormGroupComponent } from './shared/components/form/input-form-group/input-form-group.component';
-import { SelectFormGroupComponent } from './shared/components/form/select-form-group/select-form-group.component';
 import { ModalComponent } from './shared/components/modal/modal.component';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs/breadcrumbs.component';
 import { ModalContentComponent } from './shared/components/modal-content/modal-content.component';
@@ -56,7 +55,6 @@ import { ROUTES } from "./app.routers";
     NotFoundPageComponent,
     ButtonAddComponent,
     InputFormGroupComponent,
-    SelectFormGroupComponent,
     SubjectDetailComponent,
     AddingSubjectComponent,
     AddingStudentComponent,
@@ -82,7 +80,6 @@ import { ROUTES } from "./app.routers";
     NotFoundPageComponent,
     ButtonAddComponent,
     InputFormGroupComponent,
-    SelectFormGroupComponent,
     SubjectDetailComponent,
     SubjectTeachersComponent,
     AddingSubjectComponent,

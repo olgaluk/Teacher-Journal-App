@@ -1,8 +1,6 @@
 import { Component, OnInit, AfterViewChecked, ViewChild } from '@angular/core';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
 import { Observable } from "rxjs";
 
@@ -13,13 +11,13 @@ import { SubjectInfoService } from '../../../../common/services/subjects/subject
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
-
 import { Mark } from '../../../../common/entities/mark';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
+import { MESSAGE_ABOUT_CHANGES } from '../../../../common/constants/message-about-changes';
 
 @Component({
   selector: 'app-subject-detail',
@@ -39,23 +37,20 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   private notification: NotificationSelfClosingComponent;
 
   saved: boolean = false;
-
-  bsModalRef: BsModalRef;
   visibilitySaveButton: boolean = false;
-  buttonInfo: string = "Back to subject list";
-  markRegExp: any = /^[0-9]+$/;
+  bsModalRef: BsModalRef;
 
   teacherTitle: string;
   itemSelected: string = "";
 
-  subjectName: string;
+  teacher: Teacher;
   teacherId: string;
   newTeacherId: string;
-
+  subjectName: string;
   subject: Subject;
-  teacher: Teacher;
   students: Student[] = [];
   dates: string[] = [];
+  messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   constructor(
     private subjectsTableService: SubjectsTableService,
@@ -91,10 +86,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   canDeactivate(): boolean | Observable<boolean> {
     if (!this.saved && this.visibilitySaveButton) {
-      return confirm(
-        `If you leave the page without saving the changes, they will be lost.
-      Are you sure you want to leave the page without saving the changes?`
-      );
+      return confirm(this.messageAboutChanges);
     } else {
       return true;
     }
@@ -187,7 +179,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   saveContent(inputValue: string, date: string, studentId: string): void {
     let markValue: number;
-    inputValue ? markValue = +inputValue : markValue = NaN;
+    inputValue ? markValue = +inputValue : markValue = null;
     const studentIncludeDate: boolean = this.students
       .find(student => student._id === studentId)
       .academicPerformance
@@ -242,7 +234,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .getTeachersFromOtherSubject(teachersIdBySubject)
       .subscribe((teachers: Teacher[]) => {
         const listNameTeachers = teachers
-          .map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher._id})`);
+          .map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher.id})`);
         const initialState = {
           list: listNameTeachers,
           title: 'Choose a new teacher:',
@@ -267,7 +259,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
               studentInfo.marks = studentInfo.marks
                 .map(mark => {
-                  if (isNaN(mark.value) || mark.value == null) {
+                  if (mark.value === null) {
                     return null;
                   }
                   return mark;

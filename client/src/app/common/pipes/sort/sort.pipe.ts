@@ -30,7 +30,7 @@ export class SortPipe implements PipeTransform {
       .map(studentPerformance => studentPerformance.marks)
       .reduce((acc, marks) => acc.concat(marks), [])
       .map(mark => mark.value)
-      .filter(mark => mark != null);
+      .filter(mark => mark !== null);
     return studentMarks ? studentMarks : -1;
   }
 }

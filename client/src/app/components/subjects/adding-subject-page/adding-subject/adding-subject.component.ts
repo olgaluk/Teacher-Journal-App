@@ -34,10 +34,9 @@ export class AddingSubjectComponent implements OnInit {
   cabinetInfo: string = '';
 
   teachersAll: Teacher[] = [];
-  buttonInfo: string = "Back to subject list";
 
-  messageForSubject: string[] = INFO_MESSAGE_FOR_SUBJECT;
-  messageForCabinet: string[] = INFO_MESSAGE_FOR_CABINET;
+  messageForSubject: any = INFO_MESSAGE_FOR_SUBJECT;
+  messageForCabinet: any = INFO_MESSAGE_FOR_CABINET;
 
   constructor(
     private router: Router,
@@ -70,26 +69,36 @@ export class AddingSubjectComponent implements OnInit {
 
   checkSubjectLengthCondition(subject: string): boolean {
     if (!subject) {
-      this.subjectInfo = this.messageForSubject[4];
+      this.subjectInfo = this.messageForSubject.emptyField;
       return false;
-    } else if (subject.length < 4) {
-      this.subjectInfo = this.messageForSubject[2];
-      return false;
-    } else {
-      return true;
     }
+    if (subject.length < 4) {
+      this.subjectInfo = this.messageForSubject.lengthBottomLine;
+      return false;
+    }
+    return true;
   }
 
   checkCabinetLengthCondition(cabinet: number): boolean {
-    if (!cabinet) {
-      this.cabinetInfo = this.messageForCabinet[3];
+    if (!cabinet && cabinet !== 0) {
+      this.cabinetInfo = this.messageForCabinet.emptyField;
       return false;
-    } else if (cabinet < 1) {
-      this.cabinetInfo = this.messageForCabinet[1];
-      return false;
-    } else {
-      return true;
     }
+    if (cabinet < 1) {
+      this.cabinetInfo = this.messageForCabinet.valueBottomLine;
+      return false;
+    }
+    if (cabinet > 30) {
+      this.cabinetInfo = this.messageForCabinet.valueTopLine;
+      return false;
+    }
+    return true;
+  }
+
+  checkNewSubjectParameters(): boolean {
+    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(this.subject);
+    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(this.cabinet);
+    return (subjectLengthCondition && cabinetLengthCondition);
   }
 
   addNewSubject(
@@ -97,11 +106,7 @@ export class AddingSubjectComponent implements OnInit {
   ): void {
     let newTeachersID: string[];
     teachersID ? newTeachersID = teachersID : newTeachersID = [];
-
-    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(this.subject);
-    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(this.cabinet);
-
-    const conditionForAdding: boolean = (subjectLengthCondition && cabinetLengthCondition);
+    const conditionForAdding: boolean = this.checkNewSubjectParameters();
     if (conditionForAdding) {
       this.subjectsTableService.addNewSubject(this.subject, this.cabinet, newTeachersID, this.description)
         .subscribe(() => {

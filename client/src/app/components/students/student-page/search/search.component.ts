@@ -1,4 +1,7 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+
+import { InputFormGroupComponent }
+  from '../../../../shared/components/form/input-form-group/input-form-group.component';
 
 @Component({
   selector: 'app-search',
@@ -9,13 +12,11 @@ export class SearchComponent {
   searchValue: string = '';
   @Output() searchStudents = new EventEmitter<any>();
 
-  checkEnteredValue($event: any): void {
-    if (!((($event.keyCode >= 65) && ($event.keyCode <= 90)) || ($event.keyCode < 48))) {
-      $event.returnValue = false;
-    }
-    if ($event.keyCode === 32) {
-      $event.returnValue = $event.target.value.match(/\s{1,}/g) === null;
-    }
+  @ViewChild(InputFormGroupComponent, { static: false })
+  private inputComponent: InputFormGroupComponent;
+
+  getEnteredValue($event: string): void {
+    this.searchValue = $event;
   }
 
   findStudent(): void {
@@ -25,5 +26,6 @@ export class SearchComponent {
   reset(): void {
     this.searchValue = '';
     this.findStudent();
+    this.inputComponent.reset();
   }
 }

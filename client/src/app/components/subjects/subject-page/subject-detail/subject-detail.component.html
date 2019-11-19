@@ -27,7 +27,7 @@
       column</button>
   </div>
 
-  <table class="table table-bordered table-striped">
+  <table class="table table-bordered">
     <thead>
       <tr class="text-info text-uppercase">
         <th>Name</th>
@@ -41,13 +41,14 @@
     </thead>
     <tbody>
       <tr *ngFor="let student of students">
-        <td [style.verticalAlign]="'middle'">{{ student.name }}</td>
-        <td [style.verticalAlign]="'middle'">{{ student.lastName }}</td>
-        <td [style.verticalAlign]="'middle'">{{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
+        <td>{{ student.name }}</td>
+        <td>{{ student.lastName }}</td>
+        <td>
+          {{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
         <td *ngFor="let date of dates">
           <app-input-form-group [appHighlightingMark]="getMark(student._id, date)"
             itemValue="{{ getMark(student._id, date) }}" (changeItemValue)="saveContent($event, date, student._id)"
-            dataType="only numbers" maxLength="2" class="col-sm-12 col-md-12 col-lg-12">
+            dataType="mark" maxLength="2">
           </app-input-form-group>
         </td>
       </tr>
@@ -59,7 +60,7 @@
 
 <div class="row">
   <a routerLink="/subjects">
-    <app-button-add [value]="buttonInfo"></app-button-add>
+    <app-button-add value="Back to subject list"></app-button-add>
   </a>
 </div>
 
