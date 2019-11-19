@@ -1,0 +1,77 @@
+<app-notification-self-closing header="Info" description="Changes saved successfully!"></app-notification-self-closing>
+
+<div class="container-marks">
+  <div class="page-header">
+    <div class="row">
+      <h2 class="text-center text-info">{{subjectName | uppercase}}</h2>
+    </div>
+
+    <div class="panel"></div>
+
+    <div class="row">
+      <h4 class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
+        Teacher: {{teacherTitle | uppercase}}</h4>
+      <button type="button" (click)="openModalWithComponent()"
+        class="btn btn-info col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Change
+        teacher</button>
+    </div>
+
+    <div class="row">
+      <h4 class="text-center text-uppercase text-info">Cabinet: {{subject ? subject.cabinet : ""}}</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <button type="button" (click)="addColumn()"
+      class="btn btn-info col-sm-offset-4 col-sm-4 col-md-offset-5 col-md-2 col-lg-offset-8 col-lg-2">Add new
+      column</button>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr class="text-info text-uppercase">
+        <th>Name</th>
+        <th>Last Name</th>
+        <th>Average Mark</th>
+        <th *ngFor="let date of dates; let count = index">
+          <app-datepicker [valueDate]="date" [dates]="dates" (onChangedDate)="onChangedDate($event, count)">
+          </app-datepicker>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students">
+        <td>{{ student.name }}</td>
+        <td>{{ student.lastName }}</td>
+        <td>
+          {{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
+        <td *ngFor="let date of dates">
+          <app-input-form-group [appHighlightingMark]="getMark(student._id, date)"
+            itemValue="{{ getMark(student._id, date) }}" (changeItemValue)="saveContent($event, date, student._id)"
+            dataType="mark" maxLength="2">
+          </app-input-form-group>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="panel"></div>
+
+<div class="row">
+  <a routerLink="/subjects">
+    <app-button-add value="Back to subject list"></app-button-add>
+  </a>
+</div>
+
+<div class="panel"></div>
+
+<div class="row">
+  <button type="button" *ngIf="visibilitySaveButton" (click)="saveChanges()"
+    class="btn btn-danger col-sm-offset-4 col-sm-4 col-md-offset-5 col-md-2 col-lg-offset-8 col-lg-2">Save
+    changes</button>
+</div>
+
+<app-modal>
+  <h3 class="text-info">Please fill in the fields with dates. Date cannot be empty.</h3>
+</app-modal>

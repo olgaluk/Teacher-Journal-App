@@ -1,0 +1,61 @@
+.container {
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  width: 316px;
+  height: 113px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background-color: rgba(209, 253, 192, 0.58);
+  color: #08361d;
+  z-index: 9999;
+  right: 20px;
+  -webkit-animation: emersion 6s linear infinite;
+  animation: emersion 6s linear infinite;
+}
+
+.header-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.close-button {
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #08361d;
+}
+
+.content {
+  color: #08361d;
+  padding: 1rem;
+  border-top: 1px solid #123013;
+  font-size: 17px;
+}
+
+@keyframes emersion {
+  0% {
+    opacity: 0;
+    top: -113px;
+  }
+  10% {
+    opacity: 1;
+    top: 20px;
+  }
+  60% {
+    opacity: 1;
+    top: 20px;
+  }
+  100% {
+    opacity: 0;
+    top: 20px;
+  }
+}
