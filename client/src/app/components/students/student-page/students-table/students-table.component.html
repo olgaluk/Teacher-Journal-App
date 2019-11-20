@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let student of students; let count = index;">
+      <tr *ngFor="let student of students$ | async; let count = index;">
         <td>{{count + 1}}</td>
         <td>{{student.name}}</td>
         <td>{{student.lastName}}</td>

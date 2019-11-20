@@ -72,7 +72,7 @@ export class InputFormGroupComponent implements OnInit {
         .replace(/\s{2,}/g, ' ')
         .split(' ')
         .map(name => name !== '' ? name[0].toUpperCase() + name.slice(1).toLowerCase() : name)
-        .filter((item, index) => !(index > 1))
+        .filter((item, index) => index < 2)
         .join(' ');
     }
 
