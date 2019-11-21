@@ -13,6 +13,13 @@ export const subjectReducers = (
       };
     }
 
+    case ESubjectActions.SaveSelectedSubject: {
+      return {
+        ...state,
+        selectedSubject: action.payload
+      }
+    }
+
     default:
       return state;
   }

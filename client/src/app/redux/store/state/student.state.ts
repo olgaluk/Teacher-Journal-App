@@ -2,10 +2,12 @@ import { Student } from '../../../common/entities/student';
 
 export interface IStudentState {
   students: Student[];
-  selectedStudents: Student[];
+  selectedStudentsBySubject: Student[];
+  searchedStudents: Student[];
 }
 
 export const initialStudentState: IStudentState = {
   students: null,
-  selectedStudents: null
+  selectedStudentsBySubject: null,
+  searchedStudents: null
 };

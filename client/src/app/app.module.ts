@@ -21,8 +21,10 @@ import { appReducers } from './redux/store/reducers/app.reducers';
 import { environment } from '../environments/environment';
 import { StudentEffects } from './redux/store/effects/student.effects';
 import { SubjectEffects } from './redux/store/effects/subject.effects';
-import { StudentsTableService } from './common/services/students/students-table.service';
+import { TeacherEffects } from './redux/store/effects/teacher.effects';
+import { HttpStudentService } from './common/services/students/http-student.service';
 import { SubjectsTableService } from './common/services/subjects/subjects-table.service';
+import { HttpTeacherService } from './common/services/teachers/http-teacher.service';
 
 @NgModule({
   declarations: [
@@ -37,14 +39,19 @@ import { SubjectsTableService } from './common/services/subjects/subjects-table.
     BrowserAnimationsModule,
     HttpClientModule,
     StoreModule.forRoot(appReducers),
-    EffectsModule.forRoot([StudentEffects, SubjectEffects]),
+    EffectsModule.forRoot([
+      StudentEffects,
+      SubjectEffects,
+      TeacherEffects
+    ]),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     !environment.production ? StoreDevtoolsModule.instrument() : []
   ],
   providers: [
     httpInterceptorProviders,
-    StudentsTableService,
-    SubjectsTableService
+    HttpStudentService,
+    SubjectsTableService,
+    HttpTeacherService
   ],
   bootstrap: [AppComponent]
 })

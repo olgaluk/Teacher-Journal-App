@@ -9,3 +9,8 @@ export const selectSubjectList = createSelector(
   selectSubjects,
   (state: ISubjectState) => state.subjects
 );
+
+export const selectSelectedSubject = createSelector(
+  selectSubjects,
+  (state: ISubjectState) => state.selectedSubject
+);

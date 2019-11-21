@@ -9,3 +9,13 @@ export const selectStudentList = createSelector(
   selectStudents,
   (state: IStudentState) => state.students
 );
+
+export const selectSearchedStudents = createSelector(
+  selectStudents,
+  (state: IStudentState) => state.searchedStudents
+);
+
+export const selectStudentListBySubject = createSelector(
+  selectStudents,
+  (state: IStudentState) => state.selectedStudentsBySubject
+)

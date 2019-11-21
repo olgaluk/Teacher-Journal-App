@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 import { Student } from '../../entities/student';
 
 @Injectable()
-export class StudentsTableService {
+export class HttpStudentService {
   url = 'http://localhost:3004';
 
   constructor(private http: HttpClient) { }
@@ -38,6 +38,18 @@ export class StudentsTableService {
       }));
   }
 
+  getStudentsByName(studentsName: string): Observable<Student[]> {
+    const url = `${this.url}/students/search`;
+    let params = new HttpParams()
+      .set('studentsName', `${studentsName}`);
+    const options = { params: params };
+    return this.http.get<Student[]>(url, options).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
+  }
+
   addNewStudent(
     name: string,
     lastName: string,
@@ -47,18 +59,6 @@ export class StudentsTableService {
     const body = { name, lastName, age, address, academicPerformance: [] };
     const url = `${this.url}/students`;
     return this.http.post<''>(url, body).pipe(
-      catchError(err => {
-        console.log('message:', err.statusText);
-        return throwError(err);
-      }));
-  }
-
-  getStudentsByName(studentsName: string): Observable<Student[]> {
-    const url = `${this.url}/students/search`;
-    let params = new HttpParams()
-      .set('studentsName', `${studentsName}`);
-    const options = { params: params };
-    return this.http.get<Student[]>(url, options).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);

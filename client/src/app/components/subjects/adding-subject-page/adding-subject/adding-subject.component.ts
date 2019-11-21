@@ -15,7 +15,6 @@ import { INFO_MESSAGE_FOR_CABINET } from '../../../../common/constants/info-mess
 @Component({
   selector: 'app-adding-subject',
   templateUrl: './adding-subject.component.html',
-  providers: [SubjectsTableService],
   styleUrls: ['./adding-subject.component.scss']
 })
 export class AddingSubjectComponent implements OnInit {

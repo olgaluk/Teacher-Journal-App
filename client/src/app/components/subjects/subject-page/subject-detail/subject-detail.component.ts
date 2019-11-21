@@ -5,7 +5,7 @@ import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-p
 import { Observable } from "rxjs";
 
 import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
-import { StudentsTableService } from '../../../../common/services/students/students-table.service';
+import { HttpStudentService } from '../../../../common/services/students/http-student.service';
 import { SubjectInfoService } from '../../../../common/services/subjects/subject-info.service';
 
 import { Subject } from '../../../../common/entities/subject';
@@ -23,8 +23,6 @@ import { MESSAGE_ABOUT_CHANGES } from '../../../../common/constants/message-abou
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
   providers: [
-    SubjectsTableService,
-    StudentsTableService,
     SubjectInfoService
   ],
   styleUrls: ['./subject-detail.component.scss']
@@ -54,7 +52,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   constructor(
     private subjectsTableService: SubjectsTableService,
-    private studentsTableService: StudentsTableService,
+    private httpStudentService: HttpStudentService,
     private subjectInfoService: SubjectInfoService,
     private activateRoute: ActivatedRoute,
     private modalService: BsModalService,
@@ -113,7 +111,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     teacherId: string,
     subjectId: string
   ): void {
-    this.studentsTableService
+    this.httpStudentService
       .getStudentsBySubjectAndTeacher(teacherId, subjectId)
       .subscribe((students: Student[]) => {
         this.students = students;

@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { StudentsTableService } from '../../../../common/services/students/students-table.service';
+import { HttpStudentService } from '../../../../common/services/students/http-student.service';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
@@ -15,7 +15,6 @@ import { INFO_MESSAGE_FOR_ADDRESS } from '../../../../common/constants/info-mess
 @Component({
   selector: 'app-adding-student',
   templateUrl: './adding-student.component.html',
-  providers: [StudentsTableService],
   styleUrls: ['./adding-student.component.scss']
 })
 export class AddingStudentComponent {
@@ -42,8 +41,8 @@ export class AddingStudentComponent {
   messageForAddress: any = INFO_MESSAGE_FOR_ADDRESS;
 
   constructor(
-    private router: Router,
-    private studentsTableService: StudentsTableService
+    private _router: Router,
+    private _httpStudentService: HttpStudentService
   ) { }
 
   changeItemValue(valueItem: any, itemName: string) {
@@ -125,10 +124,10 @@ export class AddingStudentComponent {
   addNewStudent(): void {
     const conditionForAdding: boolean = this.checkNewStudentParameters();
     if (conditionForAdding) {
-      this.studentsTableService.addNewStudent(this.name, this.lastName, this.age, this.address)
+      this._httpStudentService.addNewStudent(this.name, this.lastName, this.age, this.address)
         .subscribe(() => {
           this.notification.openNotification();
-          setTimeout(() => this.router.navigate(['/students']), 4000);
+          setTimeout(() => this._router.navigate(['/students']), 4000);
         });
     } else {
       this.templateModalComponent.openModal();
