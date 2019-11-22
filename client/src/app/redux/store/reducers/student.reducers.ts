@@ -27,6 +27,34 @@ export const studentReducers = (
       }
     }
 
+    case EStudentActions.AddNewStudentSuccess: {
+      const students = JSON.parse(JSON.stringify(state.students));
+      students.push(action.payload);
+
+      return {
+        ...state,
+        students
+      }
+    }
+
+    case EStudentActions.UpdateStudentsSuccess: {
+      const students = JSON.parse(JSON.stringify(state.students));
+      const modifiedStudents = action.payload;
+      modifiedStudents.forEach((modifiedStudent) => {
+        students.find(oldStudent => {
+          if (oldStudent._id === modifiedStudent._id) {
+            oldStudent = modifiedStudent;
+          }
+          return;
+        });
+      });
+
+      return {
+        ...state,
+        students
+      }
+    }
+
     default:
       return state;
   }

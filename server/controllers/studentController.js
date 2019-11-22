@@ -4,9 +4,9 @@ const Student = require('../db/models/Student');
 exports.student_create_post = (req, res) => {
   const createStudent = studentData => new Student(studentData).save();
   createStudent(req.body)
-    .then(() => {
+    .then((result) => {
       console.log('Student created');
-      res.status(201).json(null);
+      res.status(201).json(result);
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -58,7 +58,7 @@ exports.student_replacement_put = (req, res) => {
     return Student.updateOne(
       { _id: student._id },
       { academicPerformance: student.academicPerformance },
-      { upsert: false }
+      { upsert: true }
     );
   });
 

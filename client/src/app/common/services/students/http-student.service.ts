@@ -50,15 +50,22 @@ export class HttpStudentService {
       }));
   }
 
-  addNewStudent(
-    name: string,
-    lastName: string,
-    age: number | null,
-    address: string
-  ): Observable<{}> {
-    const body = { name, lastName, age, address, academicPerformance: [] };
+  addNewStudent(student: Student): Observable<Student> {
+    const body = student;
     const url = `${this.url}/students`;
-    return this.http.post<''>(url, body).pipe(
+    return this.http.post<Student>(url, body).pipe(
+      catchError(err => {
+        console.log('message:', err.statusText);
+        return throwError(err);
+      }));
+  }
+
+  updateStudents(
+    students: Student[]
+  ): Observable<Student[]> {
+    const url = `${this.url}/students`;
+    const body = { students: JSON.stringify(students) };
+    return this.http.put<Student[]>(url, body).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);

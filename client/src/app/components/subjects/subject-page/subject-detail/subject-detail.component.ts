@@ -4,8 +4,6 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
 import { Observable } from "rxjs";
 
-import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
-import { HttpStudentService } from '../../../../common/services/students/http-student.service';
 import { SubjectInfoService } from '../../../../common/services/subjects/subject-info.service';
 
 import { Subject } from '../../../../common/entities/subject';
@@ -18,6 +16,28 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 import { MESSAGE_ABOUT_CHANGES } from '../../../../common/constants/message-about-changes';
+
+
+import { Store, select } from '@ngrx/store';
+import { IAppState } from '../../../../redux/store/state/app.state';
+
+import {
+  GetTeachersFromOtherSubject,
+  GetSelectedTeacher
+} from '../../../../redux/store/actions/teacher.actions';
+import { UpdateStudents, GetStudentsBySelectedSubject, ISubjectAndTeacherId } from '../../../../redux/store/actions/student.actions';
+import {
+  UpdateSubjectTeachersId,
+  INewSubjectInfo,
+  GetSelectedSubject
+} from '../../../../redux/store/actions/subject.actions';
+
+import {
+  selectSelectedTeacher,
+  selectTeachersFromOtherSubjects
+} from '../../../../redux/store/selectors/teacher.selectors';
+import { selectSelectedSubject } from '../../../../redux/store/selectors/subject.selectors';
+import { selectStudentListBySubject } from '../../../../redux/store/selectors/student.selectors';
 
 @Component({
   selector: 'app-subject-detail',
@@ -51,20 +71,20 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   constructor(
-    private subjectsTableService: SubjectsTableService,
-    private httpStudentService: HttpStudentService,
-    private subjectInfoService: SubjectInfoService,
-    private activateRoute: ActivatedRoute,
+    private _store: Store<IAppState>,
+    private _subjectInfoService: SubjectInfoService,
     private modalService: BsModalService,
-    private router: Router
+    private _router: Router,
+    private _activateRoute: ActivatedRoute
   ) {
-    this.teacherId = activateRoute.snapshot.params['teacherId'];
-    this.newTeacherId = activateRoute.snapshot.params['teacherId'];
-    this.subjectName = activateRoute.snapshot.params['subjectName'];
+    this.teacherId = _activateRoute.snapshot.params['teacherId'];
+    this.newTeacherId = _activateRoute.snapshot.params['teacherId'];
+    this.subjectName = _activateRoute.snapshot.params['subjectName'];
   }
 
   ngOnInit() {
     this.getTeacher(this.teacherId);
+    this.getSubject();
   }
 
   ngAfterViewChecked() {
@@ -90,32 +110,39 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  getTeacher(teacherId: string): void {
-    this.subjectsTableService.getTeacherById(teacherId)
+  getTeacher(teacherId: string): void {   
+    this._store.dispatch(new GetSelectedTeacher(teacherId));
+      this._store
+      .select(selectSelectedTeacher)
       .subscribe((teacher: Teacher) => {
         this.teacher = teacher;
-        this.teacherTitle = `${teacher.name} ${teacher.lastName}`;
-        this.getSubject(this.subjectName);
+        this.teacherId = teacher.id;
+        this.newTeacherId = teacher.id;
+        this.teacherTitle = `${teacher.name} ${teacher.lastName}`;        
       });
   }
 
-  getSubject(subjectName: string): void {
-    this.subjectsTableService.getSubjectByName(subjectName)
+  getSubject(): void {
+    this._store.dispatch(new GetSelectedSubject(this.subjectName));
+    this._store
+      .pipe(select(selectSelectedSubject))
       .subscribe((subject: Subject) => {
         this.subject = subject;
-        this.getStudentsBySubjectAndTeacher(this.teacherId, subject._id);
+        this.getStudentsBySubjectAndTeacher();
       });
   }
 
-  getStudentsBySubjectAndTeacher(
-    teacherId: string,
-    subjectId: string
-  ): void {
-    this.httpStudentService
-      .getStudentsBySubjectAndTeacher(teacherId, subjectId)
+  getStudentsBySubjectAndTeacher(): void {
+    const subjectAndTeacherId: ISubjectAndTeacherId = {
+      teacherId: this.teacherId,
+      subjectId: this.subject._id
+    };
+    this._store.dispatch(new GetStudentsBySelectedSubject(subjectAndTeacherId));
+    this._store
+      .pipe(select(selectStudentListBySubject))
       .subscribe((students: Student[]) => {
         this.students = students;
-        this.getDates(students, teacherId, subjectId);
+        this.getDates(students, this.teacherId, this.subject._id);
       });
   }
 
@@ -124,22 +151,21 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     teacherId: string,
     subjectId: string
   ): void {
-    this.dates = this.subjectInfoService
+    this.dates = this._subjectInfoService
       .getDates(students, teacherId, subjectId);
   }
 
   getMark(studentId: string, date: string): number | string {
-    return this.subjectInfoService
+    return this._subjectInfoService
       .getMark(studentId, date, this.subject._id, this.teacherId, this.students);
   }
 
   addColumn(): void {
     if (this.dates[this.dates.length - 1]) {
-      this.students = this.subjectInfoService
+      this.students = this._subjectInfoService
         .addNewColumn(this.students, this.teacherId, this.subject._id);
       this.getDates(this.students, this.teacherId, this.subject._id);
     }
-
     this.visibilitySaveButton = true;
   }
 
@@ -228,8 +254,9 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   openModalWithComponent(): void {
     const teachersIdBySubject: string[] = this.subject.teachersID;
-    this.subjectsTableService
-      .getTeachersFromOtherSubject(teachersIdBySubject)
+    this._store.dispatch(new GetTeachersFromOtherSubject(teachersIdBySubject));
+    this._store
+      .pipe(select(selectTeachersFromOtherSubjects))
       .subscribe((teachers: Teacher[]) => {
         const listNameTeachers = teachers
           .map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher.id})`);
@@ -243,47 +270,54 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       });
   }
 
+  deleteEmptyMarks(): void {
+    this.students = this.students.map(student => {
+      student.academicPerformance
+        .map(studentInfo => {
+
+          if (studentInfo.subjectId === this.subject._id
+            && studentInfo.teacherId === this.teacherId) {
+            studentInfo.teacherId = this.newTeacherId;
+
+            studentInfo.marks = studentInfo.marks
+              .map(mark => {
+                if (mark.value === null) {
+                  return null;
+                }
+                return mark;
+              })
+              .filter(mark => mark);
+          }
+          return studentInfo;
+        });
+
+      return student;
+    });
+  }
+
   saveChanges(): void {
     if (this.dates.includes("")) {
       this.templateModalComponent.openModal();
     } else {
-      const students = this.students.map(student => {
-        student.academicPerformance
-          .map(studentInfo => {
-
-            if (studentInfo.subjectId === this.subject._id
-              && studentInfo.teacherId === this.teacherId) {
-              studentInfo.teacherId = this.newTeacherId;
-
-              studentInfo.marks = studentInfo.marks
-                .map(mark => {
-                  if (mark.value === null) {
-                    return null;
-                  }
-                  return mark;
-                })
-                .filter(mark => mark);
-            }
-            return studentInfo;
-          });
-
-        return student;
-      });
-
-      this.subjectsTableService
-        .saveChanges(
-          this.teacherId,
-          this.newTeacherId,
-          this.subject,
-          students).subscribe(() => {
-            this.notification.openNotification();
-            this.saved = true;
-            this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
-            this.teacherId = this.newTeacherId;
-            this.getTeacher(this.teacherId);
-            this.visibilitySaveButton = false;
-            this.saved = false;
-          });
+      this.deleteEmptyMarks();
+      this._store.dispatch(new UpdateStudents(this.students));
+      if (this.teacherId !== this.newTeacherId) {
+        const newSubjectInfo: INewSubjectInfo = {
+          _id: this.subject._id,
+          teacherId: this.teacherId,
+          newTeacherId: this.newTeacherId
+        };
+        this._store.dispatch(new UpdateSubjectTeachersId(newSubjectInfo));
+      }
+      this.notification.openNotification();
+      this.saved = true;
+      setTimeout(() =>
+        this._router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]),
+        4000);
+      this.teacherId = this.newTeacherId;
+      this.getTeacher(this.teacherId);
+      this.visibilitySaveButton = false;
+      this.saved = false;
     }
   }
 }

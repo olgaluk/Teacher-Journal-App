@@ -1,13 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SubjectsTableService } from '../../../../common/services/subjects/subjects-table.service';
-
 import { Router } from '@angular/router';
+
+import { AddNewSubject } from '../../../../redux/store/actions/subject.actions';
+import { Store, select } from '@ngrx/store';
+import { IAppState } from '../../../../redux/store/state/app.state';
+import { selectTeacherList } from '../../../../redux/store/selectors/teacher.selectors';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { Teacher } from '../../../../common/entities/teacher';
+import { Subject } from '../../../../common/entities/subject';
 
 import { INFO_MESSAGE_FOR_SUBJECT } from '../../../../common/constants/info-message-for-subject';
 import { INFO_MESSAGE_FOR_CABINET } from '../../../../common/constants/info-message-for-cabinet';
@@ -38,8 +42,8 @@ export class AddingSubjectComponent implements OnInit {
   messageForCabinet: any = INFO_MESSAGE_FOR_CABINET;
 
   constructor(
-    private router: Router,
-    private subjectsTableService: SubjectsTableService
+    private _router: Router,
+    private _store: Store<IAppState>
   ) { }
 
   ngOnInit(): void {
@@ -47,10 +51,9 @@ export class AddingSubjectComponent implements OnInit {
   }
 
   getTeachers(): void {
-    this.subjectsTableService.getTeachers()
-      .subscribe((teachers: Teacher[]) => {
-        this.teachersAll = teachers;
-      });
+    this._store
+      .pipe(select(selectTeacherList))
+      .subscribe((teachers) => this.teachersAll = teachers);
   }
 
   changeItemValue(valueItem: any, itemName: string) {
@@ -107,11 +110,10 @@ export class AddingSubjectComponent implements OnInit {
     teachersID ? newTeachersID = teachersID : newTeachersID = [];
     const conditionForAdding: boolean = this.checkNewSubjectParameters();
     if (conditionForAdding) {
-      this.subjectsTableService.addNewSubject(this.subject, this.cabinet, newTeachersID, this.description)
-        .subscribe(() => {
-          this.notification.openNotification();
-          setTimeout(() => this.router.navigate(['/subjects']), 4000);
-        });
+      const newSubject = new Subject(this.subject, newTeachersID, this.cabinet, this.description);
+      this._store.dispatch(new AddNewSubject(newSubject));
+      this.notification.openNotification();
+      setTimeout(() => this._router.navigate(['/subjects']), 4000);
     } else {
       this.templateModalComponent.openModal();
     }

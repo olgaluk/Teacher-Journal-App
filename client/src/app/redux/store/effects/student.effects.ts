@@ -11,7 +11,11 @@ import {
   GetStudentsByName,
   GetStudentsByNameSuccess,
   GetStudentsBySelectedSubject,
-  GetStudentsBySelectedSubjectSuccess
+  GetStudentsBySelectedSubjectSuccess,
+  AddNewStudent,
+  AddNewStudentSuccess,
+  UpdateStudents,
+  UpdateStudentsSuccess
 } from '../actions/student.actions';
 import { HttpStudentService } from '../../../common/services/students/http-student.service';
 import { Student } from '../../../common/entities/student';
@@ -42,6 +46,24 @@ export class StudentEffects {
       return this._httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectId);
     }),
     switchMap((students: Student[]) => of(new GetStudentsBySelectedSubjectSuccess(students)))
+  );
+
+  @Effect()
+  addNewStudent$ = this._actions$.pipe(
+    ofType<AddNewStudent>(EStudentActions.AddNewStudent),
+    map((action) => action.payload),
+    switchMap((newStudent) => {
+      return this._httpStudentService.addNewStudent(newStudent);
+    }),
+    switchMap((student: Student) => of(new AddNewStudentSuccess(student)))
+  );
+
+  @Effect()
+  updateStudents$ = this._actions$.pipe(
+    ofType<UpdateStudents>(EStudentActions.UpdateStudents),
+    map(action => action.payload),
+    switchMap((students: Student[]) => this._httpStudentService.updateStudents(students)),
+    switchMap((students: Student[]) => of(new UpdateStudentsSuccess(students)))
   );
 
   constructor(

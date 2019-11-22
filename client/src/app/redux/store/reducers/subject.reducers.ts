@@ -13,10 +13,39 @@ export const subjectReducers = (
       };
     }
 
-    case ESubjectActions.SaveSelectedSubject: {
+    case ESubjectActions.GetSelectedSubject: {
+      const subjectName = action.payload;
+      const selectedSubject = state.subjects.find(subject => subject.name === subjectName);
+
       return {
         ...state,
-        selectedSubject: action.payload
+        selectedSubject
+      }
+    }
+
+    case ESubjectActions.AddNewSubjectSuccess: {
+      const subjects = JSON.parse(JSON.stringify(state.subjects));
+      subjects.push(action.payload);
+
+      return {
+        ...state,
+        subjects
+      }
+    }
+
+    case ESubjectActions.UpdateSubjectTeachersIdSuccess: {
+      const subjects = JSON.parse(JSON.stringify(state.subjects));
+      const modifiedSubject = action.payload;
+      subjects.find(oldSubject => {
+        if (oldSubject._id === modifiedSubject._id) {
+          oldSubject = modifiedSubject;
+        }
+        return;
+      });
+
+      return {
+        ...state,
+        subjects
       }
     }
 

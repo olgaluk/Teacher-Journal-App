@@ -23,7 +23,7 @@ import { StudentEffects } from './redux/store/effects/student.effects';
 import { SubjectEffects } from './redux/store/effects/subject.effects';
 import { TeacherEffects } from './redux/store/effects/teacher.effects';
 import { HttpStudentService } from './common/services/students/http-student.service';
-import { SubjectsTableService } from './common/services/subjects/subjects-table.service';
+import { HttpSubjectService } from './common/services/subjects/http-subject.service';
 import { HttpTeacherService } from './common/services/teachers/http-teacher.service';
 
 @NgModule({
@@ -50,7 +50,7 @@ import { HttpTeacherService } from './common/services/teachers/http-teacher.serv
   providers: [
     httpInterceptorProviders,
     HttpStudentService,
-    SubjectsTableService,
+    HttpSubjectService,
     HttpTeacherService
   ],
   bootstrap: [AppComponent]

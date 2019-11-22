@@ -6,6 +6,13 @@ export const teacherReducers = (
   action: TeacherActions
 ): ITeacherState => {
   switch (action.type) {
+    case ETeacherActions.GetTeachersSuccess: {
+      return {
+        ...state,
+        teachers: action.payload
+      };
+    }
+
     case ETeacherActions.GetTeachersBySubjectSuccess: {
       return {
         ...state,
@@ -13,10 +20,28 @@ export const teacherReducers = (
       };
     }
 
-    case ETeacherActions.SaveSelectedTeacher: {
+    case ETeacherActions.GetSelectedTeacher: {
+      const teacherId = action.payload;
+      const selectedTeacher = state.teachers.find(teacher => teacher.id === teacherId);
+
       return {
         ...state,
-        selectedTeacher: action.payload
+        selectedTeacher
+      }
+    }
+
+    case ETeacherActions.GetTeachersFromOtherSubjectSuccess: {
+      return {
+        ...state,
+        teachersFromOtherSubjects: action.payload
+      }
+    }
+
+    case ETeacherActions.DeleteTeachersBySubject: {
+      const teachersBySubject = null;
+      return {
+        ...state,
+        teachersBySubject
       }
     }
 

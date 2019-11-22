@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SubjectsTableService } from './subjects-table.service';
+import { HttpSubjectService } from './http-subject.service';
 
-describe('SubjectsTableService', () => {
+describe('HttpSubjectService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SubjectsTableService = TestBed.get(SubjectsTableService);
+    const service: HttpSubjectService = TestBed.get(HttpSubjectService);
     expect(service).toBeTruthy();
   });
 });

@@ -4,9 +4,9 @@ const Subject = require('../db/models/Subject');
 exports.subject_create_post = (req, res) => {
   const createSubject = subjectData => new Subject(subjectData).save();
   createSubject(req.body)
-    .then(() => {
+    .then((result) => {
       console.log('Subject created');
-      res.status(201).json(null);
+      res.status(201).json(result);
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -52,10 +52,10 @@ exports.subject_find_get = (req, res) => {
 exports.teacher_replacement_put = (req, res) => {
   const { _id, teacherId, newTeacherId } = req.body;
 
-  Subject.updateOne({ _id }, { $pull: { teachersID: teacherId } })  
+  Subject.updateOne({ _id }, { $pull: { teachersID: teacherId } }, { upsert: true })
     .then((result) => {
       if (result) {
-        return Subject.updateOne({ _id }, { $addToSet: { teachersID: newTeacherId } });
+        return Subject.updateOne({ _id }, { $addToSet: { teachersID: newTeacherId } }, { upsert: true });
       } else {
         res.status(412).send('Precondition Failed');
       }

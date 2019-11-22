@@ -1,11 +1,15 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { HttpStudentService } from '../../../../common/services/students/http-student.service';
+import { AddNewStudent } from '../../../../redux/store/actions/student.actions';
+import { Store } from '@ngrx/store';
+import { IAppState } from '../../../../redux/store/state/app.state';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
+
+import { Student } from 'src/app/common/entities/student';
 
 import { INFO_MESSAGE_FOR_NAME } from '../../../../common/constants/info-message-for-name';
 import { INFO_MESSAGE_FOR_LAST_NAME } from '../../../../common/constants/info-message-for-last-name';
@@ -42,7 +46,7 @@ export class AddingStudentComponent {
 
   constructor(
     private _router: Router,
-    private _httpStudentService: HttpStudentService
+    private _store: Store<IAppState>
   ) { }
 
   changeItemValue(valueItem: any, itemName: string) {
@@ -124,11 +128,10 @@ export class AddingStudentComponent {
   addNewStudent(): void {
     const conditionForAdding: boolean = this.checkNewStudentParameters();
     if (conditionForAdding) {
-      this._httpStudentService.addNewStudent(this.name, this.lastName, this.age, this.address)
-        .subscribe(() => {
-          this.notification.openNotification();
-          setTimeout(() => this._router.navigate(['/students']), 4000);
-        });
+      const newStudent: Student = new Student(this.name, this.lastName, this.age, this.address);
+      this._store.dispatch(new AddNewStudent(newStudent));
+      this.notification.openNotification();
+      setTimeout(() => this._router.navigate(['/students']), 4000);
     } else {
       this.templateModalComponent.openModal();
     }
