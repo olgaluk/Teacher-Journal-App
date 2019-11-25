@@ -61,12 +61,12 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   teacherTitle: string;
   itemSelected: string = "";
 
-  teacher: Teacher;
+  teacher$: Observable<Teacher>;
+  subject$: Observable<Subject>;
+  students$: Observable<Student[]>;
   teacherId: string;
   newTeacherId: string;
   subjectName: string;
-  subject: Subject;
-  students: Student[] = [];
   dates: string[] = [];
   messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
@@ -80,11 +80,20 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.teacherId = _activateRoute.snapshot.params['teacherId'];
     this.newTeacherId = _activateRoute.snapshot.params['teacherId'];
     this.subjectName = _activateRoute.snapshot.params['subjectName'];
+
+    this.teacher$ = _store.pipe(select(selectSelectedTeacher));
+    this.subject$ = _store.pipe(select(selectSelectedSubject));
+    this.students$ = _store.pipe(select(selectStudentListBySubject));
   }
 
   ngOnInit() {
-    this.getTeacher(this.teacherId);
+    const subjectAndTeacherId: ISubjectAndTeacherId = {
+      teacherId: this.teacherId,
+      subjectName: this.subjectName,
+    };
     this.getSubject();
+    this.getTeacher();
+    this.getStudentsBySubjectAndTeacher(subjectAndTeacherId);
   }
 
   ngAfterViewChecked() {
@@ -110,40 +119,24 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  getTeacher(teacherId: string): void {   
-    this._store.dispatch(new GetSelectedTeacher(teacherId));
-      this._store
-      .select(selectSelectedTeacher)
-      .subscribe((teacher: Teacher) => {
-        this.teacher = teacher;
-        this.teacherId = teacher.id;
-        this.newTeacherId = teacher.id;
-        this.teacherTitle = `${teacher.name} ${teacher.lastName}`;        
-      });
+  getTeacher(): void {
+    this._store.dispatch(new GetSelectedTeacher(this.teacherId));
+    this.teacher$.subscribe((teacher: Teacher) => {
+      this.teacherId = teacher.id;
+      this.newTeacherId = teacher.id;
+      this.teacherTitle = `${teacher.name} ${teacher.lastName}`;
+    });
   }
 
   getSubject(): void {
     this._store.dispatch(new GetSelectedSubject(this.subjectName));
-    this._store
-      .pipe(select(selectSelectedSubject))
-      .subscribe((subject: Subject) => {
-        this.subject = subject;
-        this.getStudentsBySubjectAndTeacher();
-      });
   }
 
-  getStudentsBySubjectAndTeacher(): void {
-    const subjectAndTeacherId: ISubjectAndTeacherId = {
-      teacherId: this.teacherId,
-      subjectId: this.subject._id
-    };
+  getStudentsBySubjectAndTeacher(subjectAndTeacherId: ISubjectAndTeacherId): void {
     this._store.dispatch(new GetStudentsBySelectedSubject(subjectAndTeacherId));
-    this._store
-      .pipe(select(selectStudentListBySubject))
-      .subscribe((students: Student[]) => {
-        this.students = students;
-        this.getDates(students, this.teacherId, this.subject._id);
-      });
+
+    this.getDates(students, this.teacherId, this.subject._id);
+
   }
 
   getDates(

@@ -12,13 +12,25 @@ import {
   AddNewSubjectSuccess,
   UpdateSubjectTeachersId,
   UpdateSubjectTeachersIdSuccess,
-  INewSubjectInfo
+  INewSubjectInfo,
+  GetSelectedSubject,
+  GetSelectedSubjectSuccess
 } from '../actions/subject.actions';
 import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
 import { Subject } from '../../../common/entities/subject';
 
 @Injectable()
 export class SubjectEffects {
+  @Effect()
+  getSubject$ = this._actions$.pipe(
+    ofType<GetSelectedSubject>(ESubjectActions.GetSelectedSubject),
+    map(action => action.payload),
+    switchMap((subjectName) => this._httpSubjectService.getSubjectByName(subjectName)),
+    switchMap((selectedSubject) => {
+      return of(new GetSelectedSubjectSuccess(selectedSubject));
+    })
+  );
+
   @Effect()
   getSubjects$: Observable<Action> = this._actions$.pipe(
     ofType<GetSubjects>(ESubjectActions.GetSubjects),

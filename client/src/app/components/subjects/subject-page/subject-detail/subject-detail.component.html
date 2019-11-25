@@ -10,14 +10,14 @@
 
     <div class="row">
       <h4 class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
-        Teacher: {{teacherTitle | uppercase}}</h4>
+        Teacher: {{ (teacher$ | async).name }}</h4>
       <button type="button" (click)="openModalWithComponent()"
         class="btn btn-info col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Change
         teacher</button>
     </div>
 
     <div class="row">
-      <h4 class="text-center text-uppercase text-info">Cabinet: {{subject ? subject.cabinet : ""}}</h4>
+      <h4 class="text-center text-uppercase text-info">Cabinet: {{ (subject$ | async)?.cabinet }}</h4>
     </div>
   </div>
 
@@ -40,7 +40,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let student of students">
+      <tr *ngFor="let student of students$ | async">
         <td>{{ student.name }}</td>
         <td>{{ student.lastName }}</td>
         <td>

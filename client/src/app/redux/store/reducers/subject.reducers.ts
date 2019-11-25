@@ -13,13 +13,10 @@ export const subjectReducers = (
       };
     }
 
-    case ESubjectActions.GetSelectedSubject: {
-      const subjectName = action.payload;
-      const selectedSubject = state.subjects.find(subject => subject.name === subjectName);
-
+    case ESubjectActions.GetSelectedSubjectSuccess: {
       return {
         ...state,
-        selectedSubject
+        selectedSubject: action.payload
       }
     }
 

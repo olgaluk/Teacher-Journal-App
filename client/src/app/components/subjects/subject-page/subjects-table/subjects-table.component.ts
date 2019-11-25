@@ -20,7 +20,7 @@ export class SubjectsTableComponent {
     private _store: Store<IAppState>,
     private _router: Router
   ) {
-    this.subjects$ = _store.pipe(select(selectSubjectList));
+    this.subjects$ = this._store.pipe(select(selectSubjectList));
   }
 
   navigateToSubject(selectedSubject: Subject) {

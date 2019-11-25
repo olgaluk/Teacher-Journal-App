@@ -11,7 +11,8 @@ export interface INewSubjectInfo {
 export enum ESubjectActions {
   GetSubjects = '[Subject] Get subjects',
   GetSubjectsSuccess = '[Subject] Get subjects success',
-  GetSelectedSubject = '[Subject] Save selected subject',
+  GetSelectedSubject = '[Subject] Get selected subject',
+  GetSelectedSubjectSuccess = '[Subject] Get selected subject success',
   AddNewSubject = '[Subject] Add new subject',
   AddNewSubjectSuccess = '[Subject] Add new subject success',
   UpdateSubjectTeachersId = '[Subject] Update subject teachers id',
@@ -30,6 +31,11 @@ export class GetSubjectsSuccess implements Action {
 export class GetSelectedSubject implements Action {
   public readonly type = ESubjectActions.GetSelectedSubject;
   constructor(public payload: string) { }
+}
+
+export class GetSelectedSubjectSuccess implements Action {
+  public readonly type = ESubjectActions.GetSelectedSubjectSuccess;
+  constructor(public payload: Subject) { }
 }
 
 export class AddNewSubject implements Action {
@@ -56,6 +62,7 @@ export type SubjectActions =
   | GetSubjects
   | GetSubjectsSuccess
   | GetSelectedSubject
+  | GetSelectedSubjectSuccess
   | AddNewSubject
   | AddNewSubjectSuccess
   | UpdateSubjectTeachersId

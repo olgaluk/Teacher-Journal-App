@@ -4,7 +4,7 @@ import { Student } from '../../../common/entities/student';
 
 export interface ISubjectAndTeacherId {
   teacherId: string;
-  subjectId: string;
+  subjectName: string;
 }
 
 export enum EStudentActions {

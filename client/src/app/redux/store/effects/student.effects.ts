@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import {
@@ -18,6 +18,7 @@ import {
   UpdateStudentsSuccess
 } from '../actions/student.actions';
 import { HttpStudentService } from '../../../common/services/students/http-student.service';
+import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
 import { Student } from '../../../common/entities/student';
 
 @Injectable()
@@ -41,8 +42,16 @@ export class StudentEffects {
   getStudentsBySelectedSubject$ = this._actions$.pipe(
     ofType<GetStudentsBySelectedSubject>(EStudentActions.GetStudentsBySelectedSubject),
     map((action) => action.payload),
-    switchMap((subjectIdAndTeacherId) => {
-      const { teacherId, subjectId } = subjectIdAndTeacherId;
+    switchMap((subjectNameAndTeacherId) => {
+      const { teacherId, subjectName } = subjectNameAndTeacherId;
+      return forkJoin(
+        of(teacherId),
+        this._httpSubjectService.getSubjectByName(subjectName)
+      )
+    }),
+    switchMap((teacherIdAndSubject) => {
+      const teacherId = teacherIdAndSubject[0];
+      const subjectId = teacherIdAndSubject[1]._id;
       return this._httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectId);
     }),
     switchMap((students: Student[]) => of(new GetStudentsBySelectedSubjectSuccess(students)))
@@ -68,6 +77,7 @@ export class StudentEffects {
 
   constructor(
     private _httpStudentService: HttpStudentService,
+    private _httpSubjectService: HttpSubjectService,
     private _actions$: Actions
   ) { }
 }

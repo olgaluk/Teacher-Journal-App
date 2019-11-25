@@ -27,11 +27,12 @@ export class SubjectTeachersComponent implements OnInit, OnDestroy {
     private _activateRoute: ActivatedRoute
   ) {
     this.subjectName = _activateRoute.snapshot.params['id'];
-    this.teacherListBySubject$ = this._store
+    this.teacherListBySubject$ = _store
       .pipe(select(selectTeacherListBySubject));
   }
 
   ngOnInit(): void {
+    console.log("som23");
     this.getTeachers();
   }
 
