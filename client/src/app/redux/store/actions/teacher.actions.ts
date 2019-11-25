@@ -8,6 +8,7 @@ export enum ETeacherActions {
   GetTeachersBySubject = '[Teacher] Get teachers by subject',
   GetTeachersBySubjectSuccess = '[Teacher] Get teachers by subject success',
   GetSelectedTeacher = '[Teacher] Get selected teacher',
+  GetSelectedTeacherSuccess = '[Teacher] Get selected teacher success',
   GetTeachersFromOtherSubject = '[Teacher] Get teachers from other subjects',
   GetTeachersFromOtherSubjectSuccess = '[Teacher] Get teachers from other subjects success',
   DeleteTeachersBySubject = '[Teacher] Delete teachers by subject'
@@ -41,6 +42,11 @@ export class GetSelectedTeacher implements Action {
   constructor(public payload: string) { }
 }
 
+export class GetSelectedTeacherSuccess implements Action {
+  public readonly type = ETeacherActions.GetSelectedTeacherSuccess;
+  constructor(public payload: Teacher) { }
+}
+
 export class GetTeachersFromOtherSubject implements Action {
   public readonly type = ETeacherActions.GetTeachersFromOtherSubject;
   constructor(public payload: string[]) { }
@@ -57,6 +63,7 @@ export type TeacherActions =
   | GetTeachersBySubject
   | GetTeachersBySubjectSuccess
   | GetSelectedTeacher
+  | GetSelectedTeacherSuccess
   | GetTeachersFromOtherSubject
   | GetTeachersFromOtherSubjectSuccess
   | DeleteTeachersBySubject;

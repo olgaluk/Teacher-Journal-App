@@ -15,7 +15,16 @@ import {
   AddNewStudent,
   AddNewStudentSuccess,
   UpdateStudents,
-  UpdateStudentsSuccess
+  UpdateStudentsSuccess,
+  GetDates,
+  GetDatesSuccess,
+  ISubjectIdAndTeacherId,
+  ISubjectNameAndTeacherId,
+  INewDateInfo,
+  AddEmptyDate,
+  AddEmptyDateSuccess,
+  ChangeDate,
+  ChangeDateSuccess,
 } from '../actions/student.actions';
 import { HttpStudentService } from '../../../common/services/students/http-student.service';
 import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
@@ -52,9 +61,21 @@ export class StudentEffects {
     switchMap((teacherIdAndSubject) => {
       const teacherId = teacherIdAndSubject[0];
       const subjectId = teacherIdAndSubject[1]._id;
-      return this._httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectId);
+      const teacherIdAndSubjectId = {
+        teacherId,
+        subjectId,
+      }
+      return forkJoin(
+        of(teacherIdAndSubjectId),
+        this._httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectId)
+      );
     }),
-    switchMap((students: Student[]) => of(new GetStudentsBySelectedSubjectSuccess(students)))
+    switchMap((idAndStudents) => {
+      return of(
+        new GetStudentsBySelectedSubjectSuccess(idAndStudents[1]),
+        new GetDatesSuccess(idAndStudents[0])
+      );
+    })
   );
 
   @Effect()
@@ -73,6 +94,82 @@ export class StudentEffects {
     map(action => action.payload),
     switchMap((students: Student[]) => this._httpStudentService.updateStudents(students)),
     switchMap((students: Student[]) => of(new UpdateStudentsSuccess(students)))
+  );
+
+  @Effect()
+  getDates$ = this._actions$.pipe(
+    ofType<GetDates>(EStudentActions.GetDates),
+    map((action) => action.payload),
+    switchMap((subjectNameAndTeacherId: ISubjectNameAndTeacherId) => {
+      const { teacherId, subjectName } = subjectNameAndTeacherId;
+      return forkJoin(
+        of(teacherId),
+        this._httpSubjectService.getSubjectByName(subjectName)
+      )
+    }),
+    map((teacherIdAndSubject) => {
+      const idInfo: ISubjectIdAndTeacherId = {
+        teacherId: teacherIdAndSubject[0],
+        subjectId: teacherIdAndSubject[1]._id
+      }
+      return idInfo;
+    }),
+    switchMap((idInfo: ISubjectIdAndTeacherId) => of(new GetDatesSuccess(idInfo)))
+  );
+
+  @Effect()
+  addEmptyDate$ = this._actions$.pipe(
+    ofType<GetDates>(EStudentActions.AddEmptyDate),
+    map((action) => action.payload),
+    switchMap((subjectNameAndTeacherId: ISubjectNameAndTeacherId) => {
+      const { teacherId, subjectName } = subjectNameAndTeacherId;
+      return forkJoin(
+        of(teacherId),
+        this._httpSubjectService.getSubjectByName(subjectName)
+      )
+    }),
+    map((teacherIdAndSubject) => {
+      const idInfo: ISubjectIdAndTeacherId = {
+        teacherId: teacherIdAndSubject[0],
+        subjectId: teacherIdAndSubject[1]._id
+      }
+      return idInfo;
+    }),
+    switchMap((idInfo: ISubjectIdAndTeacherId) => of(
+      new AddEmptyDateSuccess(idInfo),
+      new GetDatesSuccess(idInfo),
+    ))
+  );
+
+  @Effect()
+  changeDate$ = this._actions$.pipe(
+    ofType<ChangeDate>(EStudentActions.ChangeDate),
+    map((action) => action.payload),
+    switchMap((newDateInfo: INewDateInfo) => {
+      const { subjectName } = newDateInfo;
+      return forkJoin(
+        of(newDateInfo),
+        this._httpSubjectService.getSubjectByName(subjectName)
+      )
+    }),
+    map((teacherIdAndSubject) => {
+      const idInfo: INewDateInfo = {
+        ...teacherIdAndSubject[0],
+        subjectName: teacherIdAndSubject[1]._id
+      }
+      return idInfo;
+    }),
+    switchMap((idInfo: INewDateInfo) => {
+      const { teacherId, subjectName } = idInfo;
+      const subjectIdAndTeacherId: ISubjectIdAndTeacherId = {
+        teacherId,
+        subjectId: subjectName
+      }
+      return of(
+        new ChangeDateSuccess(idInfo),
+        new GetDatesSuccess(subjectIdAndTeacherId),
+      );
+    })
   );
 
   constructor(

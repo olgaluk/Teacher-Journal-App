@@ -9,6 +9,7 @@ import { SubjectInfoService } from '../../../../common/services/subjects/subject
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
+import { AcademicPerformance } from '../../../../common/entities/academicPerformance';
 import { Mark } from '../../../../common/entities/mark';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
@@ -17,27 +18,33 @@ import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 import { MESSAGE_ABOUT_CHANGES } from '../../../../common/constants/message-about-changes';
 
-
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/state/app.state';
 
 import {
   GetTeachersFromOtherSubject,
-  GetSelectedTeacher
+  GetSelectedTeacher,
 } from '../../../../redux/store/actions/teacher.actions';
-import { UpdateStudents, GetStudentsBySelectedSubject, ISubjectAndTeacherId } from '../../../../redux/store/actions/student.actions';
+import {
+  UpdateStudents,
+  GetStudentsBySelectedSubject,
+  ISubjectNameAndTeacherId,
+  INewDateInfo,
+  AddEmptyDate,
+  ChangeDate
+} from '../../../../redux/store/actions/student.actions';
 import {
   UpdateSubjectTeachersId,
   INewSubjectInfo,
-  GetSelectedSubject
+  GetSelectedSubject,
 } from '../../../../redux/store/actions/subject.actions';
 
 import {
   selectSelectedTeacher,
-  selectTeachersFromOtherSubjects
+  selectTeachersFromOtherSubjects,
 } from '../../../../redux/store/selectors/teacher.selectors';
 import { selectSelectedSubject } from '../../../../redux/store/selectors/subject.selectors';
-import { selectStudentListBySubject } from '../../../../redux/store/selectors/student.selectors';
+import { selectStudentListBySubject, selectDates } from '../../../../redux/store/selectors/student.selectors';
 
 @Component({
   selector: 'app-subject-detail',
@@ -64,10 +71,14 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   teacher$: Observable<Teacher>;
   subject$: Observable<Subject>;
   students$: Observable<Student[]>;
+  dates$: Observable<string[]>;
   teacherId: string;
   newTeacherId: string;
   subjectName: string;
-  dates: string[] = [];
+  subjectNameAndTeacherId: ISubjectNameAndTeacherId;
+
+  currentSubject: Subject;
+
   messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   constructor(
@@ -80,20 +91,27 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.teacherId = _activateRoute.snapshot.params['teacherId'];
     this.newTeacherId = _activateRoute.snapshot.params['teacherId'];
     this.subjectName = _activateRoute.snapshot.params['subjectName'];
+    this.subjectNameAndTeacherId = {
+      teacherId: this.teacherId,
+      subjectName: this.subjectName,
+    };
 
     this.teacher$ = _store.pipe(select(selectSelectedTeacher));
     this.subject$ = _store.pipe(select(selectSelectedSubject));
     this.students$ = _store.pipe(select(selectStudentListBySubject));
+    this.dates$ = _store.pipe(select(selectDates));
   }
 
   ngOnInit() {
-    const subjectAndTeacherId: ISubjectAndTeacherId = {
-      teacherId: this.teacherId,
-      subjectName: this.subjectName,
-    };
     this.getSubject();
     this.getTeacher();
-    this.getStudentsBySubjectAndTeacher(subjectAndTeacherId);
+    this.getStudentsBySubjectAndTeacher();
+    this.subject$.subscribe((subject) => {
+      if (subject) {
+        this.currentSubject = subject;
+        this._store.dispatch(new GetTeachersFromOtherSubject(subject.teachersID));
+      }
+    });
   }
 
   ngAfterViewChecked() {
@@ -121,77 +139,39 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   getTeacher(): void {
     this._store.dispatch(new GetSelectedTeacher(this.teacherId));
-    this.teacher$.subscribe((teacher: Teacher) => {
-      this.teacherId = teacher.id;
-      this.newTeacherId = teacher.id;
-      this.teacherTitle = `${teacher.name} ${teacher.lastName}`;
-    });
   }
 
   getSubject(): void {
     this._store.dispatch(new GetSelectedSubject(this.subjectName));
   }
 
-  getStudentsBySubjectAndTeacher(subjectAndTeacherId: ISubjectAndTeacherId): void {
-    this._store.dispatch(new GetStudentsBySelectedSubject(subjectAndTeacherId));
-
-    this.getDates(students, this.teacherId, this.subject._id);
-
+  getStudentsBySubjectAndTeacher() {
+    this._store.dispatch(new GetStudentsBySelectedSubject(this.subjectNameAndTeacherId));
   }
 
-  getDates(
-    students: Student[],
+  getMark(
+    date: string,
+    academicPerformance: AcademicPerformance[],
     teacherId: string,
     subjectId: string
-  ): void {
-    this.dates = this._subjectInfoService
-      .getDates(students, teacherId, subjectId);
-  }
-
-  getMark(studentId: string, date: string): number | string {
+  ): number | null {
     return this._subjectInfoService
-      .getMark(studentId, date, this.subject._id, this.teacherId, this.students);
+      .getMark(date, academicPerformance, teacherId, subjectId);
   }
 
   addColumn(): void {
-    if (this.dates[this.dates.length - 1]) {
-      this.students = this._subjectInfoService
-        .addNewColumn(this.students, this.teacherId, this.subject._id);
-      this.getDates(this.students, this.teacherId, this.subject._id);
-    }
+    this._store.dispatch(new AddEmptyDate(this.subjectNameAndTeacherId));
     this.visibilitySaveButton = true;
   }
 
-  onChangedDate(value: string, count: number): void {
-    if (!this.dates.includes(value) && value) {
-      const oldDate: string = this.dates[count];
-      this.students = this.students.map(student => {
-        const newStudent = student;
-
-        newStudent.academicPerformance
-          .map(studentInfo => {
-            const newStudentInfo = studentInfo;
-            if (studentInfo.subjectId === this.subject._id
-              && studentInfo.teacherId === this.teacherId) {
-
-              newStudentInfo.marks = studentInfo.marks
-                .map(mark => {
-                  const newMark = mark;
-                  if (mark.date === oldDate) {
-                    newMark.date = value;
-                    this.visibilitySaveButton = true;
-                  }
-                  return newMark;
-                });
-
-            }
-            return newStudentInfo;
-          });
-
-        return newStudent;
-      });
-      this.getDates(this.students, this.teacherId, this.subject._id);
+  onChangedDate(newDate: string, count: number): void {
+    const newDateInfo: INewDateInfo = {
+      ...this.subjectNameAndTeacherId,
+      newDate,
+      count,
     }
+    this._store.dispatch(new ChangeDate(newDateInfo));
+    this.visibilitySaveButton = true;
   }
 
   saveContent(inputValue: string, date: string, studentId: string): void {
@@ -232,7 +212,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
       return newStudent;
     });
-    this.getDates(this.students, this.teacherId, this.subject._id);
   }
 
   addDate(date: string, studentId: string): void {
@@ -242,12 +221,10 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .find(studentInfo => studentInfo.subjectId === this.subject._id
         && studentInfo.teacherId === this.teacherId)
       .marks
-      .push(new Mark(date, NaN));
+      .push(new Mark(date, null));
   }
 
   openModalWithComponent(): void {
-    const teachersIdBySubject: string[] = this.subject.teachersID;
-    this._store.dispatch(new GetTeachersFromOtherSubject(teachersIdBySubject));
     this._store
       .pipe(select(selectTeachersFromOtherSubjects))
       .subscribe((teachers: Teacher[]) => {

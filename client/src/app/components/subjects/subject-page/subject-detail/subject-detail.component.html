@@ -9,8 +9,10 @@
     <div class="panel"></div>
 
     <div class="row">
-      <h4 class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
-        Teacher: {{ (teacher$ | async).name }}</h4>
+      <h4 *ngIf="!teacherTitle" class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
+        Teacher: {{ (teacher$ | async)?.name }} {{ (teacher$ | async)?.lastName }}</h4>
+        <h4 *ngIf="teacherTitle" class="text-center text-danger col-sm-offset-1 col-sm-5 col-md-offset-3 col-md-4 col-lg-offset-3 col-lg-3">
+          Teacher: {{ teacherTitle }}</h4>
       <button type="button" (click)="openModalWithComponent()"
         class="btn btn-info col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Change
         teacher</button>
@@ -33,8 +35,8 @@
         <th>Name</th>
         <th>Last Name</th>
         <th>Average Mark</th>
-        <th *ngFor="let date of dates; let count = index">
-          <app-datepicker [valueDate]="date" [dates]="dates" (onChangedDate)="onChangedDate($event, count)">
+        <th *ngFor="let date of dates$ | async; let count = index">
+          <app-datepicker [valueDate]="date" [dates]="dates$ | async" (onChangedDate)="onChangedDate($event, count)">
           </app-datepicker>
         </th>
       </tr>
@@ -45,10 +47,11 @@
         <td>{{ student.lastName }}</td>
         <td>
           {{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
-        <td *ngFor="let date of dates">
-          <app-input-form-group [appHighlightingMark]="getMark(student._id, date)"
-            itemValue="{{ getMark(student._id, date) }}" (changeItemValue)="saveContent($event, date, student._id)"
-            dataType="mark" maxLength="2">
+        <td *ngFor="let date of dates$ | async">
+          <app-input-form-group
+            [appHighlightingMark]="getMark(date, student.academicPerformance, (teacher$ | async)?.id, (subject$ | async)?._id)"
+            itemValue="{{ getMark(date, student.academicPerformance, (teacher$ | async)?.id, (subject$ | async)?._id) }}"
+            (changeItemValue)="saveContent($event, date, student._id)" dataType="mark" maxLength="2">
           </app-input-form-group>
         </td>
       </tr>

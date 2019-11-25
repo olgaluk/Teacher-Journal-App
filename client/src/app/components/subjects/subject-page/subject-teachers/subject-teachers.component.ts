@@ -32,7 +32,6 @@ export class SubjectTeachersComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log("som23");
     this.getTeachers();
   }
 

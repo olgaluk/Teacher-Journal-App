@@ -18,4 +18,9 @@ export const selectSearchedStudents = createSelector(
 export const selectStudentListBySubject = createSelector(
   selectStudents,
   (state: IStudentState) => state.selectedStudentsBySubject
-)
+);
+
+export const selectDates = createSelector(
+  selectStudents,
+  (state: IStudentState) => state.dates
+);

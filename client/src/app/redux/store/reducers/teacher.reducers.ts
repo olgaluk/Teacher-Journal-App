@@ -20,13 +20,10 @@ export const teacherReducers = (
       };
     }
 
-    case ETeacherActions.GetSelectedTeacher: {
-      const teacherId = action.payload;
-      const selectedTeacher = state.teachers.find(teacher => teacher.id === teacherId);
-
+    case ETeacherActions.GetSelectedTeacherSuccess: {
       return {
         ...state,
-        selectedTeacher
+        selectedTeacher: action.payload
       }
     }
 

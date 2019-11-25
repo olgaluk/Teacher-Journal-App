@@ -11,7 +11,9 @@ import {
   GetTeachersBySubject,
   GetTeachersBySubjectSuccess,
   GetTeachersFromOtherSubject,
-  GetTeachersFromOtherSubjectSuccess
+  GetTeachersFromOtherSubjectSuccess,
+  GetSelectedTeacher,
+  GetSelectedTeacherSuccess
 } from '../actions/teacher.actions';
 import { HttpTeacherService } from '../../../common/services/teachers/http-teacher.service';
 import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
@@ -20,6 +22,16 @@ import { Subject } from '../../../common/entities/subject';
 
 @Injectable()
 export class TeacherEffects {
+  @Effect()
+  getSelectedTeacher$ = this._actions$.pipe(
+    ofType<GetSelectedTeacher>(ETeacherActions.GetSelectedTeacher),
+    map(action => action.payload),
+    switchMap((teacherId) => this._httpTeacherService.getTeacherById(teacherId)),
+    switchMap((selectedTeacher) => {
+      return of(new GetSelectedTeacherSuccess(selectedTeacher));
+    })
+  );
+
   @Effect()
   getTeachers$: Observable<Action> = this._actions$.pipe(
     ofType<GetTeachers>(ETeacherActions.GetTeachers),
