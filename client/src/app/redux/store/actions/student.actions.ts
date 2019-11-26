@@ -29,13 +29,14 @@ export enum EStudentActions {
   AddNewStudent = '[Student] Add new student',
   AddNewStudentSuccess = '[Student] Add new student success',
   UpdateStudents = '[Student] Update students',
-  UpdateStudentsSuccess = '[Student] Update students success',
   GetDates = '[Student] Get dates',
   GetDatesSuccess = '[Student] Get dates success',
   AddEmptyDate = '[Student] Add empty date',
   AddEmptyDateSuccess = '[Student] Add empty date success',
   ChangeDate = '[Student] Change date',
   ChangeDateSuccess = '[Student] Change date success',
+  AddMark = '[Student] Add new mark or change old',
+  DeleteEmptyMarks = '[Student] Delete empty marks'
 }
 
 export class GetStudents implements Action {
@@ -79,12 +80,6 @@ export class AddNewStudentSuccess implements Action {
 
 export class UpdateStudents implements Action {
   public readonly type = EStudentActions.UpdateStudents;
-  constructor(public payload: Student[]) { }
-}
-
-export class UpdateStudentsSuccess implements Action {
-  public readonly type = EStudentActions.UpdateStudentsSuccess;
-  constructor(public payload: Student[]) { }
 }
 
 export class GetDates implements Action {
@@ -117,6 +112,21 @@ export class ChangeDateSuccess implements Action {
   constructor(public payload) { }
 }
 
+export class AddMark implements Action {
+  public readonly type = EStudentActions.AddMark;
+  constructor(public payload: {
+    markValue: number | null;
+    date: string;
+    studentId: string;
+    teacherId: string;
+    subjectId: string;
+  }) { }
+}
+
+export class DeleteEmptyMarks implements Action {
+  public readonly type = EStudentActions.DeleteEmptyMarks;
+}
+
 export type StudentActions =
   | GetStudents
   | GetStudentsSuccess
@@ -127,10 +137,11 @@ export type StudentActions =
   | AddNewStudent
   | AddNewStudentSuccess
   | UpdateStudents
-  | UpdateStudentsSuccess
   | GetDates
   | GetDatesSuccess
   | AddEmptyDate
   | AddEmptyDateSuccess
   | ChangeDate
-  | ChangeDateSuccess;
+  | ChangeDateSuccess
+  | AddMark
+  | DeleteEmptyMarks;

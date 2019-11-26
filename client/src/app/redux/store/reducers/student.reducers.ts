@@ -2,6 +2,8 @@ import { EStudentActions, StudentActions } from '../actions/student.actions';
 import { initialStudentState, IStudentState } from '../state/student.state';
 
 import { Mark } from '../../../common/entities/mark';
+import { Student } from '../../../common/entities/student';
+import { AcademicPerformance } from '../../../common/entities/academicPerformance';
 
 export const studentReducers = (
   state = initialStudentState,
@@ -32,24 +34,6 @@ export const studentReducers = (
     case EStudentActions.AddNewStudentSuccess: {
       const students = JSON.parse(JSON.stringify(state.students));
       students.push(action.payload);
-
-      return {
-        ...state,
-        students
-      }
-    }
-
-    case EStudentActions.UpdateStudentsSuccess: {
-      const students = JSON.parse(JSON.stringify(state.students));
-      const modifiedStudents = action.payload;
-      modifiedStudents.forEach((modifiedStudent) => {
-        students.find(oldStudent => {
-          if (oldStudent._id === modifiedStudent._id) {
-            oldStudent = modifiedStudent;
-          }
-          return;
-        });
-      });
 
       return {
         ...state,
@@ -150,6 +134,74 @@ export const studentReducers = (
           selectedStudentsBySubject
         };
       }
+    }
+
+    case EStudentActions.AddMark: {
+      const {
+        markValue,
+        date,
+        studentId,
+        teacherId,
+        subjectId,
+      } = action.payload;
+
+      const selectedStudentsBySubject: Student[] = JSON.parse(JSON.stringify(state.selectedStudentsBySubject));
+
+      if (studentId) {
+        const selectedStudentPerformance = selectedStudentsBySubject
+          .find((student: Student) => student._id === studentId)
+          .academicPerformance
+          .find((studentPerformance: AcademicPerformance) => studentPerformance.subjectId
+            && studentPerformance.subjectId === subjectId
+            && studentPerformance.teacherId === teacherId);
+
+        const studentIncludeDate: boolean = selectedStudentPerformance
+          .marks
+          .some((mark: Mark) => mark.date === date);
+
+        if (!studentIncludeDate) {
+          selectedStudentPerformance
+            .marks
+            .push(new Mark(date, markValue));
+        } else {
+          selectedStudentPerformance
+            .marks
+            .map((mark: Mark) => {
+              if (mark.date === date) {
+                mark.value = markValue;
+              }
+              return mark;
+            });
+        }
+      }
+
+      return {
+        ...state,
+        selectedStudentsBySubject
+      };
+    }
+
+    case EStudentActions.DeleteEmptyMarks: {
+      const selectedStudentsBySubject: Student[] =
+        JSON.parse(JSON.stringify(state.selectedStudentsBySubject));
+      selectedStudentsBySubject.forEach((student: Student) => {
+        student.academicPerformance
+          .forEach((studentPerformance: AcademicPerformance) => {
+            studentPerformance.marks = studentPerformance.marks
+              .map((mark: Mark) => {
+                if (mark.value === null) {
+                  return null;
+                }
+                return mark;
+              })
+              .filter(mark => mark);
+          });
+      });
+
+      return {
+        ...state,
+        selectedStudentsBySubject
+      };
     }
 
     default:

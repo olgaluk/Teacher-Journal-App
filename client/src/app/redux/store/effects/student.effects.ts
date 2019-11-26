@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 
 import {
   EStudentActions,
@@ -15,19 +15,21 @@ import {
   AddNewStudent,
   AddNewStudentSuccess,
   UpdateStudents,
-  UpdateStudentsSuccess,
   GetDates,
   GetDatesSuccess,
   ISubjectIdAndTeacherId,
   ISubjectNameAndTeacherId,
   INewDateInfo,
-  AddEmptyDate,
   AddEmptyDateSuccess,
   ChangeDate,
-  ChangeDateSuccess,
+  ChangeDateSuccess
 } from '../actions/student.actions';
 import { HttpStudentService } from '../../../common/services/students/http-student.service';
 import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
+
+import { IAppState } from '../state/app.state';
+import { selectStudentListBySubject } from '../selectors/student.selectors';
+
 import { Student } from '../../../common/entities/student';
 
 @Injectable()
@@ -88,12 +90,14 @@ export class StudentEffects {
     switchMap((student: Student) => of(new AddNewStudentSuccess(student)))
   );
 
-  @Effect()
+  @Effect({ dispatch: false })
   updateStudents$ = this._actions$.pipe(
     ofType<UpdateStudents>(EStudentActions.UpdateStudents),
-    map(action => action.payload),
-    switchMap((students: Student[]) => this._httpStudentService.updateStudents(students)),
-    switchMap((students: Student[]) => of(new UpdateStudentsSuccess(students)))
+    map(action => action),
+    withLatestFrom(this._store.pipe(select(selectStudentListBySubject))),
+    switchMap(([action, students]) => {
+      return this._httpStudentService.updateStudents(students);
+    })
   );
 
   @Effect()
@@ -173,6 +177,7 @@ export class StudentEffects {
   );
 
   constructor(
+    private _store: Store<IAppState>,
     private _httpStudentService: HttpStudentService,
     private _httpSubjectService: HttpSubjectService,
     private _actions$: Actions

@@ -79,7 +79,9 @@ export class InputFormGroupComponent implements OnInit {
     if (this.maxLength && $event.target.value.length > this.maxLength) {
       this.inputValue = $event.target.value = $event.target.value.slice(0, this.maxLength);
     }
+  }
 
+  onChange(): void {
     this.changeItemValue.emit(this.inputValue);
   }
 }

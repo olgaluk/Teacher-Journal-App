@@ -10,7 +10,6 @@ import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
 import { AcademicPerformance } from '../../../../common/entities/academicPerformance';
-import { Mark } from '../../../../common/entities/mark';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -31,7 +30,9 @@ import {
   ISubjectNameAndTeacherId,
   INewDateInfo,
   AddEmptyDate,
-  ChangeDate
+  ChangeDate,
+  AddMark,
+  DeleteEmptyMarks,
 } from '../../../../redux/store/actions/student.actions';
 import {
   UpdateSubjectTeachersId,
@@ -75,6 +76,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   teacherId: string;
   newTeacherId: string;
   subjectName: string;
+
   subjectNameAndTeacherId: ISubjectNameAndTeacherId;
 
   currentSubject: Subject;
@@ -171,57 +173,20 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       count,
     }
     this._store.dispatch(new ChangeDate(newDateInfo));
+  }
+
+  onChangeMark(inputMark: string, date: string, studentId: string): void {
+    let newMark: number;
+    inputMark ? newMark = +inputMark : newMark = null;
+
+    this._store.dispatch(new AddMark({
+      markValue: newMark,
+      date,
+      studentId,
+      teacherId: this.teacherId,
+      subjectId: this.currentSubject._id,
+    }));
     this.visibilitySaveButton = true;
-  }
-
-  saveContent(inputValue: string, date: string, studentId: string): void {
-    let markValue: number;
-    inputValue ? markValue = +inputValue : markValue = null;
-    const studentIncludeDate: boolean = this.students
-      .find(student => student._id === studentId)
-      .academicPerformance
-      .find(studentInfo => studentInfo.subjectId === this.subject._id
-        && studentInfo.teacherId === this.teacherId)
-      .marks
-      .some(mark => mark.date === date);
-    if (!studentIncludeDate) this.addDate(date, studentId);
-
-    this.students = this.students.map(student => {
-      let newStudent: Student = student;
-
-      if (student._id === studentId) {
-        newStudent.academicPerformance
-          .map(studentInfo => {
-            const newStudentInfo = studentInfo;
-            if (studentInfo.subjectId === this.subject._id
-              && studentInfo.teacherId === this.teacherId) {
-
-              newStudentInfo.marks = studentInfo.marks.map(mark => {
-                const newMark = mark;
-                if (mark.date === date) {
-                  newMark.value = markValue;
-                  this.visibilitySaveButton = true;
-                }
-                return newMark;
-              });
-
-            }
-            return newStudentInfo;
-          });
-      }
-
-      return newStudent;
-    });
-  }
-
-  addDate(date: string, studentId: string): void {
-    this.students
-      .find(student => student._id === studentId)
-      .academicPerformance
-      .find(studentInfo => studentInfo.subjectId === this.subject._id
-        && studentInfo.teacherId === this.teacherId)
-      .marks
-      .push(new Mark(date, null));
   }
 
   openModalWithComponent(): void {
@@ -240,40 +205,16 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       });
   }
 
-  deleteEmptyMarks(): void {
-    this.students = this.students.map(student => {
-      student.academicPerformance
-        .map(studentInfo => {
-
-          if (studentInfo.subjectId === this.subject._id
-            && studentInfo.teacherId === this.teacherId) {
-            studentInfo.teacherId = this.newTeacherId;
-
-            studentInfo.marks = studentInfo.marks
-              .map(mark => {
-                if (mark.value === null) {
-                  return null;
-                }
-                return mark;
-              })
-              .filter(mark => mark);
-          }
-          return studentInfo;
-        });
-
-      return student;
-    });
-  }
-
-  saveChanges(): void {
-    if (this.dates.includes("")) {
+  saveChanges($event): void {
+    const dates = $event.target.value.split(',');
+    if (dates.includes('')) {
       this.templateModalComponent.openModal();
     } else {
-      this.deleteEmptyMarks();
-      this._store.dispatch(new UpdateStudents(this.students));
+      this._store.dispatch(new DeleteEmptyMarks());
+      this._store.dispatch(new UpdateStudents());
       if (this.teacherId !== this.newTeacherId) {
         const newSubjectInfo: INewSubjectInfo = {
-          _id: this.subject._id,
+          _id: this.currentSubject._id,
           teacherId: this.teacherId,
           newTeacherId: this.newTeacherId
         };
@@ -284,10 +225,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       setTimeout(() =>
         this._router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]),
         4000);
-      this.teacherId = this.newTeacherId;
-      this.getTeacher(this.teacherId);
-      this.visibilitySaveButton = false;
-      this.saved = false;
     }
   }
 }

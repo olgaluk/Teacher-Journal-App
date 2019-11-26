@@ -62,7 +62,7 @@ export class HttpStudentService {
 
   updateStudents(
     students: Student[]
-  ): Observable<Student[]> {
+  ): Observable<{}> {
     const url = `${this.url}/students`;
     const body = { students: JSON.stringify(students) };
     return this.http.put<Student[]>(url, body).pipe(

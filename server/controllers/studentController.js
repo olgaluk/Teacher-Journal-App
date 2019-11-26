@@ -58,13 +58,13 @@ exports.student_replacement_put = (req, res) => {
   const performancePromises = studentsParse.map((student) => Student.updateOne(
     { _id: student._id },
     { academicPerformance: student.academicPerformance },
-    { upsert: true },
+    { upsert: false },
   ));
 
   Promise.all(performancePromises)
     .then((result) => {
       if (result) {
-        res.status(200).send(result);
+        res.status(200).send({});
       } else {
         res.status(412).send('Precondition Failed');
       }
