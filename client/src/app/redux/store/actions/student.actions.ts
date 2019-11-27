@@ -36,7 +36,8 @@ export enum EStudentActions {
   ChangeDate = '[Student] Change date',
   ChangeDateSuccess = '[Student] Change date success',
   AddMark = '[Student] Add new mark or change old',
-  DeleteEmptyMarks = '[Student] Delete empty marks'
+  DeleteEmptyMarks = '[Student] Delete empty marks',
+  UpdateTeacherInStudents = '[Student] Update teacher in students',
 }
 
 export class GetStudents implements Action {
@@ -127,6 +128,15 @@ export class DeleteEmptyMarks implements Action {
   public readonly type = EStudentActions.DeleteEmptyMarks;
 }
 
+export class UpdateTeacherInStudents implements Action {
+  public readonly type = EStudentActions.UpdateTeacherInStudents;
+  constructor(public payload: {
+    teacherId: string;
+    subjectId: string;
+    newTeacherId: string;
+  }) { }
+}
+
 export type StudentActions =
   | GetStudents
   | GetStudentsSuccess
@@ -144,4 +154,5 @@ export type StudentActions =
   | ChangeDate
   | ChangeDateSuccess
   | AddMark
-  | DeleteEmptyMarks;
+  | DeleteEmptyMarks
+  | UpdateTeacherInStudents;

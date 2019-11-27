@@ -52,10 +52,10 @@ exports.subject_find_get = (req, res) => {
 exports.teacher_replacement_put = (req, res) => {
   const { _id, teacherId, newTeacherId } = req.body;
 
-  Subject.updateOne({ _id }, { $pull: { teachersID: teacherId } }, { upsert: true })
+  Subject.updateOne({ _id }, { $pull: { teachersID: teacherId } }, { upsert: false })
     .then((result) => {
       if (result) {
-        return Subject.updateOne({ _id }, { $addToSet: { teachersID: newTeacherId } }, { upsert: true });
+        return Subject.updateOne({ _id }, { $addToSet: { teachersID: newTeacherId } }, { upsert: false });
       } else {
         res.status(412).send('Precondition Failed');
       }

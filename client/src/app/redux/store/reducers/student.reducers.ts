@@ -204,6 +204,28 @@ export const studentReducers = (
       };
     }
 
+    case EStudentActions.UpdateTeacherInStudents: {
+      const { teacherId, subjectId, newTeacherId } = action.payload;
+      const selectedStudentsBySubject: Student[] =
+        JSON.parse(JSON.stringify(state.selectedStudentsBySubject));
+
+      selectedStudentsBySubject.forEach((student) => {
+        student
+          .academicPerformance.
+          find((studentPerformance: AcademicPerformance) => {
+            if (studentPerformance.subjectId === subjectId
+              && studentPerformance.teacherId === teacherId) {
+              studentPerformance.teacherId = newTeacherId;
+            }
+          });
+      });
+
+      return {
+        ...state,
+        selectedStudentsBySubject
+      };
+    }
+
     default:
       return state;
   }
