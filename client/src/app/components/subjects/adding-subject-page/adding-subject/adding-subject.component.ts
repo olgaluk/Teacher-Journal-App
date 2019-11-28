@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { AddNewSubject } from '../../../../redux/store/actions/subject.actions';
 import { Store, select } from '@ngrx/store';
-import { IAppState } from '../../../../redux/store/state/app.state';
+import { IAppState } from '../../../../redux/store/app.state';
 import { selectTeacherList } from '../../../../redux/store/selectors/teacher.selectors';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';

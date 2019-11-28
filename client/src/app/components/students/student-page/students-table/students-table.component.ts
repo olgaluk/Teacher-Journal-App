@@ -7,7 +7,7 @@ import {
   GetStudentsByName
 } from '../../../../redux/store/actions/student.actions';
 import { Store, select } from '@ngrx/store';
-import { IAppState } from '../../../../redux/store/state/app.state';
+import { IAppState } from '../../../../redux/store/app.state';
 import {
   selectStudentList,
   selectSearchedStudents

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Store } from '@ngrx/store';
-import { IAppState } from '../redux/store/state/app.state';
+import { IAppState } from '../redux/store/app.state';
 import { GetStudents } from '../redux/store/actions/student.actions';
 import { GetSubjects } from '../redux/store/actions/subject.actions';
 import { GetTeachers } from '../redux/store/actions/teacher.actions';

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { Store, select } from '@ngrx/store';
-import { IAppState } from '../../../../redux/store/state/app.state';
+import { IAppState } from '../../../../redux/store/app.state';
 import { selectSubjectList } from '../../../../redux/store/selectors/subject.selectors';
 
 import { Subject } from '../../../../common/entities/subject';

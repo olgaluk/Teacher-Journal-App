@@ -18,7 +18,13 @@ import { NotificationSelfClosingComponent }
 import { MESSAGE_ABOUT_CHANGES } from '../../../../common/constants/message-about-changes';
 
 import { Store, select } from '@ngrx/store';
-import { IAppState } from '../../../../redux/store/state/app.state';
+import { IAppState } from '../../../../redux/store/app.state';
+
+import {
+  getInitialInfo,
+} from '../../../../redux/store/subjects/subject-detail/subject-detail.actions';
+
+import { } from '../../../../redux/store/subjects/subject-detail/subject-detail.selectors';
 
 import {
   GetTeachersFromOtherSubject,
@@ -66,27 +72,27 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   @ViewChild(NotificationSelfClosingComponent, { static: false })
   private notification: NotificationSelfClosingComponent;
 
-  saved: boolean = false;
-  visibilitySaveButton: boolean = false;
   bsModalRef: BsModalRef;
-
-  teacherTitle: string;
-  itemSelected: string = "";
+  messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   teacher$: Observable<Teacher>;
   subject$: Observable<Subject>;
   students$: Observable<Student[]>;
   dates$: Observable<string[]>;
+  teachersFromOtherSubjects$: Observable<Teacher[]>;
+
+  saved: boolean = false;
+  visibilitySaveButton: boolean = false;
+
+  teacherTitle: string;
+  itemSelected: string = "";
+
   teacherId: string;
   newTeacherId: string;
   subjectName: string;
 
   subjectNameAndTeacherId: ISubjectNameAndTeacherId;
-
   currentSubject: Subject;
-  teachersFromOtherSubjects$: Observable<Teacher[]>;
-
-  messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   constructor(
     private _store: Store<IAppState>,
@@ -96,12 +102,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     private _activateRoute: ActivatedRoute
   ) {
     this.teacherId = _activateRoute.snapshot.params['teacherId'];
-    this.newTeacherId = _activateRoute.snapshot.params['teacherId'];
     this.subjectName = _activateRoute.snapshot.params['subjectName'];
-    this.subjectNameAndTeacherId = {
-      teacherId: this.teacherId,
-      subjectName: this.subjectName,
-    };
 
     this.teacher$ = _store.pipe(select(selectSelectedTeacher));
     this.subject$ = _store.pipe(select(selectSelectedSubject));
@@ -110,7 +111,9 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.teachersFromOtherSubjects$ = _store.pipe(select(selectTeachersFromOtherSubjects));
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.getInitialInfo(this.subjectName, this.teacherId);
+
     this.getSubject();
     this.getTeacher();
     this.getStudentsBySubjectAndTeacher();
@@ -121,6 +124,16 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
           this._store.dispatch(new GetTeachersFromOtherSubject(subject.teachersID));
         }
       });
+  }
+
+  getInitialInfo(
+    subjectName: string,
+    teacherId: string,
+  ): void {
+    this._store.dispatch(getInitialInfo({
+      subjectName,
+      teacherId,
+    }));
   }
 
   ngAfterViewChecked() {

@@ -27,7 +27,7 @@ import {
 import { HttpStudentService } from '../../../common/services/students/http-student.service';
 import { HttpSubjectService } from '../../../common/services/subjects/http-subject.service';
 
-import { IAppState } from '../state/app.state';
+import { IAppState } from '../app.state';
 import { selectStudentListBySubject } from '../selectors/student.selectors';
 
 import { Student } from '../../../common/entities/student';

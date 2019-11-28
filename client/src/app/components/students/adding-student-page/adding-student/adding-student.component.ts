@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { AddNewStudent } from '../../../../redux/store/actions/student.actions';
 import { Store } from '@ngrx/store';
-import { IAppState } from '../../../../redux/store/state/app.state';
+import { IAppState } from '../../../../redux/store/app.state';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
