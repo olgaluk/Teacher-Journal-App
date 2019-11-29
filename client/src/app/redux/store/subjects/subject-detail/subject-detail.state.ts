@@ -7,10 +7,8 @@ export interface ISubjectDetailState {
   selectedTeacher: Teacher;
   selectedStudentsBySubject: Student[];
   dates: string[];
-  newSelectedTeacher: Teacher;
   teachersFromOtherSubjects: Teacher[];
   visibilitySaveButton: boolean;
-  permissionForNavigation: boolean;
   dataSaved: boolean;
 }
 
@@ -19,9 +17,7 @@ export const initialSubjectDetailState: ISubjectDetailState = {
   selectedTeacher: null,
   selectedStudentsBySubject: null,
   dates: null,
-  newSelectedTeacher: null,
   teachersFromOtherSubjects: null,
   visibilitySaveButton: false,
-  permissionForNavigation: false,
   dataSaved: false,
 }; 

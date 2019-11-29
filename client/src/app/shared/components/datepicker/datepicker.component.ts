@@ -40,7 +40,7 @@ export class DatepickerComponent implements OnInit {
 
   onValueChange(value: any): void {
     let newDate = '';
-    if (value) {
+    if (value && this.valueDate !== value.toDateString()) {
       newDate = value.toDateString();
     }
     this.onChangedDate.emit(newDate);

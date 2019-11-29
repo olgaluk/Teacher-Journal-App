@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewChecked, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { SubjectInfoService } from '../../../../common/services/subjects/subject-info.service';
 
@@ -22,46 +23,28 @@ import { IAppState } from '../../../../redux/store/app.state';
 
 import {
   getInitialInfo,
+  changeVisibilitySaveButton,
+  addEmptyDate,
+  changeDate,
+  changeMark,
+  saveChanges,
 } from '../../../../redux/store/subjects/subject-detail/subject-detail.actions';
 
-import { } from '../../../../redux/store/subjects/subject-detail/subject-detail.selectors';
-
 import {
-  GetTeachersFromOtherSubject,
-  GetSelectedTeacher,
-} from '../../../../redux/store/actions/teacher.actions';
-import {
-  UpdateStudents,
-  GetStudentsBySelectedSubject,
-  ISubjectNameAndTeacherId,
-  INewDateInfo,
-  AddEmptyDate,
-  ChangeDate,
-  AddMark,
-  DeleteEmptyMarks,
-  UpdateTeacherInStudents,
-} from '../../../../redux/store/actions/student.actions';
-import {
-  UpdateSubjectTeachersId,
-  INewSubjectInfo,
-  GetSelectedSubject,
-} from '../../../../redux/store/actions/subject.actions';
-
-import {
+  selectSelectedSubject,
   selectSelectedTeacher,
-  selectTeachersFromOtherSubjects,
-} from '../../../../redux/store/selectors/teacher.selectors';
-import { selectSelectedSubject } from '../../../../redux/store/selectors/subject.selectors';
-import {
   selectStudentListBySubject,
-  selectDates
-} from '../../../../redux/store/selectors/student.selectors';
+  selectDates,
+  selectTeachersFromOtherSubjects,
+  selectVisibilitySaveButton,
+  selectDataSaved,
+} from '../../../../redux/store/subjects/subject-detail/subject-detail.selectors';
 
 @Component({
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
   providers: [
-    SubjectInfoService
+    SubjectInfoService,
   ],
   styleUrls: ['./subject-detail.component.scss']
 })
@@ -73,6 +56,10 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   private notification: NotificationSelfClosingComponent;
 
   bsModalRef: BsModalRef;
+
+  teacherId: string;
+  newTeacherId: string;
+  subjectName: string;
   messageAboutChanges: string = MESSAGE_ABOUT_CHANGES;
 
   teacher$: Observable<Teacher>;
@@ -80,19 +67,13 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   students$: Observable<Student[]>;
   dates$: Observable<string[]>;
   teachersFromOtherSubjects$: Observable<Teacher[]>;
+  visibilitySaveButton: Observable<boolean>;
 
   saved: boolean = false;
-  visibilitySaveButton: boolean = false;
+  newDataSaved: Observable<boolean>;
 
   teacherTitle: string;
   itemSelected: string = "";
-
-  teacherId: string;
-  newTeacherId: string;
-  subjectName: string;
-
-  subjectNameAndTeacherId: ISubjectNameAndTeacherId;
-  currentSubject: Subject;
 
   constructor(
     private _store: Store<IAppState>,
@@ -109,21 +90,12 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.students$ = _store.pipe(select(selectStudentListBySubject));
     this.dates$ = _store.pipe(select(selectDates));
     this.teachersFromOtherSubjects$ = _store.pipe(select(selectTeachersFromOtherSubjects));
+    this.visibilitySaveButton = _store.pipe(select(selectVisibilitySaveButton));
+    this.newDataSaved = _store.pipe(select(selectDataSaved));
   }
 
   ngOnInit(): void {
     this.getInitialInfo(this.subjectName, this.teacherId);
-
-    this.getSubject();
-    this.getTeacher();
-    this.getStudentsBySubjectAndTeacher();
-    this.subject$
-      .subscribe((subject) => {
-        if (subject) {
-          this.currentSubject = subject;
-          this._store.dispatch(new GetTeachersFromOtherSubject(subject.teachersID));
-        }
-      });
   }
 
   getInitialInfo(
@@ -146,29 +118,17 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         this.teacherTitle = teacherSelected.split(" (id:")[0];
         let newTeacherId = teacherSelected.split(" (id: ")[1];
         this.newTeacherId = newTeacherId.split(")")[0];
-        this.visibilitySaveButton = true;
+        this._store.dispatch(changeVisibilitySaveButton({ visibility: true }));
       })
     }
   }
 
   canDeactivate(): boolean | Observable<boolean> {
-    if (!this.saved && this.visibilitySaveButton) {
+    if (!this.saved) {
       return confirm(this.messageAboutChanges);
     } else {
       return true;
     }
-  }
-
-  getTeacher(): void {
-    this._store.dispatch(new GetSelectedTeacher(this.teacherId));
-  }
-
-  getSubject(): void {
-    this._store.dispatch(new GetSelectedSubject(this.subjectName));
-  }
-
-  getStudentsBySubjectAndTeacher(): void {
-    this._store.dispatch(new GetStudentsBySelectedSubject(this.subjectNameAndTeacherId));
   }
 
   getMark(
@@ -182,31 +142,22 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   }
 
   addColumn(): void {
-    this._store.dispatch(new AddEmptyDate(this.subjectNameAndTeacherId));
-    this.visibilitySaveButton = true;
+    this._store.dispatch(addEmptyDate());
   }
 
   onChangedDate(newDate: string, count: number): void {
-    const newDateInfo: INewDateInfo = {
-      ...this.subjectNameAndTeacherId,
-      newDate,
-      count,
-    }
-    this._store.dispatch(new ChangeDate(newDateInfo));
+    if (newDate) this._store.dispatch(changeDate({ newDate, count }));
   }
 
   onChangeMark(inputMark: string, date: string, studentId: string): void {
     let newMark: number;
     inputMark ? newMark = +inputMark : newMark = null;
 
-    this._store.dispatch(new AddMark({
+    this._store.dispatch(changeMark({
       markValue: newMark,
       date,
       studentId,
-      teacherId: this.teacherId,
-      subjectId: this.currentSubject._id,
     }));
-    this.visibilitySaveButton = true;
   }
 
   openModalWithComponent(): void {
@@ -231,26 +182,22 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     if (dates.includes('')) {
       this.templateModalComponent.openModal();
     } else {
-      this._store.dispatch(new UpdateTeacherInStudents({
+      this._store.dispatch(saveChanges({
         teacherId: this.teacherId,
-        subjectId: this.currentSubject._id,
         newTeacherId: this.newTeacherId,
       }));
-      this._store.dispatch(new DeleteEmptyMarks());
-      this._store.dispatch(new UpdateStudents());
-      if (this.teacherId !== this.newTeacherId) {
-        const newSubjectInfo: INewSubjectInfo = {
-          _id: this.currentSubject._id,
-          teacherId: this.teacherId,
-          newTeacherId: this.newTeacherId
-        };
-        this._store.dispatch(new UpdateSubjectTeachersId(newSubjectInfo));
-      }
-      this.notification.openNotification();
-      this.saved = true;
-      setTimeout(() =>
-        this._router.navigate([`subjects/${this.subjectName}`]),
-        4000);
+
+      this.newDataSaved.subscribe(
+        ((saved: boolean) => {
+          if (saved) {
+            this.notification.openNotification();
+            this.saved = true;
+            setTimeout(() =>
+              this._router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]),
+              4000);
+          }
+        })
+      );
     }
   }
 }

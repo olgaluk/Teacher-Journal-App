@@ -24,3 +24,18 @@ export const selectDates = createSelector(
   selectSubjectDetail,
   (state: ISubjectDetailState) => state.dates
 );
+
+export const selectTeachersFromOtherSubjects = createSelector(
+  selectSubjectDetail,
+  (state: ISubjectDetailState) => state.teachersFromOtherSubjects
+);
+
+export const selectVisibilitySaveButton = createSelector(
+  selectSubjectDetail,
+  (state: ISubjectDetailState) => state.visibilitySaveButton
+);
+
+export const selectDataSaved = createSelector(
+  selectSubjectDetail,
+  (state: ISubjectDetailState) => state.dataSaved
+);
