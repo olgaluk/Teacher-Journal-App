@@ -3,8 +3,6 @@ import { createAction, props } from '@ngrx/store';
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
-import { Mark } from '../../../../common/entities/mark';
-import { AcademicPerformance } from '../../../../common/entities/academicPerformance';
 
 export enum ESubjectDetailActions {
   GetInitialInfo = '[SubjectDetail] Get initial info',
@@ -25,8 +23,10 @@ export enum ESubjectDetailActions {
   DeleteEmptyMarks = '[SubjectDetail] Delete empty marks',
   UpdateTeacherInStudents = '[SubjectDetail] Update teacher in students',
   UpdateInfoInDatabase = '[SubjectDetail] Update students and subject in database',
-  UpdateInfoInDatabaseSuccess = '[SubjectDetail] Update result saving in database',
   UpdateTeacherListInSubject = '[SubjectDetail] Update teacher list in subject',
+  UpdateTeachersFromOtherSubject = '[SubjectDetail] Update teachers from other subject',
+  Reset = '[SubjectDetail] Reset',
+  UpdateDataSaved = '[SubjectDetail] Update props dataSaved',
 }
 
 export const getInitialInfo = createAction(
@@ -121,12 +121,20 @@ export const updateInfoInDatabase = createAction(
   props<{ subjectId: string, teacherId: string, newTeacherId: string }>()
 );
 
-export const updateInfoInDatabaseSuccess = createAction(
-  ESubjectDetailActions.UpdateInfoInDatabaseSuccess,
-  props<{ save: boolean }>()
-);
-
 export const updateTeacherListInSubject = createAction(
   ESubjectDetailActions.UpdateTeacherListInSubject,
   props<{ teacherId: string, newTeacherId: string }>()
+);
+
+export const updateTeachersFromOtherSubject = createAction(
+  ESubjectDetailActions.UpdateTeachersFromOtherSubject
+);
+
+export const reset = createAction(
+  ESubjectDetailActions.Reset
+);
+
+export const updateDataSaved = createAction(
+  ESubjectDetailActions.UpdateDataSaved,
+  props<{ save: boolean }>()
 );

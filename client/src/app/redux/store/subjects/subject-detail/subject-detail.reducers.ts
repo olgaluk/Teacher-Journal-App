@@ -12,8 +12,9 @@ import {
   changeMark,
   deleteEmptyMarks,
   updateTeacherInStudents,
-  updateInfoInDatabaseSuccess,
   updateTeacherListInSubject,
+  reset,
+  updateDataSaved,
 } from '../../subjects/subject-detail/subject-detail.actions';
 
 import {
@@ -75,15 +76,19 @@ const _subjectDetailReducers = createReducer(initialSubjectDetailState,
     (state, { newTeacherId }) => (updateTeacherInStudentsInState(state, newTeacherId))
   ),
   on(
-    updateInfoInDatabaseSuccess,
-    (state, { save }) => ({ ...state, dataSaved: save })
-  ),
-  on(
     updateTeacherListInSubject,
     (state, { teacherId, newTeacherId }) => ({
       ...state,
       selectedSubject: updateTeacherList(state.selectedSubject, teacherId, newTeacherId)
     })
+  ),
+  on(
+    reset,
+    () => initialSubjectDetailState
+  ),
+  on(
+    updateDataSaved,
+    (state, { save }) => ({ ...state, dataSaved: save })
   )
 );
 
@@ -316,7 +321,7 @@ const updateTeacherInStudentsInState = (state: ISubjectDetailState, newTeacherId
 const updateTeacherList = (
   selectedSubject: Subject,
   teacherId: string,
-  newTeacherId: string
+  newTeacherId: string,
 ) => {
   const newSelectedSubject: Subject = JSON.parse(JSON.stringify(selectedSubject));
   if (newTeacherId && newTeacherId !== teacherId) {

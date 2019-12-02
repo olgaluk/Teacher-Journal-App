@@ -9,7 +9,10 @@ import { HttpTeacherService } from '../../../../common/services/teachers/http-te
 import { HttpStudentService } from '../../../../common/services/students/http-student.service';
 
 import { IAppState } from '../../app.state';
-import { selectSelectedSubject, selectStudentListBySubject } from '../../subjects/subject-detail/subject-detail.selectors';
+import {
+  selectSelectedSubject,
+  selectStudentListBySubject,
+} from '../../subjects/subject-detail/subject-detail.selectors';
 
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
@@ -29,8 +32,9 @@ import {
   deleteEmptyMarks,
   updateTeacherInStudents,
   updateInfoInDatabase,
-  updateInfoInDatabaseSuccess,
+  updateDataSaved,
   updateTeacherListInSubject,
+  updateTeachersFromOtherSubject,
 } from './subject-detail.actions';
 
 @Injectable()
@@ -110,13 +114,23 @@ export class SubjectDetailEffects {
       withLatestFrom(this._store.pipe(select(selectSelectedSubject))),
       concatMap(([{ teacherId, newTeacherId }, subject]) => {
         const subjectId = subject._id;
-        return [
-          deleteEmptyMarks(),
-          getDates({ teacherId, subjectId }),
-          updateTeacherInStudents({ newTeacherId }),
-          updateTeacherListInSubject({ teacherId, newTeacherId }),
-          updateInfoInDatabase({ subjectId, teacherId, newTeacherId }),
-        ];
+        if (newTeacherId && teacherId !== newTeacherId) {
+          return [
+            deleteEmptyMarks(),
+            getDates({ teacherId, subjectId }),
+            updateTeacherInStudents({ newTeacherId }),
+            getSelectedTeacher({ teacherId: newTeacherId }),
+            updateTeacherListInSubject({ teacherId, newTeacherId }),
+            updateTeachersFromOtherSubject(),
+            updateInfoInDatabase({ subjectId, teacherId, newTeacherId }),
+          ];
+        } else {
+          return [
+            deleteEmptyMarks(),
+            getDates({ teacherId, subjectId }),
+            updateInfoInDatabase({ subjectId, teacherId, newTeacherId }),
+          ];
+        }
       })
     )
   );
@@ -135,16 +149,31 @@ export class SubjectDetailEffects {
               newTeacherId,
             }),
           ).pipe(
-            map(() => updateInfoInDatabaseSuccess({ save: true })),
-            catchError(() => of(updateInfoInDatabaseSuccess({ save: false })))
+            map(() => updateDataSaved({ save: true })),
+            catchError(() => of(updateDataSaved({ save: false })))
           );
         } else {
           return this._httpStudentService.updateStudents(students).pipe(
-            map(() => updateInfoInDatabaseSuccess({ save: true })),
-            catchError(() => of(updateInfoInDatabaseSuccess({ save: false })))
+            map(() => updateDataSaved({ save: true })),
+            catchError(() => of(updateDataSaved({ save: false })))
           );
         }
       })
+    )
+  );
+
+  updateTeachersFromOtherSubject$: Observable<Action> = createEffect(() =>
+    this._actions$.pipe(
+      ofType(updateTeachersFromOtherSubject.type),
+      withLatestFrom(this._store.pipe(select(selectSelectedSubject))),
+      mergeMap(([props, subject]) => this._httpTeacherService
+        .getTeachersFromOtherSubject(subject.teachersID)
+        .pipe(
+          map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
+            teachersFromOtherSubjects
+          }))
+        )
+      ),
     )
   );
 

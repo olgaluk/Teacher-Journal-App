@@ -51,8 +51,8 @@
           {{ student.academicPerformance | studentMarks | averageMark | number:'.1-1' }}</td>
         <td *ngFor="let date of dates$ | async">
           <app-input-form-group
-            [appHighlightingMark]="getMark(date, student.academicPerformance, (teacher$ | async)?.id, (subject$ | async)?._id)"
-            itemValue="{{ getMark(date, student.academicPerformance, (teacher$ | async)?.id, (subject$ | async)?._id) }}"
+            [appHighlightingMark]="getMark(date, student.academicPerformance, (subject$ | async)?._id)"
+            itemValue="{{ getMark(date, student.academicPerformance, (subject$ | async)?._id) }}"
             (changeItemValue)="onChangeMark($event, date, student._id)" dataType="mark" maxLength="2">
           </app-input-form-group>
         </td>

@@ -3,7 +3,7 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnInit
+  OnInit,
 } from '@angular/core';
 
 @Component({
@@ -22,7 +22,9 @@ export class InputFormGroupComponent implements OnInit {
   inputValue: string = '';
 
   ngOnInit(): void {
-    if (this.itemValue) this.inputValue = this.itemValue;
+    if (this.itemValue) {
+      this.inputValue = this.itemValue;
+    }
   }
 
   reset(): void {

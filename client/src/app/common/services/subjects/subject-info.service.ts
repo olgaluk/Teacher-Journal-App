@@ -27,6 +27,6 @@ export class SubjectInfoService {
           markValue = mark.value;
         }
       })
-    return markValue ? markValue : null;
+    return (markValue || markValue === 0) ? markValue : null;
   }
 }
