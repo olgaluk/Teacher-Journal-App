@@ -21,12 +21,8 @@ export const subjectReducers = (
     }
 
     case ESubjectActions.AddNewSubjectSuccess: {
-      const subjects = JSON.parse(JSON.stringify(state.subjects));
-      subjects.push(action.payload);
-
       return {
         ...state,
-        subjects
       }
     }
 

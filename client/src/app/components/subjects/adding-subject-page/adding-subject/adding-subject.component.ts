@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { AddNewSubject } from '../../../../redux/store/actions/subject.actions';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
+import { GetTeachers } from '../../../../redux/store/actions/teacher.actions';
 import { selectTeacherList } from '../../../../redux/store/selectors/teacher.selectors';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -36,7 +38,7 @@ export class AddingSubjectComponent implements OnInit {
   subjectInfo: string = '';
   cabinetInfo: string = '';
 
-  teachersAll: Teacher[] = [];
+  teacherList$: Observable<Teacher[]>;
 
   messageForSubject: any = INFO_MESSAGE_FOR_SUBJECT;
   messageForCabinet: any = INFO_MESSAGE_FOR_CABINET;
@@ -44,16 +46,16 @@ export class AddingSubjectComponent implements OnInit {
   constructor(
     private _router: Router,
     private _store: Store<IAppState>
-  ) { }
+  ) {
+    this.teacherList$ = _store.pipe(select(selectTeacherList));
+   }
 
   ngOnInit(): void {
     this.getTeachers();
   }
 
   getTeachers(): void {
-    this._store
-      .pipe(select(selectTeacherList))
-      .subscribe((teachers) => this.teachersAll = teachers);
+    this._store.dispatch(new GetTeachers());
   }
 
   changeItemValue(valueItem: any, itemName: string) {

@@ -17,7 +17,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
-import { appReducers } from './redux/store/reducers/app.reducers';
+import { appReducers } from './redux/store/app.reducers';
 import { environment } from '../environments/environment';
 import { StudentEffects } from './redux/store/effects/student.effects';
 import { SubjectEffects } from './redux/store/effects/subject.effects';
@@ -25,6 +25,7 @@ import { TeacherEffects } from './redux/store/effects/teacher.effects';
 import { SubjectDetailEffects } from './redux/store/subjects/subject-detail/subject-detail.effects';
 import { SubjectsTableEffects } from './redux/store/subjects/subjects-table/subjects-table.effects';
 import { SubjectTeachersEffects } from './redux/store/subjects/subject-teachers/subject-teachers.effects';
+import { StudentsTableEffects } from './redux/store/students/students-table/students-table.effects';
 import { HttpStudentService } from './common/services/students/http-student.service';
 import { HttpSubjectService } from './common/services/subjects/http-subject.service';
 import { HttpTeacherService } from './common/services/teachers/http-teacher.service';
@@ -49,6 +50,7 @@ import { HttpTeacherService } from './common/services/teachers/http-teacher.serv
       SubjectDetailEffects,
       SubjectsTableEffects,
       SubjectTeachersEffects,
+      StudentsTableEffects,
     ]),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     !environment.production ? StoreDevtoolsModule.instrument() : []

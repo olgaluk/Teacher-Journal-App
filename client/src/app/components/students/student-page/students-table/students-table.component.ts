@@ -1,24 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Student } from '../../../../common/entities/student';
-
-import {
-  GetStudentsByName
-} from '../../../../redux/store/actions/student.actions';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
+
 import {
-  selectStudentList,
-  selectSearchedStudents
-} from '../../../../redux/store/selectors/student.selectors';
+  getStudentList,
+  getStudentsByName,
+  reset,
+} from '../../../../redux/store/students/students-table/students-table.actions';
+
+import {
+  selectStudentList
+} from '../../../../redux/store/students/students-table/students-table.selectors';
+
+import { Student } from '../../../../common/entities/student';
 
 @Component({
   selector: 'students-table-app',
   templateUrl: './students-table.component.html',
   styleUrls: ['./students-table.component.scss']
 })
-export class StudentsTableComponent {
+export class StudentsTableComponent implements OnInit, OnDestroy {
   students$: Observable<Student[]>;
 
   constructor(
@@ -27,9 +30,16 @@ export class StudentsTableComponent {
     this.students$ = _store.pipe(select(selectStudentList));
   }
 
+  ngOnInit(): void {
+    this._store.dispatch(getStudentList());
+  }
+
   searchStudents(name: string) {
-    const studentsName = name.trim();
-    this._store.dispatch(new GetStudentsByName(studentsName));
-    this.students$ = this._store.pipe(select(selectSearchedStudents));
+    const inputName = name.trim();
+    this._store.dispatch(getStudentsByName({ inputName }));
+  }
+
+  ngOnDestroy(): void {
+    this._store.dispatch(reset());
   }
 }
