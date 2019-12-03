@@ -118,7 +118,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }));
   }
 
-  ngAfterViewChecked() {
+  ngAfterViewChecked(): void {
     if (this.bsModalRef &&
       this.itemSelected !== this.bsModalRef.content.itemSelected &&
       this.bsModalRef.content.itemSelected) {

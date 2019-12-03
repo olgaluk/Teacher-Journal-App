@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
-import { selectSubjectList } from '../../../../redux/store/selectors/subject.selectors';
+import { getSubjectList, reset } from '../../../../redux/store/subjects/subjects-table/subjects-table.actions';
+import { selectSubjectList } from '../../../../redux/store/subjects/subjects-table/subjects-table.selectors';
 
 import { Subject } from '../../../../common/entities/subject';
 
@@ -13,7 +14,7 @@ import { Subject } from '../../../../common/entities/subject';
   templateUrl: './subjects-table.component.html',
   styleUrls: ['./subjects-table.component.scss']
 })
-export class SubjectsTableComponent {
+export class SubjectsTableComponent implements OnInit, OnDestroy {
   subjects$: Observable<Subject[]>;
 
   constructor(
@@ -23,7 +24,15 @@ export class SubjectsTableComponent {
     this.subjects$ = this._store.pipe(select(selectSubjectList));
   }
 
-  navigateToSubject(selectedSubject: Subject) {
-    this._router.navigate(['subjects', selectedSubject.name]);
+  ngOnInit(): void {
+    this._store.dispatch(getSubjectList());
+  }
+
+  navigateToSubject(subjectName: string) {
+    this._router.navigate(['subjects', subjectName]);
+  }
+
+  ngOnDestroy(): void {
+    this._store.dispatch(reset());
   }
 }
