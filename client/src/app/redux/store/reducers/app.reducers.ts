@@ -8,6 +8,7 @@ import { teacherReducers } from '../reducers/teacher.reducers';
 
 import { subjectDetailReducers } from '../subjects/subject-detail/subject-detail.reducers';
 import { subjectsTableReducers } from '../subjects/subjects-table/subjects-table.reducers';
+import { subjectTeachersReducers } from '../subjects/subject-teachers/subject-teachers.reducers';
 
 export const appReducers: ActionReducerMap<IAppState, any> = {
   router: routerReducer,
@@ -16,4 +17,5 @@ export const appReducers: ActionReducerMap<IAppState, any> = {
   teachers: teacherReducers,
   subjectDetail: subjectDetailReducers,
   subjectsTable: subjectsTableReducers,
+  subjectTeachers: subjectTeachersReducers,
 };

@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
-import { selectTeacherListBySubject } from '../../../../redux/store/selectors/teacher.selectors';
+import { selectTeacherListBySubject } from '../../../../redux/store/subjects/subject-teachers/subject-teachers.selectors';
 import {
-  GetTeachersBySubject,
-  DeleteTeachersBySubject
-} from '../../../../redux/store/actions/teacher.actions';
+  getTeacherListbySubject,
+  reset,
+} from '../../../../redux/store/subjects/subject-teachers/subject-teachers.actions';
 
 import { Teacher } from '../../../../common/entities/teacher';
 
@@ -35,19 +35,19 @@ export class SubjectTeachersComponent implements OnInit, OnDestroy {
     this.getTeachers();
   }
 
-  ngOnDestroy(): void {
-    this.deleteTeachers();
-  }
-
   getTeachers(): void {
-    this._store.dispatch(new GetTeachersBySubject(this.subjectName));
+    this._store.dispatch(getTeacherListbySubject({ subjectName: this.subjectName }));
   }
 
   deleteTeachers(): void {
-    this._store.dispatch(new DeleteTeachersBySubject());
+    this._store.dispatch(reset());
   }
 
-  navigateToSubjectDetail(selectedTeacher: Teacher) {
-    this._router.navigate(['subjects', `${this.subjectName}`, selectedTeacher.id]);
+  navigateToSubjectDetail(selectedTeacherId: string) {
+    this._router.navigate(['subjects', `${this.subjectName}`, selectedTeacherId]);
+  }
+
+  ngOnDestroy(): void {
+    this.deleteTeachers();
   }
 }

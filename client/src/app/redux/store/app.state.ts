@@ -4,13 +4,15 @@ import { IStudentState, initialStudentState } from './state/student.state';
 import { ISubjectState, initialSubjectState } from './state/subject.state';
 import { ITeacherState, initialTeacherState } from './state/teacher.state';
 
-
-
-
 import {
   ISubjectsTableState,
   initialSubjectsTableState
 } from './subjects/subjects-table/subjects-table.state';
+
+import {
+  ISubjectTeachersState,
+  initialSubjectTeachersState
+} from './subjects/subject-teachers/subject-teachers.state';
 
 import {
   ISubjectDetailState,
@@ -24,6 +26,7 @@ export interface IAppState {
   teachers: ITeacherState;
   subjectDetail: ISubjectDetailState;
   subjectsTable: ISubjectsTableState;
+  subjectTeachers: ISubjectTeachersState;
 }
 
 export const initialAppState: IAppState = {
@@ -32,6 +35,7 @@ export const initialAppState: IAppState = {
   teachers: initialTeacherState,
   subjectDetail: initialSubjectDetailState,
   subjectsTable: initialSubjectsTableState,
+  subjectTeachers: initialSubjectTeachersState,
 }
 
 export function getInitialState(): IAppState {
