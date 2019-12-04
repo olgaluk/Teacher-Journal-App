@@ -15,8 +15,8 @@ import { NotificationSelfClosingComponent }
 import { Teacher } from '../../../../common/entities/teacher';
 import { Subject } from '../../../../common/entities/subject';
 
-import { INFO_MESSAGE_FOR_SUBJECT } from '../../../../common/constants/info-message-for-subject';
-import { INFO_MESSAGE_FOR_CABINET } from '../../../../common/constants/info-message-for-cabinet';
+import { EMessageForSubject } from '../../../../common/constants/info-message-for-subject';
+import { EMessageForCabinet } from '../../../../common/constants/info-message-for-cabinet';
 
 @Component({
   selector: 'app-adding-subject',
@@ -40,15 +40,12 @@ export class AddingSubjectComponent implements OnInit {
 
   teacherList$: Observable<Teacher[]>;
 
-  messageForSubject: any = INFO_MESSAGE_FOR_SUBJECT;
-  messageForCabinet: any = INFO_MESSAGE_FOR_CABINET;
-
   constructor(
     private _router: Router,
     private _store: Store<IAppState>
   ) {
     this.teacherList$ = _store.pipe(select(selectTeacherList));
-   }
+  }
 
   ngOnInit(): void {
     this.getTeachers();
@@ -73,11 +70,11 @@ export class AddingSubjectComponent implements OnInit {
 
   checkSubjectLengthCondition(subject: string): boolean {
     if (!subject) {
-      this.subjectInfo = this.messageForSubject.emptyField;
+      this.subjectInfo = EMessageForSubject.EmptyField;
       return false;
     }
     if (subject.length < 4) {
-      this.subjectInfo = this.messageForSubject.lengthBottomLine;
+      this.subjectInfo = EMessageForSubject.LengthBottomLine;
       return false;
     }
     return true;
@@ -85,15 +82,15 @@ export class AddingSubjectComponent implements OnInit {
 
   checkCabinetLengthCondition(cabinet: number): boolean {
     if (!cabinet && cabinet !== 0) {
-      this.cabinetInfo = this.messageForCabinet.emptyField;
+      this.cabinetInfo = EMessageForCabinet.EmptyField;
       return false;
     }
     if (cabinet < 1) {
-      this.cabinetInfo = this.messageForCabinet.valueBottomLine;
+      this.cabinetInfo = EMessageForCabinet.ValueBottomLine;
       return false;
     }
     if (cabinet > 30) {
-      this.cabinetInfo = this.messageForCabinet.valueTopLine;
+      this.cabinetInfo = EMessageForCabinet.ValueTopLine;
       return false;
     }
     return true;

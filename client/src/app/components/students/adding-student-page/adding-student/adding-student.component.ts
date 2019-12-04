@@ -1,139 +1,118 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, SubscriptionLike } from 'rxjs';
 
-import { AddNewStudent } from '../../../../redux/store/actions/student.actions';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
+
+import {
+  updateName,
+  updateLastName,
+  updateAge,
+  updateAddress,
+  reset,
+  addNewStudent,
+} from '../../../../redux/store/students/adding-student/adding-student.actions';
+
+import {
+  selectName,
+  selectLastName,
+  selectAge,
+  selectAddress,
+  selectNameInfo,
+  selectLastNameInfo,
+  selectAgeInfo,
+  selectAddressInfo,
+  selectDataSaved,
+  selectValuesСorrectness,
+} from '../../../../redux/store/students/adding-student/adding-student.selectors';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
-
-import { Student } from 'src/app/common/entities/student';
-
-import { INFO_MESSAGE_FOR_NAME } from '../../../../common/constants/info-message-for-name';
-import { INFO_MESSAGE_FOR_LAST_NAME } from '../../../../common/constants/info-message-for-last-name';
-import { INFO_MESSAGE_FOR_AGE } from '../../../../common/constants/info-message-for-age';
-import { INFO_MESSAGE_FOR_ADDRESS } from '../../../../common/constants/info-message-for-address';
 
 @Component({
   selector: 'app-adding-student',
   templateUrl: './adding-student.component.html',
   styleUrls: ['./adding-student.component.scss']
 })
-export class AddingStudentComponent {
-
+export class AddingStudentComponent implements OnInit, OnDestroy {
   @ViewChild(ModalComponent, { static: false })
   private templateModalComponent: ModalComponent;
 
   @ViewChild(NotificationSelfClosingComponent, { static: false })
   private notification: NotificationSelfClosingComponent;
 
-  name: string = "";
-  lastName: string = "";
-  age: number;
-  address: string = "";
+  subscription: SubscriptionLike;
 
-  nameInfo: string = "";
-  lastNameInfo: string = "";
-  ageInfo: string = "";
-  addressInfo: string = "";
+  name$: Observable<string>;
+  lastName$: Observable<string>;
+  age$: Observable<number | null>;
+  address$: Observable<string>;
 
-  messageForName: any = INFO_MESSAGE_FOR_NAME;
-  messageForLastName: any = INFO_MESSAGE_FOR_LAST_NAME;
-  messageForAge: any = INFO_MESSAGE_FOR_AGE;
-  messageForAddress: any = INFO_MESSAGE_FOR_ADDRESS;
+  nameInfo$: Observable<string>;
+  lastNameInfo$: Observable<string>;
+  ageInfo$: Observable<string>;
+  addressInfo$: Observable<string>;
+
+  newDataSaved$: Observable<boolean>;
+  correctness$: Observable<boolean>;
 
   constructor(
     private _router: Router,
     private _store: Store<IAppState>
-  ) { }
+  ) {
+    this.name$ = _store.pipe(select(selectName));
+    this.lastName$ = _store.pipe(select(selectLastName));
+    this.age$ = _store.pipe(select(selectAge));
+    this.address$ = _store.pipe(select(selectAddress));
+    this.nameInfo$ = _store.pipe(select(selectNameInfo));
+    this.lastNameInfo$ = _store.pipe(select(selectLastNameInfo));
+    this.ageInfo$ = _store.pipe(select(selectAgeInfo));
+    this.addressInfo$ = _store.pipe(select(selectAddressInfo));
+    this.newDataSaved$ = _store.pipe(select(selectDataSaved));
+    this.correctness$ = _store.pipe(select(selectValuesСorrectness));
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.newDataSaved$.subscribe(
+      ((saved: boolean) => {
+        if (saved) {
+          this.notification.openNotification();
+          setTimeout(() => this._router.navigate(['/students']), 4000);
+        }
+      })
+    );
+  }
 
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "name") {
-      this.name = valueItem;
+      this._store.dispatch(updateName({ name: valueItem }));
     }
     if (itemName === "lastName") {
-      this.lastName = valueItem;
+      this._store.dispatch(updateLastName({ lastName: valueItem }));
     }
     if (itemName === "age") {
-      this.age = +valueItem;
+      this._store.dispatch(updateAge({ age: +valueItem }));
     }
     if (itemName === "address") {
-      this.address = valueItem.trim();
+      this._store.dispatch(updateAddress({ address: valueItem.trim() }));
     }
   }
 
-  checkNameLengthCondition(name: string): boolean {
-    if (!name) {
-      this.nameInfo = this.messageForName.emptyField;
-      return false;
-    }
-    if (name.length < 2) {
-      this.nameInfo = this.messageForName.lengthBottomLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkLastNameLengthCondition(lastName: string): boolean {
-    if (!lastName) {
-      this.lastNameInfo = this.messageForLastName.emptyField;
-      return false;
-    }
-    if (lastName.length < 2) {
-      this.lastNameInfo = this.messageForLastName.lengthBottomLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkAgeRestrictionsCondition(age: number | null): boolean {
-    if (!age && age !== 0) {
-      this.ageInfo = this.messageForAge.emptyField;
-      return false;
-    }
-    if (age < 17) {
-      this.ageInfo = this.messageForAge.valueBottomLine;
-      return false;
-    }
-    if (age > 24) {
-      this.ageInfo = this.messageForAge.valueTopLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkAddressLengthCondition(address: string): boolean {
-    if (!address) {
-      this.addressInfo = this.messageForAddress.emptyField;
-      return false;
-    }
-    if (address.length < 6) {
-      this.addressInfo = this.messageForAddress.valueBottomLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkNewStudentParameters(): boolean {
-    const nameLengthCondition: boolean = this.checkNameLengthCondition(this.name);
-    const lastNameLengthCondition: boolean = this.checkLastNameLengthCondition(this.lastName);
-    const ageRestrictionsCondition: boolean = this.checkAgeRestrictionsCondition(this.age);
-    const addressLengthCondition: boolean = this.checkAddressLengthCondition(this.address);
-    return (nameLengthCondition && lastNameLengthCondition &&
-      ageRestrictionsCondition && addressLengthCondition);
-  }
-
-  addNewStudent(): void {
-    const conditionForAdding: boolean = this.checkNewStudentParameters();
-    if (conditionForAdding) {
-      const newStudent: Student = new Student(this.name, this.lastName, this.age, this.address);
-      this._store.dispatch(new AddNewStudent(newStudent));
-      this.notification.openNotification();
-      setTimeout(() => this._router.navigate(['/students']), 4000);
+  addNewStudent($event: any): void {
+    if ($event.target.value) {
+      this._store.dispatch(addNewStudent());
     } else {
       this.templateModalComponent.openModal();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._store.dispatch(reset());
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
     }
   }
 }

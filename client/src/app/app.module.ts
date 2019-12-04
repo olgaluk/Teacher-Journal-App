@@ -26,6 +26,7 @@ import { SubjectDetailEffects } from './redux/store/subjects/subject-detail/subj
 import { SubjectsTableEffects } from './redux/store/subjects/subjects-table/subjects-table.effects';
 import { SubjectTeachersEffects } from './redux/store/subjects/subject-teachers/subject-teachers.effects';
 import { StudentsTableEffects } from './redux/store/students/students-table/students-table.effects';
+import { AddingStudentEffects } from './redux/store/students/adding-student/adding-student.effects';
 import { HttpStudentService } from './common/services/students/http-student.service';
 import { HttpSubjectService } from './common/services/subjects/http-subject.service';
 import { HttpTeacherService } from './common/services/teachers/http-teacher.service';
@@ -51,6 +52,7 @@ import { HttpTeacherService } from './common/services/teachers/http-teacher.serv
       SubjectsTableEffects,
       SubjectTeachersEffects,
       StudentsTableEffects,
+      AddingStudentEffects,
     ]),
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     !environment.production ? StoreDevtoolsModule.instrument() : []

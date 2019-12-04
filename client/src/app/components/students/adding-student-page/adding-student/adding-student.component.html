@@ -6,20 +6,22 @@
 <div class="panel">
   <form class="form-horizontal">
 
-    <app-input-form-group [(itemInfo)]="nameInfo" itemName="Name" (changeItemValue)="changeItemValue($event, 'name')"
-      dataType="only letters" maxLength="15"></app-input-form-group>
-    <app-input-form-group [(itemInfo)]="lastNameInfo" itemName="Last name"
-      (changeItemValue)="changeItemValue($event, 'lastName')" dataType="only letters" maxLength="15">
+    <app-input-form-group itemValue="{{ name$ | async }}" itemInfo="{{ nameInfo$ | async }}" itemName="Name"
+      (changeItemValue)="changeItemValue($event, 'name')" dataType="only letters" maxLength="15"></app-input-form-group>
+    <app-input-form-group itemValue="{{ lastName$ | async }}" itemInfo="{{ lastNameInfo$ | async }}"
+      itemName="Last name" (changeItemValue)="changeItemValue($event, 'lastName')" dataType="only letters"
+      maxLength="15">
     </app-input-form-group>
-    <app-input-form-group [(itemInfo)]="ageInfo" itemName="Age" (changeItemValue)="changeItemValue($event, 'age')"
-      dataType="only numbers" maxLength="2"></app-input-form-group>
-    <app-input-form-group [(itemInfo)]="addressInfo" itemName="Address"
+    <app-input-form-group itemValue="{{ age$ | async }}" itemInfo="{{ ageInfo$ | async }}" itemName="Age"
+      (changeItemValue)="changeItemValue($event, 'age')" dataType="only numbers" maxLength="2"></app-input-form-group>
+    <app-input-form-group itemValue="{{ address$ | async }}" itemInfo="{{ addressInfo$ | async }}" itemName="Address"
       (changeItemValue)="changeItemValue($event, 'address')" dataType="only numbers, letters and spaces" maxLength="30">
     </app-input-form-group>
 
     <div class="form-group">
       <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
-        <button type="button" (click)="addNewStudent()" class="btn btn-info">ADD</button>
+        <button type="button" value="{{ correctness$ | async }}" (click)="addNewStudent($event)"
+          class="btn btn-info">ADD</button>
       </div>
     </div>
   </form>

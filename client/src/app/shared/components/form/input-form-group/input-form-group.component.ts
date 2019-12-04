@@ -13,10 +13,10 @@ import {
 })
 export class InputFormGroupComponent implements OnInit {
   @Input() dataType: string;
-  @Input() itemInfo: string;
+  @Input() itemInfo: string | null;
   @Input() itemName: string;
   @Input() maxLength: string;
-  @Input() itemValue: string;
+  @Input() itemValue: string | null;
   @Output() changeItemValue = new EventEmitter<any>();
 
   inputValue: string = '';
@@ -32,7 +32,7 @@ export class InputFormGroupComponent implements OnInit {
   }
 
   onItemValueChange($event: any): void {
-    this.itemInfo = '';
+    //this.itemInfo = '';
     if (this.dataType === 'only letters') {
       this.inputValue = $event.target.value = $event.target.value
         .replace(/[^A-Za-z]/g, '');

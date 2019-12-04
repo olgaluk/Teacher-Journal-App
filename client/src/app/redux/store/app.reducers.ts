@@ -10,6 +10,7 @@ import { subjectDetailReducers } from './subjects/subject-detail/subject-detail.
 import { subjectsTableReducers } from './subjects/subjects-table/subjects-table.reducers';
 import { subjectTeachersReducers } from './subjects/subject-teachers/subject-teachers.reducers';
 import { studentsTableReducers } from './students/students-table/students-table.reducers';
+import { addingStudentReducers } from './students/adding-student/adding-student.reducers';
 
 export const appReducers: ActionReducerMap<IAppState, any> = {
   router: routerReducer,
@@ -20,4 +21,5 @@ export const appReducers: ActionReducerMap<IAppState, any> = {
   subjectsTable: subjectsTableReducers,
   subjectTeachers: subjectTeachersReducers,
   studentsTable: studentsTableReducers,
+  addingStudent: addingStudentReducers,
 };
