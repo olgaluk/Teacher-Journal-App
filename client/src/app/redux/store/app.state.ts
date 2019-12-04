@@ -1,8 +1,9 @@
 import { RouterReducerState } from '@ngrx/router-store';
 
-import { IStudentState, initialStudentState } from './state/student.state';
-import { ISubjectState, initialSubjectState } from './state/subject.state';
-import { ITeacherState, initialTeacherState } from './state/teacher.state';
+import {
+  IAddingSubjectState,
+  initialAddingSubjectState,
+} from './subjects/adding-subject/adding-subject.state';
 
 import {
   IAddingStudentState,
@@ -31,25 +32,21 @@ import {
 
 export interface IAppState {
   router?: RouterReducerState;
-  students: IStudentState;
-  subjects: ISubjectState;
-  teachers: ITeacherState;
   subjectDetail: ISubjectDetailState;
   subjectsTable: ISubjectsTableState;
   subjectTeachers: ISubjectTeachersState;
   studentsTable: IStudentsTableState;
   addingStudent: IAddingStudentState;
+  addingSubject: IAddingSubjectState;
 }
 
 export const initialAppState: IAppState = {
-  students: initialStudentState,
-  subjects: initialSubjectState,
-  teachers: initialTeacherState,
   subjectDetail: initialSubjectDetailState,
   subjectsTable: initialSubjectsTableState,
   subjectTeachers: initialSubjectTeachersState,
   studentsTable: initialStudentsTableState,
   addingStudent: initialAddingStudentState,
+  addingSubject: initialAddingSubjectState,
 }
 
 export function getInitialState(): IAppState {

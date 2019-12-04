@@ -101,7 +101,7 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
   }
 
   addNewStudent($event: any): void {
-    if ($event.target.value) {
+    if ($event.target.value === 'true') {
       this._store.dispatch(addNewStudent());
     } else {
       this.templateModalComponent.openModal();

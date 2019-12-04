@@ -1,120 +1,124 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, SubscriptionLike } from 'rxjs';
 
-import { AddNewSubject } from '../../../../redux/store/actions/subject.actions';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
-import { GetTeachers } from '../../../../redux/store/actions/teacher.actions';
-import { selectTeacherList } from '../../../../redux/store/selectors/teacher.selectors';
+
+import {
+  updateSubjectName,
+  updateCabinet,
+  updateDescription,
+  updateSelectedTeachersId,
+  getTeacherList,
+  addNewSubject,
+  reset,
+} from '../../../../redux/store/subjects/adding-subject/adding-subject.actions';
+
+import {
+  selectSubjectName,
+  selectCabinet,
+  selectDescription,
+  selectTeacherList,
+  selectSubjectInfo,
+  selectCabinetInfo,
+  selectValuesСorrectness,
+  selectDataSaved,
+} from '../../../../redux/store/subjects/adding-subject/adding-subject.selectors';
 
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { Teacher } from '../../../../common/entities/teacher';
-import { Subject } from '../../../../common/entities/subject';
-
-import { EMessageForSubject } from '../../../../common/constants/info-message-for-subject';
-import { EMessageForCabinet } from '../../../../common/constants/info-message-for-cabinet';
 
 @Component({
   selector: 'app-adding-subject',
   templateUrl: './adding-subject.component.html',
   styleUrls: ['./adding-subject.component.scss']
 })
-export class AddingSubjectComponent implements OnInit {
-
+export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(ModalComponent, { static: false })
   private templateModalComponent: ModalComponent;
 
   @ViewChild(NotificationSelfClosingComponent, { static: false })
   private notification: NotificationSelfClosingComponent;
 
-  subject: string = '';
-  cabinet: number;
-  description: string = '';
+  subscription: SubscriptionLike;
 
-  subjectInfo: string = '';
-  cabinetInfo: string = '';
-
+  subjectName$: Observable<string>;
+  cabinet$: Observable<number | null>;
+  description$: Observable<string>;
   teacherList$: Observable<Teacher[]>;
+
+  subjectInfo$: Observable<string>;
+  cabinetInfo$: Observable<string>;
+
+  newDataSaved$: Observable<boolean>;
+  correctness$: Observable<boolean>;
 
   constructor(
     private _router: Router,
     private _store: Store<IAppState>
   ) {
+    this.subjectName$ = _store.pipe(select(selectSubjectName));
+    this.cabinet$ = _store.pipe(select(selectCabinet));
+    this.description$ = _store.pipe(select(selectDescription));
     this.teacherList$ = _store.pipe(select(selectTeacherList));
+    this.subjectInfo$ = _store.pipe(select(selectSubjectInfo));
+    this.cabinetInfo$ = _store.pipe(select(selectCabinetInfo));
+    this.newDataSaved$ = _store.pipe(select(selectDataSaved));
+    this.correctness$ = _store.pipe(select(selectValuesСorrectness));
   }
 
   ngOnInit(): void {
     this.getTeachers();
+    this.subscription = this.newDataSaved$.subscribe(
+      ((saved: boolean) => {
+        if (saved) {
+          this.notification.openNotification();
+          setTimeout(() => this._router.navigate(['/subjects']), 4000);
+        }
+      })
+    );
+  }
+
+  ngAfterViewInit(): void {
+    this.templateModalComponent.openModal();
   }
 
   getTeachers(): void {
-    this._store.dispatch(new GetTeachers());
+    this._store.dispatch(getTeacherList());
   }
 
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "subject") {
       if (valueItem) valueItem.toLowerCase();
-      this.subject = valueItem;
+      this._store.dispatch(updateSubjectName({ subjectName: valueItem }));
     }
     if (itemName === "cabinet") {
-      this.cabinet = +valueItem;
+      this._store.dispatch(updateCabinet({ cabinet: +valueItem }));
     }
     if (itemName === "description") {
-      this.description = valueItem;
+      this._store.dispatch(updateDescription({ description: valueItem }));
     }
   }
 
-  checkSubjectLengthCondition(subject: string): boolean {
-    if (!subject) {
-      this.subjectInfo = EMessageForSubject.EmptyField;
-      return false;
-    }
-    if (subject.length < 4) {
-      this.subjectInfo = EMessageForSubject.LengthBottomLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkCabinetLengthCondition(cabinet: number): boolean {
-    if (!cabinet && cabinet !== 0) {
-      this.cabinetInfo = EMessageForCabinet.EmptyField;
-      return false;
-    }
-    if (cabinet < 1) {
-      this.cabinetInfo = EMessageForCabinet.ValueBottomLine;
-      return false;
-    }
-    if (cabinet > 30) {
-      this.cabinetInfo = EMessageForCabinet.ValueTopLine;
-      return false;
-    }
-    return true;
-  }
-
-  checkNewSubjectParameters(): boolean {
-    const subjectLengthCondition: boolean = this.checkSubjectLengthCondition(this.subject);
-    const cabinetLengthCondition: boolean = this.checkCabinetLengthCondition(this.cabinet);
-    return (subjectLengthCondition && cabinetLengthCondition);
-  }
-
-  addNewSubject(
-    teachersID: string[]
-  ): void {
+  onChangeTeacherList(teachersID: string[]): void {
     let newTeachersID: string[];
     teachersID ? newTeachersID = teachersID : newTeachersID = [];
-    const conditionForAdding: boolean = this.checkNewSubjectParameters();
-    if (conditionForAdding) {
-      const newSubject = new Subject(this.subject, newTeachersID, this.cabinet, this.description);
-      this._store.dispatch(new AddNewSubject(newSubject));
-      this.notification.openNotification();
-      setTimeout(() => this._router.navigate(['/subjects']), 4000);
-    } else {
-      this.templateModalComponent.openModal();
+    this._store.dispatch(updateSelectedTeachersId({ selectedTeachersId: newTeachersID }));
+  }
+
+  addNewSubject(): void {
+    this._store.dispatch(addNewSubject());
+  }
+
+  ngOnDestroy(): void {
+    this._store.dispatch(reset());
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.subscription = null;
     }
   }
 }

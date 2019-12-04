@@ -6,8 +6,6 @@ import { catchError } from 'rxjs/operators';
 
 import { Subject } from '../../entities/subject';
 
-import { INewSubjectInfo } from '../../../redux/store/actions/subject.actions';
-
 @Injectable()
 export class HttpSubjectService {
   url: string = 'http://localhost:3004';
@@ -39,7 +37,7 @@ export class HttpSubjectService {
   }
 
   updateSubjectTeachersId(
-    subjectInfo: INewSubjectInfo
+    subjectInfo: any
   ): Observable<Subject> {
     const url = `${this.url}/subjects`;
     const body = subjectInfo;

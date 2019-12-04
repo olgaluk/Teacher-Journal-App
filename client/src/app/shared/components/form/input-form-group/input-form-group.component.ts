@@ -32,7 +32,6 @@ export class InputFormGroupComponent implements OnInit {
   }
 
   onItemValueChange($event: any): void {
-    //this.itemInfo = '';
     if (this.dataType === 'only letters') {
       this.inputValue = $event.target.value = $event.target.value
         .replace(/[^A-Za-z]/g, '');
