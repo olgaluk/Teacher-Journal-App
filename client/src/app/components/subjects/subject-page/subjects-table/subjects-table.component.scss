@@ -1,0 +1,25 @@
+.subject-container {
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+    padding: 15px;
+    border-radius: 7px;
+    background-color: rgb(253, 232, 206);
+
+    &:hover {
+      transition: 0.2s;
+      cursor: pointer;
+      background-color: rgb(243, 205, 159);
+    }
+
+    & h3 {
+      margin: 0px;
+      font-size: 1.8em;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: capitalize;
+    }
+  }
+}

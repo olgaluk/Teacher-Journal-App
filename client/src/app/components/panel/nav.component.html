@@ -1,0 +1,11 @@
+<nav>
+  <ul>
+    <li *ngFor="let routerLink of routerLinks">
+      <a routerLink="{{routerLink}}">
+        <button type="button" class="btn btn-primary">
+          {{ routerLink | slice:1:2 | uppercase }}{{ routerLink | slice:2 | lowercase }}
+        </button>
+      </a>
+    </li>
+  </ul>
+</nav>

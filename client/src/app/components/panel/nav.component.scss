@@ -1,0 +1,21 @@
+nav {
+  width: 80vw;
+  margin: 0 auto;
+
+  ul {
+    display: flex;
+    justify-content: center;
+
+    li {
+      margin: 5px;
+      list-style: none;
+
+      .btn-primary {
+        width: 200px;
+        padding: 15px;
+        transform: skew(345deg);
+        font-size: 22px;
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+<app-notification-self-closing header="Info" description="Student created!"></app-notification-self-closing>
+
+<div class="page-header">
+  <h2 class="text-center text-uppercase text-info">Add new student:</h2>
+</div>
+<div class="panel">
+  <form class="form-horizontal">
+
+    <app-input-form-group itemValue="{{ name$ | async }}" itemInfo="{{ nameInfo$ | async }}" itemName="Name"
+      (changeItemValue)="changeItemValue($event, 'name')" dataType="only letters" maxLength="15"></app-input-form-group>
+    <app-input-form-group itemValue="{{ lastName$ | async }}" itemInfo="{{ lastNameInfo$ | async }}"
+      itemName="Last name" (changeItemValue)="changeItemValue($event, 'lastName')" dataType="only letters"
+      maxLength="15">
+    </app-input-form-group>
+    <app-input-form-group itemValue="{{ age$ | async }}" itemInfo="{{ ageInfo$ | async }}" itemName="Age"
+      (changeItemValue)="changeItemValue($event, 'age')" dataType="only numbers" maxLength="2"></app-input-form-group>
+    <app-input-form-group itemValue="{{ address$ | async }}" itemInfo="{{ addressInfo$ | async }}" itemName="Address"
+      (changeItemValue)="changeItemValue($event, 'address')" dataType="only numbers, letters and spaces" maxLength="30">
+    </app-input-form-group>
+
+    <div class="form-group">
+      <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
+        <button type="button" value="{{ correctness$ | async }}" (click)="addNewStudent($event)"
+          class="btn btn-info">ADD</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="/students">
+  <app-button-add value="Back to student list"></app-button-add>
+</a>
+
+<app-modal>
+  <h3 class="text-info">Please check the filling and correctness of filling in all fields!</h3>
+</app-modal>

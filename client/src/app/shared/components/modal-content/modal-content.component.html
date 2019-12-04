@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left text-warning">{{title}}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div *ngIf="list.length">
+    <div class="row" *ngFor="let item of list">
+      <input class="col-sm-offset-1 col-sm-1 col-md-offset-1 col-md-1 col-lg-offset-1 col-lg-1" type="radio"
+        name="optionsRadios" value={{item}} [(ngModel)]="itemSelected">
+      <p class="text-info col-sm-offset-1 col-sm-8 col-md-offset-1 col-md-7 col-lg-offset-1 col-lg-6">{{item}}</p>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" (click)="close()">{{closeBtnName}}</button>
+</div>

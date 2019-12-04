@@ -1,0 +1,14 @@
+<div class="page-header">
+  <h2 class="text-center text-uppercase text-info">List of teachers by {{subjectName}}:</h2>
+</div>
+<div class="container-teachers">
+  <a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6"
+    *ngFor="let teacher of teacherListBySubject$ | async" (click)="navigateToSubjectDetail(teacher.id)">
+    <div>
+      <h3>{{teacher.name}} {{teacher.lastName}}</h3>
+    </div>
+  </a>
+</div>
+<a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="/subjects">
+  <app-button-add value="Back to subject list"></app-button-add>
+</a>
