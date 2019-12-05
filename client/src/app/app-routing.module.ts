@@ -38,6 +38,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { ROUTES } from "./app.routers";
 
+import { DropdownComponent } from './shared/components/form/dropdown/dropdown.component';
+
 @NgModule({
   imports: [
     RouterModule.forRoot(ROUTES),
@@ -69,7 +71,8 @@ import { ROUTES } from "./app.routers";
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
     OutputAllMarksDirective,
-    NotificationSelfClosingComponent
+    NotificationSelfClosingComponent,
+    DropdownComponent,
   ],
   declarations: [
     HomeComponent,
@@ -95,7 +98,8 @@ import { ROUTES } from "./app.routers";
     StatisticStudentsPageComponent,
     HighlightingMarkDirective,
     OutputAllMarksDirective,
-    NotificationSelfClosingComponent
+    NotificationSelfClosingComponent,
+    DropdownComponent,
   ],
   providers: [ExitSubjectDetailPageGuard],
   entryComponents: [ModalContentComponent]

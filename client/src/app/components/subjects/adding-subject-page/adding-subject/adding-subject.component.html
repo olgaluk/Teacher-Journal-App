@@ -20,7 +20,7 @@
           {{teacher.name}} {{teacher.lastName}}
         </option>
       </select>
-    </div>
+    </div>    
 
     <app-input-form-group itemValue="{{ description$ | async }}" itemName="Description"
       (changeItemValue)="changeItemValue($event, 'description')" dataType="only numbers, letters and spaces"

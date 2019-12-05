@@ -28,11 +28,13 @@ import { AddingSubjectEffects } from './redux/store/subjects/adding-subject/addi
 import { HttpStudentService } from './common/services/students/http-student.service';
 import { HttpSubjectService } from './common/services/subjects/http-subject.service';
 import { HttpTeacherService } from './common/services/teachers/http-teacher.service';
+import { DropdownPickerComponent } from './shared/components/form/dropdown-picker/dropdown-picker.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavComponent
+    NavComponent,
+    DropdownPickerComponent,
   ],
   imports: [
     BrowserModule,
