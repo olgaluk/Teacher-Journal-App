@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { SortPipe } from './common/pipes/sort/sort.pipe';
 import { AverageMarkPipe } from './common/pipes/average-mark/average-mark.pipe';
@@ -45,6 +45,7 @@ import { DropdownComponent } from './shared/components/form/dropdown/dropdown.co
     RouterModule.forRoot(ROUTES),
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     BsDatepickerModule.forRoot()
   ],
   exports: [

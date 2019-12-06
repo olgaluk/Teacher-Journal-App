@@ -1,13 +1,17 @@
-<div class="dropdown-group">
-  <button type="button" class="dropdown-placeholder">{{ getPlaceholder() }}</button>
-  <button type="button" class="dropdown-toggle" (click)="toggleOpen()">
-    <span>&#9658;</span>
-  </button>
-  <div class="menu">
-    <button type="button" class="dropdown-item" *ngFor="let option of options"
-      [ngClass]="{'active':option.value === value}" (click)="optionSelect(option);">
-      {{option.title}}
+<form [formGroup]="selectForm" novalidate>
+  <h6>{{ outputItems }}</h6>
+  <div>
+    <button type="button" class="dropdown-toggle" (click)="toggleOpen()">
+      <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>
+    <input type="checkbox" formControlName="formTitle">
+    <label>{{ formTitle }}</label>
+  </div>
+  <div *ngIf="isOpen()" class="menu">
+    <div *ngFor="let option of selectForm.controls.checkboxes.controls; let i = index;">
+      <input type="checkbox" [formControl]="option" class="" (change)="optionSelect(option.value, options[i]);">
+      <label>{{ options[i].title }}</label>
+    </div>
     <div class="dropdown-item" *ngIf="!options.length">No items for select</div>
   </div>
-</div>
+</form>
