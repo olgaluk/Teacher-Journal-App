@@ -1,12 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { AcademicPerformance } from '../../entities/academicPerformance';
+
 @Pipe({
   name: 'studentMarks',
-  pure: false
 })
 export class StudentMarksPipe implements PipeTransform {
 
-  transform(academicPerformance: any, ...args: any[]): any {
+  transform(academicPerformance: AcademicPerformance[]): number[] {
     if (!academicPerformance.length) { return [] };
     const marks = academicPerformance
       .map(studentPerformance => studentPerformance.marks)

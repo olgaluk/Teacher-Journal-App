@@ -5,14 +5,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class AverageMarkPipe implements PipeTransform {
 
-  transform(value: any, ...args: any[]): any {
+  transform(value: number[]): number | null {
     const marks = value
       .filter(mark => mark !== null);
     if (marks.length) {
       return (marks
         .reduce((acc, currentMark) => acc + currentMark, 0) / marks.length);
     } else {
-      return "";
+      return null;
     }
   }
 }
