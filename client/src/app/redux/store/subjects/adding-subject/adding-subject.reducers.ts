@@ -15,8 +15,7 @@ import {
   initialAddingSubjectState,
 } from './adding-subject.state';
 
-import { EMessageForSubject } from '../../../../common/constants/info-message-for-subject';
-import { EMessageForCabinet } from '../../../../common/constants/info-message-for-cabinet';
+import { messages } from '../../../../common/constants/messages';
 
 const _addingSubjectReducers = createReducer(initialAddingSubjectState,
   on(
@@ -59,10 +58,10 @@ const updateSubjectNameInState = (
 ): IAddingSubjectState => {
   let subjectInfo: string | null = null;
   if (!subjectName) {
-    subjectInfo = EMessageForSubject.EmptyField;
+    subjectInfo = messages.subjectName.emptyField;
   }
   if (subjectName.length < 4) {
-    subjectInfo = EMessageForSubject.LengthBottomLine;
+    subjectInfo = messages.subjectName.lengthBottomLine;
   }
 
   const { cabinet, cabinetInfo, selectedTeachersId } = state;
@@ -85,13 +84,13 @@ const updateCabinetInState = (
 ): IAddingSubjectState => {
   let cabinetInfo: string | null = null;
   if (!cabinet && cabinet !== 0) {
-    cabinetInfo = EMessageForCabinet.EmptyField;
+    cabinetInfo = messages.cabinet.emptyField;
   }
   if (cabinet < 1) {
-    cabinetInfo = EMessageForCabinet.ValueBottomLine;
+    cabinetInfo = messages.cabinet.lengthBottomLine;
   }
   if (cabinet > 30) {
-    cabinetInfo = EMessageForCabinet.ValueTopLine;
+    cabinetInfo = messages.cabinet.lengthTopLine;
   }
 
   const { subjectName, subjectInfo, selectedTeachersId } = state;

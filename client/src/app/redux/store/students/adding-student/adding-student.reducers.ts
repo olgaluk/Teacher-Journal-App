@@ -14,10 +14,7 @@ import {
   initialAddingStudentState,
 } from './adding-student.state';
 
-import { EMessageForName } from '../../../../common/constants/info-message-for-name';
-import { EMessageForLastName } from '../../../../common/constants/info-message-for-last-name';
-import { EMessageForAge } from '../../../../common/constants/info-message-for-age';
-import { EMessageForAddress } from '../../../../common/constants/info-message-for-address';
+import { messages } from '../../../../common/constants/messages';
 
 const _addingStudentReducers = createReducer(initialAddingStudentState,
   on(
@@ -56,10 +53,10 @@ const updateNameInState = (
 ): IAddingStudentState => {
   let nameInfo: string | null = null;
   if (!name) {
-    nameInfo = EMessageForName.EmptyField;
+    nameInfo = messages.name.emptyField;
   }
   if (name.length < 2) {
-    nameInfo = EMessageForName.LengthBottomLine;
+    nameInfo = messages.name.lengthBottomLine;
   }
 
   const { lastNameInfo, ageInfo, addressInfo, lastName, age, address } = state;
@@ -85,10 +82,10 @@ const updateLastNameInState = (
 ): IAddingStudentState => {
   let lastNameInfo: string | null = null;
   if (!lastName) {
-    lastNameInfo = EMessageForLastName.EmptyField;
+    lastNameInfo = messages.lastName.emptyField;
   }
   if (lastName.length < 2) {
-    lastNameInfo = EMessageForLastName.LengthBottomLine;
+    lastNameInfo = messages.lastName.lengthBottomLine;
   }
 
   const { nameInfo, ageInfo, addressInfo, name, age, address } = state;
@@ -114,13 +111,13 @@ const updateAgeInState = (
 ): IAddingStudentState => {
   let ageInfo: string | null = null;
   if (!age && age !== 0) {
-    ageInfo = EMessageForAge.EmptyField;
+    ageInfo = messages.age.emptyField;
   }
   if (age < 17) {
-    ageInfo = EMessageForAge.ValueBottomLine;
+    ageInfo = messages.age.lengthBottomLine;
   }
   if (age > 24) {
-    ageInfo = EMessageForAge.ValueTopLine;
+    ageInfo = messages.age.lengthTopLine;
   }
 
   const { lastNameInfo, nameInfo, addressInfo, lastName, name, address } = state;
@@ -146,10 +143,10 @@ const updateAddressInState = (
 ): IAddingStudentState => {
   let addressInfo: string | null = null;
   if (!address) {
-    addressInfo = EMessageForAddress.EmptyField;
+    addressInfo = messages.address.emptyField;
   }
   if (address.length < 6) {
-    addressInfo = EMessageForAddress.LengthBottomLine;
+    addressInfo = messages.address.lengthBottomLine;
   }
 
   const { lastNameInfo, ageInfo, nameInfo, lastName, age, name } = state;
