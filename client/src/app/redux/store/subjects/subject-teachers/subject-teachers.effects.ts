@@ -20,11 +20,10 @@ export class SubjectTeachersEffects {
     this.actions$.pipe(
       ofType(getTeacherListbySubject.type),
       concatMap(({ subjectName }) => this.httpSubjectService.getSubjectByName(subjectName)),
-      concatMap((subject: Subject) => this.httpTeacherService.getTeachersListById(subject.teachersID).pipe(
-        map((teachersBySubject: Teacher[]) => getTeacherListbySubjectSuccess({
-          teachersBySubject
-        }))
-      )),
+      concatMap((subject: Subject) => this.httpTeacherService.getTeachersListById(subject.teachersID)),
+      map((teachersBySubject: Teacher[]) => getTeacherListbySubjectSuccess({
+        teachersBySubject
+      }))
     )
   );
 

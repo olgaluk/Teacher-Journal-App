@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Store, select } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable, of } from 'rxjs';
-import { map, catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { map, catchError, mergeMap, withLatestFrom, switchMap } from 'rxjs/operators';
 
 import { IAppState } from '../../app.state';
 import { HttpTeacherService } from '../../../../common/services/teachers/http-teacher.service';
@@ -27,12 +27,8 @@ export class AddingSubjectEffects {
   getTeacherList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getTeacherList.type),
-      mergeMap(() => {
-        return this.httpTeacherService.getTeachers()
-          .pipe(
-            map((teacherList: Teacher[]) => getTeacherListSuccess({ teacherList }))
-          )
-      })
+      switchMap(() => this.httpTeacherService.getTeachers()),
+      map((teacherList: Teacher[]) => getTeacherListSuccess({ teacherList }))
     )
   );
 

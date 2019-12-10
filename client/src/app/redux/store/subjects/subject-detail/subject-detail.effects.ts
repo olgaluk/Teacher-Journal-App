@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Action, Store, select } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Observable, of, forkJoin } from 'rxjs';
-import { map, catchError, mergeMap, concatMap, withLatestFrom } from 'rxjs/operators';
+import { Observable, of, forkJoin, combineLatest } from 'rxjs';
+import { map, catchError, mergeMap, concatMap, withLatestFrom, switchMap } from 'rxjs/operators';
 
 import { HttpSubjectService } from '../../../../common/services/subjects/http-subject.service';
 import { HttpTeacherService } from '../../../../common/services/teachers/http-teacher.service';
@@ -62,18 +62,16 @@ export class SubjectDetailEffects {
   getSelectedSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getSelectedSubject.type),
-      mergeMap(({ subjectName }) => this.httpSubjectService.getSubjectByName(subjectName).pipe(
-        map((subject: Subject) => getSelectedSubjectSuccess({ subject }))
-      )),
+      switchMap(({ subjectName }) => this.httpSubjectService.getSubjectByName(subjectName)),
+      map((subject: Subject) => getSelectedSubjectSuccess({ subject }))
     )
   );
 
   getSelectedTeacher$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getSelectedTeacher.type),
-      mergeMap(({ teacherId }) => this.httpTeacherService.getTeacherById(teacherId).pipe(
-        map((teacher: Teacher) => getSelectedTeacherSuccess({ teacher }))
-      )),
+      switchMap(({ teacherId }) => this.httpTeacherService.getTeacherById(teacherId)),
+      map((teacher: Teacher) => getSelectedTeacherSuccess({ teacher }))
     )
   );
 
@@ -98,13 +96,11 @@ export class SubjectDetailEffects {
   getTeachersFromOtherSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getTeachersFromOtherSubject.type),
-      mergeMap(({ teacherListForCurrentSubject }) => this.httpTeacherService
-        .getTeachersFromOtherSubject(teacherListForCurrentSubject)
-        .pipe(
-          map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
-            teachersFromOtherSubjects
-          }))
-        )),
+      switchMap(({ teacherListForCurrentSubject }) => this.httpTeacherService
+        .getTeachersFromOtherSubject(teacherListForCurrentSubject)),
+      map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
+        teachersFromOtherSubjects
+      }))
     )
   );
 
@@ -140,24 +136,25 @@ export class SubjectDetailEffects {
       ofType(updateInfoInDatabase.type),
       withLatestFrom(this.store.pipe(select(selectStudentListBySubject))),
       mergeMap(([{ subjectId, teacherId, newTeacherId }, students]) => {
+
+        const studentsPipe$ = this.httpStudentService.updateStudents(students);
+        let resultPipe$ = studentsPipe$;
+
         if (newTeacherId && teacherId !== newTeacherId) {
-          return forkJoin(
-            this.httpStudentService.updateStudents(students),
-            this.httpSubjectService.updateSubjectTeachersId({
-              _id: subjectId,
-              teacherId,
-              newTeacherId,
-            }),
-          ).pipe(
-            map(() => updateDataSaved({ save: true })),
-            catchError(() => of(updateDataSaved({ save: false })))
-          );
-        } else {
-          return this.httpStudentService.updateStudents(students).pipe(
-            map(() => updateDataSaved({ save: true })),
-            catchError(() => of(updateDataSaved({ save: false })))
-          );
+
+          const teachersPipe$ = this.httpSubjectService.updateSubjectTeachersId({
+            _id: subjectId,
+            teacherId,
+            newTeacherId,
+          })
+
+          resultPipe$ = combineLatest(studentsPipe$, teachersPipe$);
         }
+
+        return resultPipe$.pipe(
+          map(() => updateDataSaved({ save: true })),
+          catchError(() => of(updateDataSaved({ save: false })))
+        );
       })
     )
   );
@@ -166,14 +163,11 @@ export class SubjectDetailEffects {
     this.actions$.pipe(
       ofType(updateTeachersFromOtherSubject.type),
       withLatestFrom(this.store.pipe(select(selectSelectedSubject))),
-      mergeMap(([props, subject]) => this.httpTeacherService
-        .getTeachersFromOtherSubject(subject.teachersID)
-        .pipe(
-          map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
-            teachersFromOtherSubjects
-          }))
-        )
-      ),
+      switchMap(([props, subject]) => this.httpTeacherService
+        .getTeachersFromOtherSubject(subject.teachersID)),
+      map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
+        teachersFromOtherSubjects
+      }))
     )
   );
 
