@@ -12,7 +12,7 @@ import { ButtonAddComponent } from './components/button/button-add/button-add.co
 import { InputFormGroupComponent } from './components/form/input-form-group/input-form-group.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { ModalContentComponent } from './components/modal-content/modal-content.component';
-import { DatepickerComponent } from './components/datepicker/datepicker.component';
+import { AppDatepickerComponent } from './components/datepicker/datepicker.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     InputFormGroupComponent,
     ModalComponent,
     ModalContentComponent,
-    DatepickerComponent,
+    AppDatepickerComponent,
     NotificationSelfClosingComponent,
   ],
   imports: [
@@ -39,7 +39,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     InputFormGroupComponent,
     ModalComponent,
     ModalContentComponent,
-    DatepickerComponent,
+    AppDatepickerComponent,
     NotificationSelfClosingComponent,
   ],
   entryComponents: [ModalContentComponent]
