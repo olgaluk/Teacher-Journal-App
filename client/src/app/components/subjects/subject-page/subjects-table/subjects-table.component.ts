@@ -15,14 +15,12 @@ import { Subject } from '../../../../common/entities/subject';
   styleUrls: ['./subjects-table.component.scss']
 })
 export class SubjectsTableComponent implements OnInit, OnDestroy {
-  subjects$: Observable<Subject[]>;
+  subjects$: Observable<Subject[]> = this.store.pipe(select(selectSubjectList));
 
   constructor(
     private store: Store<IAppState>,
     private router: Router
-  ) {
-    this.subjects$ = this.store.pipe(select(selectSubjectList));
-  }
+  ) { }
 
   ngOnInit(): void {
     this.store.dispatch(getSubjectList());

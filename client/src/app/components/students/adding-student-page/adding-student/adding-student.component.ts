@@ -45,34 +45,23 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
 
   subscription: SubscriptionLike;
 
-  name$: Observable<string>;
-  lastName$: Observable<string>;
-  age$: Observable<number | null>;
-  address$: Observable<string>;
+  name$: Observable<string> = this.store.pipe(select(selectName));
+  lastName$: Observable<string> = this.store.pipe(select(selectLastName));
+  age$: Observable<number | null> = this.store.pipe(select(selectAge));
+  address$: Observable<string> = this.store.pipe(select(selectAddress));
 
-  nameInfo$: Observable<string>;
-  lastNameInfo$: Observable<string>;
-  ageInfo$: Observable<string>;
-  addressInfo$: Observable<string>;
+  nameInfo$: Observable<string> = this.store.pipe(select(selectNameInfo));
+  lastNameInfo$: Observable<string> = this.store.pipe(select(selectLastNameInfo));
+  ageInfo$: Observable<string> = this.store.pipe(select(selectAgeInfo));
+  addressInfo$: Observable<string> = this.store.pipe(select(selectAddressInfo));
 
-  newDataSaved$: Observable<boolean>;
-  correctness$: Observable<boolean>;
+  newDataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
+  correctness$: Observable<boolean> = this.store.pipe(select(selectValuesСorrectness));
 
   constructor(
     private router: Router,
     private store: Store<IAppState>
-  ) {
-    this.name$ = store.pipe(select(selectName));
-    this.lastName$ = store.pipe(select(selectLastName));
-    this.age$ = store.pipe(select(selectAge));
-    this.address$ = store.pipe(select(selectAddress));
-    this.nameInfo$ = store.pipe(select(selectNameInfo));
-    this.lastNameInfo$ = store.pipe(select(selectLastNameInfo));
-    this.ageInfo$ = store.pipe(select(selectAgeInfo));
-    this.addressInfo$ = store.pipe(select(selectAddressInfo));
-    this.newDataSaved$ = store.pipe(select(selectDataSaved));
-    this.correctness$ = store.pipe(select(selectValuesСorrectness));
-  }
+  ) { }
 
   ngOnInit(): void {
     this.subscription = this.newDataSaved$.subscribe(

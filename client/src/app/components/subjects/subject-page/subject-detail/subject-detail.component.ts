@@ -64,15 +64,15 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   subjectName: string;
   messageAboutChanges: string = messages.savingChanges;
 
-  teacher$: Observable<Teacher>;
-  subject$: Observable<Subject>;
-  students$: Observable<Student[]>;
-  dates$: Observable<string[]>;
-  teachersFromOtherSubjects$: Observable<Teacher[]>;
-  visibilitySaveButton: Observable<boolean>;
+  teacher$: Observable<Teacher> = this.store.pipe(select(selectSelectedTeacher));
+  subject$: Observable<Subject> = this.store.pipe(select(selectSelectedSubject));
+  students$: Observable<Student[]> = this.store.pipe(select(selectStudentListBySubject));
+  dates$: Observable<string[]> = this.store.pipe(select(selectDates));
+  teachersFromOtherSubjects$: Observable<Teacher[]> = this.store.pipe(select(selectTeachersFromOtherSubjects));
+  visibilitySaveButton$: Observable<boolean> = this.store.pipe(select(selectVisibilitySaveButton));
+  newDataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
 
   saved: boolean = true;
-  newDataSaved: Observable<boolean>;
 
   teacherTitle: string;
   itemSelected: string = "";
@@ -86,19 +86,11 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   ) {
     this.teacherId = activateRoute.snapshot.params['teacherId'];
     this.subjectName = activateRoute.snapshot.params['subjectName'];
-
-    this.teacher$ = store.pipe(select(selectSelectedTeacher));
-    this.subject$ = store.pipe(select(selectSelectedSubject));
-    this.students$ = store.pipe(select(selectStudentListBySubject));
-    this.dates$ = store.pipe(select(selectDates));
-    this.teachersFromOtherSubjects$ = store.pipe(select(selectTeachersFromOtherSubjects));
-    this.visibilitySaveButton = store.pipe(select(selectVisibilitySaveButton));
-    this.newDataSaved = store.pipe(select(selectDataSaved));
   }
 
   ngOnInit(): void {
     this.getInitialInfo(this.subjectName, this.teacherId);
-    this.subscription = this.newDataSaved.subscribe(
+    this.subscription = this.newDataSaved$.subscribe(
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();

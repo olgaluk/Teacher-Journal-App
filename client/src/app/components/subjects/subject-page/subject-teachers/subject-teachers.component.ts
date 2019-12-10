@@ -19,7 +19,8 @@ import { Teacher } from '../../../../common/entities/teacher';
 })
 export class SubjectTeachersComponent implements OnInit, OnDestroy {
   subjectName: string;
-  teacherListBySubject$: Observable<Teacher[]>;
+  teacherListBySubject$: Observable<Teacher[]> = this.store
+    .pipe(select(selectTeacherListBySubject));
 
   constructor(
     private store: Store<IAppState>,
@@ -27,8 +28,6 @@ export class SubjectTeachersComponent implements OnInit, OnDestroy {
     private activateRoute: ActivatedRoute
   ) {
     this.subjectName = activateRoute.snapshot.params['id'];
-    this.teacherListBySubject$ = store
-      .pipe(select(selectTeacherListBySubject));
   }
 
   ngOnInit(): void {

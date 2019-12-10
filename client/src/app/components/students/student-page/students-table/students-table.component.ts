@@ -22,13 +22,11 @@ import { Student } from '../../../../common/entities/student';
   styleUrls: ['./students-table.component.scss']
 })
 export class StudentsTableComponent implements OnInit, OnDestroy {
-  students$: Observable<Student[]>;
+  students$: Observable<Student[]> = this.store.pipe(select(selectStudentList));
 
   constructor(
     private store: Store<IAppState>
-  ) {
-    this.students$ = store.pipe(select(selectStudentList));
-  }
+  ) { }
 
   ngOnInit(): void {
     this.store.dispatch(getStudentList());

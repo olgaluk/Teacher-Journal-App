@@ -46,30 +46,21 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
 
   subscription: SubscriptionLike;
 
-  subjectName$: Observable<string>;
-  cabinet$: Observable<number | null>;
-  description$: Observable<string>;
-  teacherList$: Observable<Teacher[]>;
+  subjectName$: Observable<string> = this.store.pipe(select(selectSubjectName));
+  cabinet$: Observable<number | null> = this.store.pipe(select(selectCabinet));
+  description$: Observable<string> = this.store.pipe(select(selectDescription));
+  teacherList$: Observable<Teacher[]> = this.store.pipe(select(selectTeacherList));
 
-  subjectInfo$: Observable<string>;
-  cabinetInfo$: Observable<string>;
+  subjectInfo$: Observable<string> = this.store.pipe(select(selectSubjectInfo));
+  cabinetInfo$: Observable<string> = this.store.pipe(select(selectCabinetInfo));
 
-  newDataSaved$: Observable<boolean>;
-  correctness$: Observable<boolean>;
+  newDataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
+  correctness$: Observable<boolean> = this.store.pipe(select(selectValuesСorrectness));
 
   constructor(
     private router: Router,
     private store: Store<IAppState>
-  ) {
-    this.subjectName$ = store.pipe(select(selectSubjectName));
-    this.cabinet$ = store.pipe(select(selectCabinet));
-    this.description$ = store.pipe(select(selectDescription));
-    this.teacherList$ = store.pipe(select(selectTeacherList));
-    this.subjectInfo$ = store.pipe(select(selectSubjectInfo));
-    this.cabinetInfo$ = store.pipe(select(selectCabinetInfo));
-    this.newDataSaved$ = store.pipe(select(selectDataSaved));
-    this.correctness$ = store.pipe(select(selectValuesСorrectness));
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getTeachers();
