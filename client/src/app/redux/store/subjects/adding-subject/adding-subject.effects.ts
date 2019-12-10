@@ -25,10 +25,10 @@ import { Teacher } from '../../../../common/entities/teacher';
 @Injectable()
 export class AddingSubjectEffects {
   getTeacherList$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(getTeacherList.type),
       mergeMap(() => {
-        return this._httpTeacherService.getTeachers()
+        return this.httpTeacherService.getTeachers()
           .pipe(
             map((teacherList: Teacher[]) => getTeacherListSuccess({ teacherList }))
           )
@@ -37,12 +37,12 @@ export class AddingSubjectEffects {
   );
 
   addNewSubject$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(addNewSubject.type),
-      withLatestFrom(this._store.pipe(select(selectSubject))),
+      withLatestFrom(this.store.pipe(select(selectSubject))),
       mergeMap(([props, { subjectName, cabinet, description, selectedTeachersId }]) => {
         const newSubject: Subject = new Subject(subjectName, selectedTeachersId, cabinet, description);
-        return this._httpSubjectService.addNewSubject(newSubject)
+        return this.httpSubjectService.addNewSubject(newSubject)
           .pipe(
             map(() => updateDataSaved({ dataSaved: true })),
             catchError(() => of(updateDataSaved({ dataSaved: false })))
@@ -52,9 +52,9 @@ export class AddingSubjectEffects {
   );
 
   constructor(
-    private _httpTeacherService: HttpTeacherService,
-    private _httpSubjectService: HttpSubjectService,
-    private _actions$: Actions,
-    private _store: Store<IAppState>,
+    private httpTeacherService: HttpTeacherService,
+    private httpSubjectService: HttpSubjectService,
+    private actions$: Actions,
+    private store: Store<IAppState>,
   ) { }
 }

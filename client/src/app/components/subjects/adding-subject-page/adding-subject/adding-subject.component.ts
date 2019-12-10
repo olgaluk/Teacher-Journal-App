@@ -58,17 +58,17 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
   correctness$: Observable<boolean>;
 
   constructor(
-    private _router: Router,
-    private _store: Store<IAppState>
+    private router: Router,
+    private store: Store<IAppState>
   ) {
-    this.subjectName$ = _store.pipe(select(selectSubjectName));
-    this.cabinet$ = _store.pipe(select(selectCabinet));
-    this.description$ = _store.pipe(select(selectDescription));
-    this.teacherList$ = _store.pipe(select(selectTeacherList));
-    this.subjectInfo$ = _store.pipe(select(selectSubjectInfo));
-    this.cabinetInfo$ = _store.pipe(select(selectCabinetInfo));
-    this.newDataSaved$ = _store.pipe(select(selectDataSaved));
-    this.correctness$ = _store.pipe(select(selectValuesСorrectness));
+    this.subjectName$ = store.pipe(select(selectSubjectName));
+    this.cabinet$ = store.pipe(select(selectCabinet));
+    this.description$ = store.pipe(select(selectDescription));
+    this.teacherList$ = store.pipe(select(selectTeacherList));
+    this.subjectInfo$ = store.pipe(select(selectSubjectInfo));
+    this.cabinetInfo$ = store.pipe(select(selectCabinetInfo));
+    this.newDataSaved$ = store.pipe(select(selectDataSaved));
+    this.correctness$ = store.pipe(select(selectValuesСorrectness));
   }
 
   ngOnInit(): void {
@@ -77,7 +77,7 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();
-          setTimeout(() => this._router.navigate(['/subjects']), 4000);
+          setTimeout(() => this.router.navigate(['/subjects']), 4000);
         }
       })
     );
@@ -88,34 +88,34 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   getTeachers(): void {
-    this._store.dispatch(getTeacherList());
+    this.store.dispatch(getTeacherList());
   }
 
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "subject") {
       if (valueItem) valueItem.toLowerCase();
-      this._store.dispatch(updateSubjectName({ subjectName: valueItem }));
+      this.store.dispatch(updateSubjectName({ subjectName: valueItem }));
     }
     if (itemName === "cabinet") {
-      this._store.dispatch(updateCabinet({ cabinet: +valueItem }));
+      this.store.dispatch(updateCabinet({ cabinet: +valueItem }));
     }
     if (itemName === "description") {
-      this._store.dispatch(updateDescription({ description: valueItem }));
+      this.store.dispatch(updateDescription({ description: valueItem }));
     }
   }
 
   onChangeTeacherList(teachersID: string[]): void {
     let newTeachersID: string[];
     teachersID ? newTeachersID = teachersID : newTeachersID = [];
-    this._store.dispatch(updateSelectedTeachersId({ selectedTeachersId: newTeachersID }));
+    this.store.dispatch(updateSelectedTeachersId({ selectedTeachersId: newTeachersID }));
   }
 
   addNewSubject(): void {
-    this._store.dispatch(addNewSubject());
+    this.store.dispatch(addNewSubject());
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;

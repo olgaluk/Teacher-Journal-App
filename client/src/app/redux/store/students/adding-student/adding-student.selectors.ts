@@ -2,7 +2,6 @@ import { createSelector } from '@ngrx/store';
 
 import { IAppState } from '../../app.state';
 import { IAddingStudentState } from './adding-student.state';
-import { state } from '@angular/animations';
 
 const selectAddingStudent = (state: IAppState) => state.addingStudent;
 

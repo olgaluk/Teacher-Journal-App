@@ -12,16 +12,16 @@ import { getSubjectList, getSubjectListSuccess } from './subjects-table.actions'
 @Injectable()
 export class SubjectsTableEffects {
   getSubjectList$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(getSubjectList.type),
-      mergeMap(() => this._httpSubjectService.getSubjects().pipe(
+      mergeMap(() => this.httpSubjectService.getSubjects().pipe(
         map((subjects: Subject[]) => getSubjectListSuccess({ subjects }))
       )),
     )
   );
 
   constructor(
-    private _httpSubjectService: HttpSubjectService,
-    private _actions$: Actions,
+    private httpSubjectService: HttpSubjectService,
+    private actions$: Actions,
   ) { }
 }

@@ -25,21 +25,21 @@ export class StudentsTableComponent implements OnInit, OnDestroy {
   students$: Observable<Student[]>;
 
   constructor(
-    private _store: Store<IAppState>
+    private store: Store<IAppState>
   ) {
-    this.students$ = _store.pipe(select(selectStudentList));
+    this.students$ = store.pipe(select(selectStudentList));
   }
 
   ngOnInit(): void {
-    this._store.dispatch(getStudentList());
+    this.store.dispatch(getStudentList());
   }
 
   searchStudents(name: string) {
     const inputName = name.trim();
-    this._store.dispatch(getStudentsByName({ inputName }));
+    this.store.dispatch(getStudentsByName({ inputName }));
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
   }
 }

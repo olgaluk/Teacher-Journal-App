@@ -20,12 +20,12 @@ import {
 @Injectable()
 export class AddingStudentEffects {
   addNewStudent$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(addNewStudent.type),
-      withLatestFrom(this._store.pipe(select(selectStudentInfo))),
+      withLatestFrom(this.store.pipe(select(selectStudentInfo))),
       mergeMap(([props, { name, lastName, age, address }]) => {
         const newStudent: Student = new Student(name, lastName, age, address);
-        return this._httpStudentService.addNewStudent(newStudent)
+        return this.httpStudentService.addNewStudent(newStudent)
           .pipe(
             map(() => updateDataSaved({ dataSaved: true })),
             catchError(() => of(updateDataSaved({ dataSaved: false })))
@@ -36,8 +36,8 @@ export class AddingStudentEffects {
   );
 
   constructor(
-    private _httpStudentService: HttpStudentService,
-    private _actions$: Actions,
-    private _store: Store<IAppState>,
+    private httpStudentService: HttpStudentService,
+    private actions$: Actions,
+    private store: Store<IAppState>,
   ) { }
 }

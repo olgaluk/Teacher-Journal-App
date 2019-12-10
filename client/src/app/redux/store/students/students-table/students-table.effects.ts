@@ -17,9 +17,9 @@ import {
 @Injectable()
 export class StudentsTableEffects {
   getStudentList$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(getStudentList.type),
-      mergeMap(() => this._httpStudentService.getStudents().pipe(
+      mergeMap(() => this.httpStudentService.getStudents().pipe(
         map((studentList: Student[]) => getStudentListSuccess({
           studentList
         }))
@@ -28,9 +28,9 @@ export class StudentsTableEffects {
   );
 
   getStudentsByName$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
+    this.actions$.pipe(
       ofType(getStudentsByName.type),
-      mergeMap(({ inputName }) => this._httpStudentService.getStudentsByName(inputName).pipe(
+      mergeMap(({ inputName }) => this.httpStudentService.getStudentsByName(inputName).pipe(
         map((searchedStudents: Student[]) => getStudentsByNameSuccess({
           searchedStudents
         }))
@@ -39,7 +39,7 @@ export class StudentsTableEffects {
   );
 
   constructor(
-    private _httpStudentService: HttpStudentService,
-    private _actions$: Actions,
+    private httpStudentService: HttpStudentService,
+    private actions$: Actions,
   ) { }
 }

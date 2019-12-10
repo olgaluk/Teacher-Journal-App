@@ -59,19 +59,19 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
   correctness$: Observable<boolean>;
 
   constructor(
-    private _router: Router,
-    private _store: Store<IAppState>
+    private router: Router,
+    private store: Store<IAppState>
   ) {
-    this.name$ = _store.pipe(select(selectName));
-    this.lastName$ = _store.pipe(select(selectLastName));
-    this.age$ = _store.pipe(select(selectAge));
-    this.address$ = _store.pipe(select(selectAddress));
-    this.nameInfo$ = _store.pipe(select(selectNameInfo));
-    this.lastNameInfo$ = _store.pipe(select(selectLastNameInfo));
-    this.ageInfo$ = _store.pipe(select(selectAgeInfo));
-    this.addressInfo$ = _store.pipe(select(selectAddressInfo));
-    this.newDataSaved$ = _store.pipe(select(selectDataSaved));
-    this.correctness$ = _store.pipe(select(selectValuesСorrectness));
+    this.name$ = store.pipe(select(selectName));
+    this.lastName$ = store.pipe(select(selectLastName));
+    this.age$ = store.pipe(select(selectAge));
+    this.address$ = store.pipe(select(selectAddress));
+    this.nameInfo$ = store.pipe(select(selectNameInfo));
+    this.lastNameInfo$ = store.pipe(select(selectLastNameInfo));
+    this.ageInfo$ = store.pipe(select(selectAgeInfo));
+    this.addressInfo$ = store.pipe(select(selectAddressInfo));
+    this.newDataSaved$ = store.pipe(select(selectDataSaved));
+    this.correctness$ = store.pipe(select(selectValuesСorrectness));
   }
 
   ngOnInit(): void {
@@ -79,7 +79,7 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();
-          setTimeout(() => this._router.navigate(['/students']), 4000);
+          setTimeout(() => this.router.navigate(['/students']), 4000);
         }
       })
     );
@@ -87,29 +87,29 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
 
   changeItemValue(valueItem: any, itemName: string) {
     if (itemName === "name") {
-      this._store.dispatch(updateName({ name: valueItem }));
+      this.store.dispatch(updateName({ name: valueItem }));
     }
     if (itemName === "lastName") {
-      this._store.dispatch(updateLastName({ lastName: valueItem }));
+      this.store.dispatch(updateLastName({ lastName: valueItem }));
     }
     if (itemName === "age") {
-      this._store.dispatch(updateAge({ age: +valueItem }));
+      this.store.dispatch(updateAge({ age: +valueItem }));
     }
     if (itemName === "address") {
-      this._store.dispatch(updateAddress({ address: valueItem.trim() }));
+      this.store.dispatch(updateAddress({ address: valueItem.trim() }));
     }
   }
 
   addNewStudent($event: any): void {
     if ($event.target.value === 'true') {
-      this._store.dispatch(addNewStudent());
+      this.store.dispatch(addNewStudent());
     } else {
       this.templateModalComponent.openModal();
     }
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;

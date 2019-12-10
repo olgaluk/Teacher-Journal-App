@@ -78,22 +78,22 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   itemSelected: string = "";
 
   constructor(
-    private _store: Store<IAppState>,
-    private _subjectInfoService: SubjectInfoService,
+    private store: Store<IAppState>,
+    private subjectInfoService: SubjectInfoService,
     private modalService: BsModalService,
-    private _router: Router,
-    private _activateRoute: ActivatedRoute
+    private router: Router,
+    private activateRoute: ActivatedRoute
   ) {
-    this.teacherId = _activateRoute.snapshot.params['teacherId'];
-    this.subjectName = _activateRoute.snapshot.params['subjectName'];
+    this.teacherId = activateRoute.snapshot.params['teacherId'];
+    this.subjectName = activateRoute.snapshot.params['subjectName'];
 
-    this.teacher$ = _store.pipe(select(selectSelectedTeacher));
-    this.subject$ = _store.pipe(select(selectSelectedSubject));
-    this.students$ = _store.pipe(select(selectStudentListBySubject));
-    this.dates$ = _store.pipe(select(selectDates));
-    this.teachersFromOtherSubjects$ = _store.pipe(select(selectTeachersFromOtherSubjects));
-    this.visibilitySaveButton = _store.pipe(select(selectVisibilitySaveButton));
-    this.newDataSaved = _store.pipe(select(selectDataSaved));
+    this.teacher$ = store.pipe(select(selectSelectedTeacher));
+    this.subject$ = store.pipe(select(selectSelectedSubject));
+    this.students$ = store.pipe(select(selectStudentListBySubject));
+    this.dates$ = store.pipe(select(selectDates));
+    this.teachersFromOtherSubjects$ = store.pipe(select(selectTeachersFromOtherSubjects));
+    this.visibilitySaveButton = store.pipe(select(selectVisibilitySaveButton));
+    this.newDataSaved = store.pipe(select(selectDataSaved));
   }
 
   ngOnInit(): void {
@@ -102,7 +102,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();
-          this._router.navigate([`subjects/${this.subjectName}/${this.newTeacherId ? this.newTeacherId : this.teacherId}`]);
+          this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId ? this.newTeacherId : this.teacherId}`]);
         }
       })
     );
@@ -112,7 +112,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     subjectName: string,
     teacherId: string,
   ): void {
-    this._store.dispatch(getInitialInfo({
+    this.store.dispatch(getInitialInfo({
       subjectName,
       teacherId,
     }));
@@ -128,9 +128,9 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
         this.teacherTitle = teacherSelected.split(" (id:")[0];
         let newTeacherId = teacherSelected.split(" (id: ")[1];
         this.newTeacherId = newTeacherId.split(")")[0];
-        this._store.dispatch(changeVisibilitySaveButton({ visibility: true }));
+        this.store.dispatch(changeVisibilitySaveButton({ visibility: true }));
         this.saved = false;
-        this._store.dispatch(updateDataSaved({ save: false }));
+        this.store.dispatch(updateDataSaved({ save: false }));
       })
     }
   }
@@ -148,21 +148,21 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     academicPerformance: AcademicPerformance[],
     subjectId: string,
   ): number | null {
-    return this._subjectInfoService
+    return this.subjectInfoService
       .getMark(date, academicPerformance, this.teacherId, subjectId);
   }
 
   addColumn(): void {
     this.saved = false;
-    this._store.dispatch(updateDataSaved({ save: false }));
-    this._store.dispatch(addEmptyDate());
+    this.store.dispatch(updateDataSaved({ save: false }));
+    this.store.dispatch(addEmptyDate());
   }
 
   onChangedDate(newDate: string, count: number): void {
     if (newDate) {
       this.saved = false;
-      this._store.dispatch(updateDataSaved({ save: false }));
-      this._store.dispatch(changeDate({ newDate, count }));
+      this.store.dispatch(updateDataSaved({ save: false }));
+      this.store.dispatch(changeDate({ newDate, count }));
     }
   }
 
@@ -170,13 +170,13 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     let newMark: number;
     inputMark ? newMark = +inputMark : newMark = null;
 
-    this._store.dispatch(changeMark({
+    this.store.dispatch(changeMark({
       markValue: newMark,
       date,
       studentId,
     }));
     this.saved = false;
-    this._store.dispatch(updateDataSaved({ save: false }));
+    this.store.dispatch(updateDataSaved({ save: false }));
   }
 
   openModalWithComponent(): void {
@@ -202,7 +202,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       this.templateModalComponent.openModal();
     } else {
       this.saved = true;
-      this._store.dispatch(saveChanges({
+      this.store.dispatch(saveChanges({
         teacherId: this.teacherId,
         newTeacherId: this.newTeacherId,
       }));
@@ -214,7 +214,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;

@@ -18,21 +18,21 @@ export class SubjectsTableComponent implements OnInit, OnDestroy {
   subjects$: Observable<Subject[]>;
 
   constructor(
-    private _store: Store<IAppState>,
-    private _router: Router
+    private store: Store<IAppState>,
+    private router: Router
   ) {
-    this.subjects$ = this._store.pipe(select(selectSubjectList));
+    this.subjects$ = this.store.pipe(select(selectSubjectList));
   }
 
   ngOnInit(): void {
-    this._store.dispatch(getSubjectList());
+    this.store.dispatch(getSubjectList());
   }
 
   navigateToSubject(subjectName: string) {
-    this._router.navigate(['subjects', subjectName]);
+    this.router.navigate(['subjects', subjectName]);
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
   }
 }
