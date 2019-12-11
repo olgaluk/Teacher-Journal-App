@@ -31,6 +31,8 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
+import { paths } from '../../../../common/constants/paths';
+
 @Component({
   selector: 'app-adding-student',
   templateUrl: './adding-student.component.html',
@@ -44,6 +46,7 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
   private notification: NotificationSelfClosingComponent;
 
   subscription: SubscriptionLike;
+  path: string = paths.studentsTable;
 
   name$: Observable<string> = this.store.pipe(select(selectName));
   lastName$: Observable<string> = this.store.pipe(select(selectLastName));

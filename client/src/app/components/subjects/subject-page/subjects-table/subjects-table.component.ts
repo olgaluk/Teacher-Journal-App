@@ -9,12 +9,15 @@ import { selectSubjectList } from '../../../../redux/store/subjects/subjects-tab
 
 import { Subject } from '../../../../common/entities/subject';
 
+import { paths } from '../../../../common/constants/paths';
+
 @Component({
   selector: 'app-subjects-table',
   templateUrl: './subjects-table.component.html',
   styleUrls: ['./subjects-table.component.scss']
 })
 export class SubjectsTableComponent implements OnInit, OnDestroy {
+  path: string = paths.addingSubject;
   subjects$: Observable<Subject[]> = this.store.pipe(select(selectSubjectList));
 
   constructor(

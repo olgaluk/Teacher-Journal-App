@@ -16,6 +16,7 @@ import { ModalComponent } from '../../../../shared/components/modal/modal.compon
 import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 import { errorMessages } from '../../../../common/constants/errorMessages';
+import { paths } from '../../../../common/constants/paths';
 
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
@@ -63,6 +64,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   newTeacherId: string;
   subjectName: string;
   messageAboutChanges: string = errorMessages.savingChanges;
+  path: string = paths.subjectsTable;
 
   teacher$: Observable<Teacher> = this.store.pipe(select(selectSelectedTeacher));
   subject$: Observable<Subject> = this.store.pipe(select(selectSelectedSubject));

@@ -7,15 +7,15 @@ export class HighlightingMarkDirective implements AfterContentChecked {
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2) { }
 
-  @Input('appHighlightingMark') mark: number;
+  @Input('appHighlightingMark') mark: number | null;
 
   ngAfterContentChecked() {
     this.highlight(this.mark);
   }
 
-  private highlight(mark: number) {
+  private highlight(mark: number | null) {
     const parentElementRef = this.renderer.parentNode(this.elementRef.nativeElement);
-    if (typeof mark !== 'number') {
+    if (mark === null) {
       this.renderer.addClass(this.elementRef.nativeElement, 'background-color_white');
       this.renderer.addClass(parentElementRef, 'background-color_white');
     } else if (mark < 5) {

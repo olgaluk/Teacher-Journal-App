@@ -11,6 +11,7 @@ import {
 } from '../../../../redux/store/subjects/subject-teachers/subject-teachers.actions';
 
 import { Teacher } from '../../../../common/entities/teacher';
+import { paths } from '../../../../common/constants/paths';
 
 @Component({
   selector: 'app-subject-teachers',
@@ -18,6 +19,7 @@ import { Teacher } from '../../../../common/entities/teacher';
   styleUrls: ['./subject-teachers.component.scss']
 })
 export class SubjectTeachersComponent implements OnInit, OnDestroy {
+  path: string = paths.subjectsTable;
   subjectName: string;
   teacherListBySubject$: Observable<Teacher[]> = this.store
     .pipe(select(selectTeacherListBySubject));

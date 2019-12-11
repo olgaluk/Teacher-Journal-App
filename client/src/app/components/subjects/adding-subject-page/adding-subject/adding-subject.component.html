@@ -6,8 +6,8 @@
 <div class="panel">
   <form class="form-horizontal">
 
-    <app-input-form-group itemValue="{{ subjectName$ | async }}" itemInfo="{{ subjectInfo$ | async }}" itemName="Subject"
-      (changeItemValue)="changeItemValue($event, 'subject')" dataType="only letters" maxLength="15">
+    <app-input-form-group itemValue="{{ subjectName$ | async }}" itemInfo="{{ subjectInfo$ | async }}"
+      itemName="Subject" (changeItemValue)="changeItemValue($event, 'subject')" dataType="only letters" maxLength="15">
     </app-input-form-group>
     <app-input-form-group itemValue="{{ cabinet$ | async }}" itemInfo="{{ cabinetInfo$ | async }}" itemName="Cabinet"
       (changeItemValue)="changeItemValue($event, 'cabinet')" dataType="only numbers" maxLength="2">
@@ -15,7 +15,8 @@
 
     <div class="form-group">
       <label class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Select teachers:</label>
-      <select multiple class="col-sm-9 col-md-7 col-lg-5" name="teachersID" [(ngModel)]="teachersID" (change)="onChangeTeacherList(teachersID)">
+      <select multiple class="col-sm-9 col-md-7 col-lg-5" name="teachersID" [(ngModel)]="teachersID"
+        (change)="onChangeTeacherList(teachersID)">
         <option *ngFor="let teacher of teacherList$ | async" [value]="teacher.id">
           {{teacher.name}} {{teacher.lastName}}
         </option>
@@ -35,7 +36,7 @@
   </form>
 </div>
 
-<a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="/subjects">
+<a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="{{ path }}">
   <app-button-add value="Back to subject list"></app-button-add>
 </a>
 

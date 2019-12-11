@@ -15,6 +15,7 @@ import {
 } from '../../../../redux/store/students/students-table/students-table.selectors';
 
 import { Student } from '../../../../common/entities/student';
+import { paths } from '../../../..//common/constants/paths';
 
 @Component({
   selector: 'students-table-app',
@@ -22,6 +23,7 @@ import { Student } from '../../../../common/entities/student';
   styleUrls: ['./students-table.component.scss']
 })
 export class StudentsTableComponent implements OnInit, OnDestroy {
+  path: string = paths.addingStudent;
   students$: Observable<Student[]> = this.store.pipe(select(selectStudentList));
 
   constructor(

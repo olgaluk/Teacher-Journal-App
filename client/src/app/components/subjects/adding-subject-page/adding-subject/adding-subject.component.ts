@@ -31,6 +31,7 @@ import { NotificationSelfClosingComponent }
   from '../../../../shared/notifications/notification-self-closing/notification-self-closing.component';
 
 import { Teacher } from '../../../../common/entities/teacher';
+import { paths } from '../../../../common/constants/paths';
 
 @Component({
   selector: 'app-adding-subject',
@@ -45,6 +46,7 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
   private notification: NotificationSelfClosingComponent;
 
   subscription: SubscriptionLike;
+  path: string = paths.subjectsTable;
 
   subjectName$: Observable<string> = this.store.pipe(select(selectSubjectName));
   cabinet$: Observable<number | null> = this.store.pipe(select(selectCabinet));
