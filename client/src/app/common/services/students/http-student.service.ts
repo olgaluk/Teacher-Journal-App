@@ -1,20 +1,34 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { serverPath } from '../../constants/serverPath';
+
 import { Student } from '../../entities/student';
+
+const formUrlencodedHeaders = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }),
+}
+
+const jsonHeaders = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json'
+  }),
+}
 
 @Injectable()
 export class HttpStudentService {
-  url = 'http://localhost:3004';
+  url: string = serverPath;
 
   constructor(private http: HttpClient) { }
 
   getStudents(): Observable<Student[]> {
     const url = `${this.url}/students`;
-    return this.http.get<Student[]>(url).pipe(
+    return this.http.get<Student[]>(url, formUrlencodedHeaders).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);
@@ -30,7 +44,7 @@ export class HttpStudentService {
     let params = new HttpParams()
       .set('subjectId', `${subjectId}`)
       .set('teacherId', `${teacherId}`);
-    const options = { params: params };
+    const options = { ...formUrlencodedHeaders, params: params };
     return this.http.get<Student[]>(url, options).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
@@ -42,7 +56,7 @@ export class HttpStudentService {
     const url = `${this.url}/students/search`;
     let params = new HttpParams()
       .set('studentsName', `${studentsName}`);
-    const options = { params: params };
+    const options = { ...formUrlencodedHeaders, params: params };
     return this.http.get<Student[]>(url, options).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
@@ -53,7 +67,7 @@ export class HttpStudentService {
   addNewStudent(student: Student): Observable<Student> {
     const body = student;
     const url = `${this.url}/students`;
-    return this.http.post<Student>(url, body).pipe(
+    return this.http.post<Student>(url, body, jsonHeaders).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);
@@ -65,7 +79,7 @@ export class HttpStudentService {
   ): Observable<{}> {
     const url = `${this.url}/students`;
     const body = { students: JSON.stringify(students) };
-    return this.http.put<Student[]>(url, body).pipe(
+    return this.http.put<Student[]>(url, body, jsonHeaders).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);

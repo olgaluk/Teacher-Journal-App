@@ -11,7 +11,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HttpClientModule } from '@angular/common/http';
-import { httpInterceptorProviders } from './common/http-interceptors/index';
 
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -60,7 +59,6 @@ import { ExportComponent } from './components/export/export.component';
     NotFoundPageModule,
   ],
   providers: [
-    httpInterceptorProviders,
     HttpStudentService,
     HttpSubjectService,
     HttpTeacherService

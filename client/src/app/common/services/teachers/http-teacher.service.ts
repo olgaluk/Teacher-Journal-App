@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { serverPath } from '../../constants/serverPath';
+
 import { Teacher } from '../../entities/teacher';
+
+const httpHeaders = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }),
+}
 
 @Injectable()
 export class HttpTeacherService {
-  url: string = 'http://localhost:3004';
+  url: string = serverPath;
 
   constructor(private http: HttpClient) { }
 
   getTeachers(): Observable<Teacher[]> {
     const url = `${this.url}/teachers`;
-    return this.http.get<Teacher[]>(url).pipe(
+    return this.http.get<Teacher[]>(url, httpHeaders).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);
@@ -22,7 +30,10 @@ export class HttpTeacherService {
   }
 
   getTeachersListById(teachersID: string[]): Observable<Teacher[]> {
-    const options = { params: new HttpParams().set('teachersID', JSON.stringify(teachersID)) };
+    const options = {
+      ...httpHeaders,
+      params: new HttpParams().set('teachersID', JSON.stringify(teachersID))
+    };
     const url = `${this.url}/teachers`;
     return this.http.get<Teacher[]>(url, options).pipe(
       catchError(err => {
@@ -33,7 +44,7 @@ export class HttpTeacherService {
 
   getTeacherById(teacherId: string): Observable<Teacher> {
     const url = `${this.url}/teachers/id/${teacherId}`;
-    return this.http.get<Teacher>(url).pipe(
+    return this.http.get<Teacher>(url, httpHeaders).pipe(
       catchError(err => {
         console.log('message:', err.statusText);
         return throwError(err);
@@ -41,7 +52,10 @@ export class HttpTeacherService {
   }
 
   getTeachersFromOtherSubject(teachersIdBySubject: string[]): Observable<Teacher[]> {
-    const options = { params: new HttpParams().set('teachersID', JSON.stringify(teachersIdBySubject)) };
+    const options = {
+      ...httpHeaders,
+      params: new HttpParams().set('teachersID', JSON.stringify(teachersIdBySubject))
+    };
     const url = `${this.url}/teachers/other`;
     return this.http.get<Teacher[]>(url, options).pipe(
       catchError(err => {

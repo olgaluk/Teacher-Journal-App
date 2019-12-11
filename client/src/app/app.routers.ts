@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { paths } from './common/constants/paths';
+
 import { HomeComponent } from './components/home/home.component';
 import { StudentsTableComponent } from './components/students/student-page/students-table/students-table.component';
 import { SubjectsTableComponent } from './components/subjects/subject-page/subjects-table/subjects-table.component';
@@ -14,22 +16,22 @@ import { NotFoundPageComponent } from './components/not-found/not-found-page/not
 import { ExitSubjectDetailPageGuard } from './guards/exit.subject-detail-page.guard';
 
 export const ROUTES: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
-  { path: 'students', component: StudentsTableComponent, pathMatch: 'full' },
-  { path: 'students/adding', component: AddingStudentComponent, pathMatch: 'full' },
-  { path: 'subjects', component: SubjectsTableComponent, pathMatch: 'full' },
-  { path: 'subjects/adding', component: AddingSubjectComponent, pathMatch: 'full' },
-  { path: 'subjects/:id', component: SubjectTeachersComponent, pathMatch: 'full' },
+  { path: paths.home, component: HomeComponent, pathMatch: 'full' },
+  { path: paths.studentsTable, component: StudentsTableComponent, pathMatch: 'full' },
+  { path: paths.addingStudent, component: AddingStudentComponent, pathMatch: 'full' },
+  { path: paths.subjectsTable, component: SubjectsTableComponent, pathMatch: 'full' },
+  { path: paths.addingSubject, component: AddingSubjectComponent, pathMatch: 'full' },
+  { path: paths.subjectTeachers, component: SubjectTeachersComponent, pathMatch: 'full' },
   {
-    path: 'subjects/:subjectName/:teacherId',
+    path: paths.subjectDetail,
     component: SubjectDetailComponent,
     pathMatch: 'full',
     canDeactivate: [ExitSubjectDetailPageGuard]
   },
-  { path: 'statistics', component: StatisticPageComponent, pathMatch: 'full' },
-  { path: 'statistics/students', component: StatisticStudentsPageComponent, pathMatch: 'full' },
-  { path: 'export', component: ExportComponent, pathMatch: 'full' },
-  { path: 'nonexistent', component: NotFoundPageComponent, pathMatch: 'full' },
-  { path: 'main', redirectTo: '/', pathMatch: 'full' },
-  { path: '**', redirectTo: '/nonexistent' }
+  { path: paths.statistic, component: StatisticPageComponent, pathMatch: 'full' },
+  { path: paths.statisticStudents, component: StatisticStudentsPageComponent, pathMatch: 'full' },
+  { path: paths.export, component: ExportComponent, pathMatch: 'full' },
+  { path: paths.notFoundPage, component: NotFoundPageComponent, pathMatch: 'full' },
+  { path: paths.main, redirectTo: paths.home, pathMatch: 'full' },
+  { path: paths.nameless, redirectTo: paths.notFoundPage }
 ];
