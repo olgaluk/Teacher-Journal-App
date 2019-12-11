@@ -14,7 +14,7 @@ import {
   initialAddingStudentState,
 } from './adding-student.state';
 
-import { messages } from '../../../../common/constants/messages';
+import { errorMessages } from '../../../../common/constants/errorMessages';
 
 const _addingStudentReducers = createReducer(initialAddingStudentState,
   on(
@@ -53,10 +53,10 @@ const updateNameInState = (
 ): IAddingStudentState => {
   let nameInfo: string | null = null;
   if (!name) {
-    nameInfo = messages.name.emptyField;
+    nameInfo = errorMessages.name.emptyField;
   }
   if (name.length < 2) {
-    nameInfo = messages.name.lengthBottomLine;
+    nameInfo = errorMessages.name.lengthBottomLine;
   }
 
   const { lastNameInfo, ageInfo, addressInfo, lastName, age, address } = state;
@@ -82,10 +82,10 @@ const updateLastNameInState = (
 ): IAddingStudentState => {
   let lastNameInfo: string | null = null;
   if (!lastName) {
-    lastNameInfo = messages.lastName.emptyField;
+    lastNameInfo = errorMessages.lastName.emptyField;
   }
   if (lastName.length < 2) {
-    lastNameInfo = messages.lastName.lengthBottomLine;
+    lastNameInfo = errorMessages.lastName.lengthBottomLine;
   }
 
   const { nameInfo, ageInfo, addressInfo, name, age, address } = state;
@@ -111,13 +111,13 @@ const updateAgeInState = (
 ): IAddingStudentState => {
   let ageInfo: string | null = null;
   if (!age && age !== 0) {
-    ageInfo = messages.age.emptyField;
+    ageInfo = errorMessages.age.emptyField;
   }
   if (age < 17) {
-    ageInfo = messages.age.lengthBottomLine;
+    ageInfo = errorMessages.age.lengthBottomLine;
   }
   if (age > 24) {
-    ageInfo = messages.age.lengthTopLine;
+    ageInfo = errorMessages.age.lengthTopLine;
   }
 
   const { lastNameInfo, nameInfo, addressInfo, lastName, name, address } = state;
@@ -143,10 +143,10 @@ const updateAddressInState = (
 ): IAddingStudentState => {
   let addressInfo: string | null = null;
   if (!address) {
-    addressInfo = messages.address.emptyField;
+    addressInfo = errorMessages.address.emptyField;
   }
   if (address.length < 6) {
-    addressInfo = messages.address.lengthBottomLine;
+    addressInfo = errorMessages.address.lengthBottomLine;
   }
 
   const { lastNameInfo, ageInfo, nameInfo, lastName, age, name } = state;

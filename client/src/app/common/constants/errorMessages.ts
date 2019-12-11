@@ -5,7 +5,7 @@ interface IMessageFields {
   emptyField: string,
 }
 
-interface IMessages {
+interface IErrorMessages {
   name: IMessageFields,
   lastName: IMessageFields,
   age: IMessageFields,
@@ -15,7 +15,7 @@ interface IMessages {
   savingChanges: string,
 }
 
-export const messages: IMessages = {
+export const errorMessages: IErrorMessages = {
   name: {
     contentCharacters: 'This field can only contain letters!',
     lengthBottomLine: 'Invalid name length! This field must contain at least two letters.',

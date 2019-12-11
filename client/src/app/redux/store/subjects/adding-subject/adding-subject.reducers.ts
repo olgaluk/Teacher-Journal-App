@@ -15,7 +15,7 @@ import {
   initialAddingSubjectState,
 } from './adding-subject.state';
 
-import { messages } from '../../../../common/constants/messages';
+import { errorMessages } from '../../../../common/constants/errorMessages';
 
 const _addingSubjectReducers = createReducer(initialAddingSubjectState,
   on(
@@ -58,10 +58,10 @@ const updateSubjectNameInState = (
 ): IAddingSubjectState => {
   let subjectInfo: string | null = null;
   if (!subjectName) {
-    subjectInfo = messages.subjectName.emptyField;
+    subjectInfo = errorMessages.subjectName.emptyField;
   }
   if (subjectName.length < 4) {
-    subjectInfo = messages.subjectName.lengthBottomLine;
+    subjectInfo = errorMessages.subjectName.lengthBottomLine;
   }
 
   const { cabinet, cabinetInfo, selectedTeachersId } = state;
@@ -84,13 +84,13 @@ const updateCabinetInState = (
 ): IAddingSubjectState => {
   let cabinetInfo: string | null = null;
   if (!cabinet && cabinet !== 0) {
-    cabinetInfo = messages.cabinet.emptyField;
+    cabinetInfo = errorMessages.cabinet.emptyField;
   }
   if (cabinet < 1) {
-    cabinetInfo = messages.cabinet.lengthBottomLine;
+    cabinetInfo = errorMessages.cabinet.lengthBottomLine;
   }
   if (cabinet > 30) {
-    cabinetInfo = messages.cabinet.lengthTopLine;
+    cabinetInfo = errorMessages.cabinet.lengthTopLine;
   }
 
   const { subjectName, subjectInfo, selectedTeachersId } = state;
