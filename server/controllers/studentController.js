@@ -76,11 +76,11 @@ exports.student_replacement_put = (req, res) => {
 };
 
 exports.students_by_name_get = (req, res) => {
-  const { studentsName } = req.query;
+  const { name } = req.query;
 
   let studentsNameInParts = '';
-  if (studentsName) {
-    studentsNameInParts = studentsName
+  if (name) {
+    studentsNameInParts = name
       .toLowerCase()
       .split(' ')
       .map((name) => {
@@ -89,7 +89,7 @@ exports.students_by_name_get = (req, res) => {
       });
   }
 
-  if (!studentsName) {
+  if (!name) {
     Student
       .find()
       .then((result) => {

@@ -64,7 +64,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   newTeacherId: string;
   subjectName: string;
   messageAboutChanges: string = errorMessages.savingChanges;
-  path: string = paths.subjectsTable;
+  path: string = `/${paths.subjectsTable}`;
 
   teacher$: Observable<Teacher> = this.store.pipe(select(selectSelectedTeacher));
   subject$: Observable<Subject> = this.store.pipe(select(selectSelectedSubject));

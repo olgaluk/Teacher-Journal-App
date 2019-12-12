@@ -44,8 +44,8 @@ export class SubjectDetailEffects {
       ofType(getInitialInfo.type),
       mergeMap(({ subjectName, teacherId }) => {
         return forkJoin(
-          this.httpSubjectService.getSubjectByName(subjectName),
-          this.httpTeacherService.getTeacherById(teacherId)
+          this.httpSubjectService.getItemByName(subjectName),
+          this.httpTeacherService.getItemById(teacherId)
         );
       }),
       mergeMap(([subject, teacher]) => {
@@ -62,7 +62,7 @@ export class SubjectDetailEffects {
   getSelectedSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getSelectedSubject.type),
-      switchMap(({ subjectName }) => this.httpSubjectService.getSubjectByName(subjectName)),
+      switchMap(({ subjectName }) => this.httpSubjectService.getItemByName(subjectName)),
       map((subject: Subject) => getSelectedSubjectSuccess({ subject }))
     )
   );
@@ -70,7 +70,7 @@ export class SubjectDetailEffects {
   getSelectedTeacher$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getSelectedTeacher.type),
-      switchMap(({ teacherId }) => this.httpTeacherService.getTeacherById(teacherId)),
+      switchMap(({ teacherId }) => this.httpTeacherService.getItemById(teacherId)),
       map((teacher: Teacher) => getSelectedTeacherSuccess({ teacher }))
     )
   );

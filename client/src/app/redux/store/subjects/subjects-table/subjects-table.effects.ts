@@ -14,7 +14,7 @@ export class SubjectsTableEffects {
   getSubjectList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getSubjectList.type),
-      switchMap(() => this.httpSubjectService.getSubjects()),
+      switchMap(() => this.httpSubjectService.getItems()),
       map((subjects: Subject[]) => getSubjectListSuccess({ subjects }))
     )
   );

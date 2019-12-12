@@ -27,7 +27,7 @@ export class AddingSubjectEffects {
   getTeacherList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getTeacherList.type),
-      switchMap(() => this.httpTeacherService.getTeachers()),
+      switchMap(() => this.httpTeacherService.getItems()),
       map((teacherList: Teacher[]) => getTeacherListSuccess({ teacherList }))
     )
   );
@@ -38,7 +38,7 @@ export class AddingSubjectEffects {
       withLatestFrom(this.store.pipe(select(selectSubject))),
       mergeMap(([props, { subjectName, cabinet, description, selectedTeachersId }]) => {
         const newSubject: Subject = new Subject(subjectName, selectedTeachersId, cabinet, description);
-        return this.httpSubjectService.addNewSubject(newSubject)
+        return this.httpSubjectService.addNewItem(newSubject)
           .pipe(
             map(() => updateDataSaved({ dataSaved: true })),
             catchError(() => of(updateDataSaved({ dataSaved: false })))

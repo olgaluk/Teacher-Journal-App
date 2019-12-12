@@ -19,7 +19,7 @@ export class StudentsTableEffects {
   getStudentList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getStudentList.type),
-      switchMap(() => this.httpStudentService.getStudents()),
+      switchMap(() => this.httpStudentService.getItems()),
       map((studentList: Student[]) => getStudentListSuccess({
         studentList
       }))
@@ -29,7 +29,7 @@ export class StudentsTableEffects {
   getStudentsByName$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(getStudentsByName.type),
-      switchMap(({ inputName }) => this.httpStudentService.getStudentsByName(inputName)),
+      switchMap(({ inputName }) => this.httpStudentService.getItemListByName(inputName)),
       map((searchedStudents: Student[]) => getStudentsByNameSuccess({
         searchedStudents
       }))

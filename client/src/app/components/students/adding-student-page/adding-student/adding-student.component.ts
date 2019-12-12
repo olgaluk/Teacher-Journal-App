@@ -46,7 +46,7 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
   private notification: NotificationSelfClosingComponent;
 
   subscription: SubscriptionLike;
-  path: string = paths.studentsTable;
+  path: string = `/${paths.studentsTable}`;
 
   name$: Observable<string> = this.store.pipe(select(selectName));
   lastName$: Observable<string> = this.store.pipe(select(selectLastName));

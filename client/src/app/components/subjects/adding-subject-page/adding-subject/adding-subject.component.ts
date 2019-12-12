@@ -46,7 +46,7 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
   private notification: NotificationSelfClosingComponent;
 
   subscription: SubscriptionLike;
-  path: string = paths.subjectsTable;
+  path: string = `/${paths.subjectsTable}`;
 
   subjectName$: Observable<string> = this.store.pipe(select(selectSubjectName));
   cabinet$: Observable<number | null> = this.store.pipe(select(selectCabinet));

@@ -25,7 +25,7 @@ export class AddingStudentEffects {
       withLatestFrom(this.store.pipe(select(selectStudentInfo))),
       mergeMap(([props, { name, lastName, age, address }]) => {
         const newStudent: Student = new Student(name, lastName, age, address);
-        return this.httpStudentService.addNewStudent(newStudent)
+        return this.httpStudentService.addNewItem(newStudent)
           .pipe(
             map(() => updateDataSaved({ dataSaved: true })),
             catchError(() => of(updateDataSaved({ dataSaved: false })))

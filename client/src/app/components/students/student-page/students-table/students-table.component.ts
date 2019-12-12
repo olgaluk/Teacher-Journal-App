@@ -23,7 +23,7 @@ import { paths } from '../../../..//common/constants/paths';
   styleUrls: ['./students-table.component.scss']
 })
 export class StudentsTableComponent implements OnInit, OnDestroy {
-  path: string = paths.addingStudent;
+  path: string = `/${paths.addingStudent}`;
   students$: Observable<Student[]> = this.store.pipe(select(selectStudentList));
 
   constructor(

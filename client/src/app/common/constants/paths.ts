@@ -1,4 +1,8 @@
-export const paths = {
+interface IPaths {
+  [key: string]: string;
+}
+
+export const paths: IPaths = {
   home: '',
   studentsTable: 'students',
   addingStudent: 'students/adding',
@@ -12,4 +16,5 @@ export const paths = {
   notFoundPage: 'nonexistent',
   main: 'main',
   nameless: '**',
+  teachersTable: 'teachers',
 }

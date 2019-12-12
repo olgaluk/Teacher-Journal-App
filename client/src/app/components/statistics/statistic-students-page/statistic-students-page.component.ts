@@ -19,7 +19,7 @@ export class StatisticStudentsPageComponent implements OnInit {
   }
 
   getStudents(): void {
-    this.httpStudentService.getStudents()
+    this.httpStudentService.getItems()
       .subscribe((students: Student[]) => this.students = students);
   }
 

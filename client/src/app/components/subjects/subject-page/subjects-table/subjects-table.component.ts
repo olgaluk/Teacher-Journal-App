@@ -17,7 +17,7 @@ import { paths } from '../../../../common/constants/paths';
   styleUrls: ['./subjects-table.component.scss']
 })
 export class SubjectsTableComponent implements OnInit, OnDestroy {
-  path: string = paths.addingSubject;
+  path: string = `/${paths.addingSubject}`;
   subjects$: Observable<Subject[]> = this.store.pipe(select(selectSubjectList));
 
   constructor(

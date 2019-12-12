@@ -2,11 +2,11 @@
 const Teacher = require('../db/models/Teacher');
 
 exports.teachers_from_subject_get = (req, res, next) => {
-  if (!req.query.teachersID) {
+  if (!req.query.idList) {
     next();
   } else {
-    const { teachersID } = req.query;
-    const id = JSON.parse(teachersID);
+    const { idList } = req.query;
+    const id = JSON.parse(idList);
 
     Teacher.find({ id: { $in: id } })
       .then((result) => {
