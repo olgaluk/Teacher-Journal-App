@@ -2,10 +2,10 @@ import { Student } from '../../../../common/entities/student';
 
 export interface IStudentsTableState {
   studentList: Student[];
-  searchedStudents: Student[];
+  searchValue: string;
 }
 
 export const initialStudentsTableState: IStudentsTableState = {
-  studentList: null,
-  searchedStudents: null,
+  studentList: [],
+  searchValue: '',
 };

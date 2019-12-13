@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from '@ngrx/store';
+import { Action, Store, select } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+
+import { IAppState } from '../../../../redux/store/app.state';
 
 import { HttpStudentService } from '../../../../common/services/students/http-student.service';
 import { Student } from '../../../../common/entities/student';
@@ -14,11 +16,13 @@ import {
   getStudentsByNameSuccess,
 } from './students-table.actions';
 
+import { selectSearchValue } from './students-table.selectors';
+
 @Injectable()
 export class StudentsTableEffects {
   getStudentList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getStudentList.type),
+      ofType(getStudentList),
       switchMap(() => this.httpStudentService.getItems()),
       map((studentList: Student[]) => getStudentListSuccess({
         studentList
@@ -28,8 +32,9 @@ export class StudentsTableEffects {
 
   getStudentsByName$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getStudentsByName.type),
-      switchMap(({ inputName }) => this.httpStudentService.getItemListByName(inputName)),
+      ofType(getStudentsByName),
+      withLatestFrom(this.store.pipe(select(selectSearchValue))),
+      switchMap(([props, searchValue]) => this.httpStudentService.getItemListByName(searchValue.trim())),
       map((searchedStudents: Student[]) => getStudentsByNameSuccess({
         searchedStudents
       }))
@@ -39,5 +44,6 @@ export class StudentsTableEffects {
   constructor(
     private httpStudentService: HttpStudentService,
     private actions$: Actions,
+    private store: Store<IAppState>,
   ) { }
 }

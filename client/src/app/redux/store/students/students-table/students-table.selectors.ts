@@ -9,3 +9,8 @@ export const selectStudentList = createSelector(
   selectStudentsTable,
   (state: IStudentsTableState) => state.studentList
 );
+
+export const selectSearchValue = createSelector(
+  selectStudentsTable,
+  (state: IStudentsTableState) => state.searchValue
+);

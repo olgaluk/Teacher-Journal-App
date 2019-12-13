@@ -6,7 +6,6 @@ import { IAppState } from '../../../../redux/store/app.state';
 
 import {
   getStudentList,
-  getStudentsByName,
   reset,
 } from '../../../../redux/store/students/students-table/students-table.actions';
 
@@ -32,11 +31,6 @@ export class StudentsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(getStudentList());
-  }
-
-  searchStudents(name: string) {
-    const inputName = name.trim();
-    this.store.dispatch(getStudentsByName({ inputName }));
   }
 
   ngOnDestroy(): void {

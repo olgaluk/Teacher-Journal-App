@@ -21,7 +21,7 @@ import {
 export class AddingStudentEffects {
   addNewStudent$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(addNewStudent.type),
+      ofType(addNewStudent),
       withLatestFrom(this.store.pipe(select(selectStudentInfo))),
       mergeMap(([props, { name, lastName, age, address }]) => {
         const newStudent: Student = new Student(name, lastName, age, address);

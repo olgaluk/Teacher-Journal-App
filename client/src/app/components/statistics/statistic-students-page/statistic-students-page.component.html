@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let student of (students | sort); let counter = index;">
+      <tr *ngFor="let student of (students$ | async | sort); let counter = index;">
         <td>{{ counter + 1 }}</td>
         <td>{{ student.name }}</td>
         <td>{{ student.lastName }}</td>

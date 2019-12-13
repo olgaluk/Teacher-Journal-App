@@ -26,7 +26,7 @@ import { Teacher } from '../../../../common/entities/teacher';
 export class AddingSubjectEffects {
   getTeacherList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getTeacherList.type),
+      ofType(getTeacherList),
       switchMap(() => this.httpTeacherService.getItems()),
       map((teacherList: Teacher[]) => getTeacherListSuccess({ teacherList }))
     )
@@ -34,7 +34,7 @@ export class AddingSubjectEffects {
 
   addNewSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(addNewSubject.type),
+      ofType(addNewSubject),
       withLatestFrom(this.store.pipe(select(selectSubject))),
       mergeMap(([props, { subjectName, cabinet, description, selectedTeachersId }]) => {
         const newSubject: Subject = new Subject(subjectName, selectedTeachersId, cabinet, description);

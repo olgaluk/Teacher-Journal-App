@@ -1,44 +1,56 @@
 import { createAction, props } from '@ngrx/store';
 
-export enum EAddingStudentActions {
-  UpdateName = '[AddingStudent] Update student name',
-  UpdateLastName = '[AddingStudent] Update student last name',
-  UpdateAge = '[AddingStudent] Update student age',
-  UpdateAddress = '[AddingStudent] Update student address',
-  AddNewStudent = '[AddingStudent] Add new student',
-  UpdateDataSaved = '[AddingStudent] Update data saved',
-  Reset = '[AddingStudent] Reset student info',
+interface ITypeActions {
+  updateName: string;
+  updateLastName: string;
+  updateAge: string;
+  updateAddress: string;
+  addNewStudent: string;
+  updateDataSaved: string;
+  reset: string;
+}
+
+const BLOCK: string = '[AddingStudent]';
+
+const addingStudentActions: ITypeActions = {
+  updateName: `${BLOCK} Update student name`,
+  updateLastName: `${BLOCK} Update student last name`,
+  updateAge: `${BLOCK} Update student age`,
+  updateAddress: `${BLOCK} Update student address`,
+  addNewStudent: `${BLOCK} Add new student`,
+  updateDataSaved: `${BLOCK} Update data saved`,
+  reset: `${BLOCK} Reset student info`,
 }
 
 export const updateName = createAction(
-  EAddingStudentActions.UpdateName,
+  addingStudentActions.updateName,
   props<{ name: string }>()
 );
 
 export const updateLastName = createAction(
-  EAddingStudentActions.UpdateLastName,
+  addingStudentActions.updateLastName,
   props<{ lastName: string }>()
 );
 
 export const updateAge = createAction(
-  EAddingStudentActions.UpdateAge,
+  addingStudentActions.updateAge,
   props<{ age: number | null }>()
 );
 
 export const updateAddress = createAction(
-  EAddingStudentActions.UpdateAddress,
+  addingStudentActions.updateAddress,
   props<{ address: string }>()
 );
 
 export const addNewStudent = createAction(
-  EAddingStudentActions.AddNewStudent
+  addingStudentActions.addNewStudent
 );
 
 export const updateDataSaved = createAction(
-  EAddingStudentActions.UpdateDataSaved,
+  addingStudentActions.updateDataSaved,
   props<{ dataSaved: boolean }>()
 );
 
 export const reset = createAction(
-  EAddingStudentActions.Reset
+  addingStudentActions.reset
 );
