@@ -9,7 +9,7 @@ import { SubjectInfoService } from '../../../../common/services/subjects/subject
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
-import { AcademicPerformance } from '../../../../common/entities/academicPerformance';
+import { AcademicPerformance } from '../../../../common/entities/student';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -139,7 +139,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   getMark(
     date: string,
-    academicPerformance: AcademicPerformance[],
+    academicPerformance: AcademicPerformance,
     subjectId: string,
   ): number | null {
     return this.subjectInfoService

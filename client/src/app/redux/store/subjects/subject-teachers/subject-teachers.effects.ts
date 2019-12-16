@@ -18,7 +18,7 @@ import {
 export class SubjectTeachersEffects {
   getTeacherListBySubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getTeacherListbySubject.type),
+      ofType(getTeacherListbySubject),
       concatMap(({ subjectName }) => this.httpSubjectService.getItemByName(subjectName)),
       concatMap((subject: Subject) => this.httpTeacherService.getItemListById(subject.teachersID)),
       map((teachersBySubject: Teacher[]) => getTeacherListbySubjectSuccess({

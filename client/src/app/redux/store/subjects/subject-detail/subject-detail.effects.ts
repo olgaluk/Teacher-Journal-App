@@ -41,7 +41,7 @@ import {
 export class SubjectDetailEffects {
   getInitialInfo$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getInitialInfo.type),
+      ofType(getInitialInfo),
       mergeMap(({ subjectName, teacherId }) => {
         return forkJoin(
           this.httpSubjectService.getItemByName(subjectName),
@@ -52,7 +52,7 @@ export class SubjectDetailEffects {
         return [
           getSelectedSubjectSuccess({ subject }),
           getSelectedTeacherSuccess({ teacher }),
-          getStudentsBySelectedSubject({ teacherId: teacher.id, subjectId: subject._id }),
+          getStudentsBySelectedSubject({ teacherId: teacher.id, subjectName: subject.name }),
           getTeachersFromOtherSubject({ teacherListForCurrentSubject: subject.teachersID }),
         ];
       })
@@ -61,7 +61,7 @@ export class SubjectDetailEffects {
 
   getSelectedSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getSelectedSubject.type),
+      ofType(getSelectedSubject),
       switchMap(({ subjectName }) => this.httpSubjectService.getItemByName(subjectName)),
       map((subject: Subject) => getSelectedSubjectSuccess({ subject }))
     )
@@ -69,7 +69,7 @@ export class SubjectDetailEffects {
 
   getSelectedTeacher$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getSelectedTeacher.type),
+      ofType(getSelectedTeacher),
       switchMap(({ teacherId }) => this.httpTeacherService.getItemById(teacherId)),
       map((teacher: Teacher) => getSelectedTeacherSuccess({ teacher }))
     )
@@ -77,17 +77,17 @@ export class SubjectDetailEffects {
 
   getStudentsBySelectedSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getStudentsBySelectedSubject.type),
-      mergeMap(({ teacherId, subjectId }) => {
+      ofType(getStudentsBySelectedSubject),
+      mergeMap(({ teacherId, subjectName }) => {
         return forkJoin(
-          of({ teacherId, subjectId }),
-          this.httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectId)
+          of({ teacherId, subjectName }),
+          this.httpStudentService.getStudentsBySubjectAndTeacher(teacherId, subjectName)
         );
       }),
-      concatMap(([{ teacherId, subjectId }, students]) => {
+      concatMap(([{ teacherId, subjectName }, students]) => {
         return [
           getStudentsBySelectedSubjectSuccess({ students }),
-          getDates({ teacherId, subjectId })
+          getDates({ teacherId, subjectName })
         ];
       })
     )
@@ -95,7 +95,7 @@ export class SubjectDetailEffects {
 
   getTeachersFromOtherSubject$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getTeachersFromOtherSubject.type),
+      ofType(getTeachersFromOtherSubject),
       switchMap(({ teacherListForCurrentSubject }) => this.httpTeacherService
         .getTeachersFromOtherSubject(teacherListForCurrentSubject)),
       map((teachersFromOtherSubjects: Teacher[]) => getTeachersFromOtherSubjectSuccess({
@@ -106,25 +106,25 @@ export class SubjectDetailEffects {
 
   saveChanges$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(saveChanges.type),
+      ofType(saveChanges),
       withLatestFrom(this.store.pipe(select(selectSelectedSubject))),
       concatMap(([{ teacherId, newTeacherId }, subject]) => {
-        const subjectId = subject._id;
+        const subjectName = subject.name;
         if (newTeacherId && teacherId !== newTeacherId) {
           return [
             deleteEmptyMarks(),
-            getDates({ teacherId, subjectId }),
+            getDates({ teacherId, subjectName }),
             updateTeacherInStudents({ newTeacherId }),
             getSelectedTeacher({ teacherId: newTeacherId }),
             updateTeacherListInSubject({ teacherId, newTeacherId }),
             updateTeachersFromOtherSubject(),
-            updateInfoInDatabase({ subjectId, teacherId, newTeacherId }),
+            updateInfoInDatabase({ subjectName, teacherId, newTeacherId }),
           ];
         } else {
           return [
             deleteEmptyMarks(),
-            getDates({ teacherId, subjectId }),
-            updateInfoInDatabase({ subjectId, teacherId, newTeacherId }),
+            getDates({ teacherId, subjectName }),
+            updateInfoInDatabase({ subjectName, teacherId, newTeacherId }),
           ];
         }
       })
@@ -133,9 +133,9 @@ export class SubjectDetailEffects {
 
   updateInfoInDatabase$: Observable<Action> = createEffect(
     () => this.actions$.pipe(
-      ofType(updateInfoInDatabase.type),
+      ofType(updateInfoInDatabase),
       withLatestFrom(this.store.pipe(select(selectStudentListBySubject))),
-      mergeMap(([{ subjectId, teacherId, newTeacherId }, students]) => {
+      mergeMap(([{ subjectName, teacherId, newTeacherId }, students]) => {
 
         const studentsPipe$ = this.httpStudentService.updateStudents(students);
         let resultPipe$ = studentsPipe$;
@@ -143,7 +143,7 @@ export class SubjectDetailEffects {
         if (newTeacherId && teacherId !== newTeacherId) {
 
           const teachersPipe$ = this.httpSubjectService.updateSubjectTeachersId({
-            _id: subjectId,
+            name: subjectName,
             teacherId,
             newTeacherId,
           })

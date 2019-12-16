@@ -1,5 +1,4 @@
 export class Subject {
-  _id: string;
   constructor(
     public name: string,
     public teachersID: string[],

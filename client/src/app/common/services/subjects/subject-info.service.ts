@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { AcademicPerformance } from '../../entities/academicPerformance';
+import { AcademicPerformance } from '../../entities/student';
 
 @Injectable()
 export class SubjectInfoService {
   getMark(
     date: string,
-    academicPerformance: AcademicPerformance[],
+    academicPerformance: AcademicPerformance,
     teacherId: string,
     subjectId: string
   ): number | null {
+    /*
     let markValue;
     const studentInfo = academicPerformance
       .find((studentInfo) => {
@@ -28,5 +29,8 @@ export class SubjectInfoService {
         }
       })
     return (markValue || markValue === 0) ? markValue : null;
+     */
+ return null;
   }
+ 
 }

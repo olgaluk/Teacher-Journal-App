@@ -23,8 +23,8 @@ import {
 } from '../../subjects/subject-detail/subject-detail.state';
 
 import { Student } from '../../../../common/entities/student';
-import { Mark } from '../../../../common/entities/mark';
-import { AcademicPerformance } from '../../../../common/entities/academicPerformance';
+import { Marks } from '../../../../common/entities/student';
+import { AcademicPerformance } from '../../../../common/entities/student';
 import { Subject } from '../../../../common/entities/subject';
 
 const _subjectDetailReducers = createReducer(initialSubjectDetailState,
@@ -42,9 +42,9 @@ const _subjectDetailReducers = createReducer(initialSubjectDetailState,
   ),
   on(
     getDates,
-    (state, { teacherId, subjectId }) => ({
+    (state, { teacherId, subjectName }) => ({
       ...state,
-      dates: getCurrentDates(state.selectedStudentsBySubject, teacherId, subjectId)
+     dates: getCurrentDates(state.selectedStudentsBySubject, teacherId, subjectName)
     })
   ),
   on(

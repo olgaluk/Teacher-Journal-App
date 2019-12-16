@@ -34,15 +34,11 @@ exports.students_info_get = (req, res) => {
 };
 
 exports.students_by_teacher_get = (req, res) => {
-  const { teacherId, subjectId } = req.query;
+  const { teacherId, subjectName } = req.query;
+  const searchField = `academicPerformance.${subjectName}.teacherId`;
 
   Student
-    .find({}, 'academicPerformance')
-    .find({ 'academicPerformance.teacherId': teacherId, 'academicPerformance.subjectId': subjectId })
-    .then((result) => {
-      const studentsId = result.map((infoStudent) => infoStudent._id);
-      return Student.find({ _id: { $in: studentsId } });
-    })
+    .find({ [searchField]: teacherId })
     .then((students) => {
       res.status(200).send(students);
     })

@@ -8,6 +8,7 @@ import { Student } from '../../entities/student';
 export class SortPipe implements PipeTransform {
 
   transform(value: Student[]): Student[] {
+
     if (value.length) {
       const studentsSorting = JSON.parse(JSON.stringify(value))
         .sort((studentFirst, studentSecond) => {
@@ -23,6 +24,7 @@ export class SortPipe implements PipeTransform {
     } else {
       return [];
     }
+
   }
 
   getStudentMarks(student: Student): number[] {
@@ -34,4 +36,5 @@ export class SortPipe implements PipeTransform {
       .filter(mark => mark !== null);
     return studentMarks;
   }
+
 }

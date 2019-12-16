@@ -18,7 +18,7 @@ exports.subject_create_post = (req, res) => {
 };
 
 exports.subjects_info_get = (req, res) => {
-  Subject.find()
+  Subject.find({}, { _id: 0 })
     .then((result) => {
       if (result) {
         res.status(200).send(result);
@@ -35,7 +35,7 @@ exports.subjects_info_get = (req, res) => {
 exports.subject_find_get = (req, res) => {
   const subjectName = req.params[0];
 
-  Subject.findOne({ name: subjectName })
+  Subject.findOne({ name: subjectName }, { _id: 0 })
     .then((result) => {
       if (result) {
         res.status(200).send(result);

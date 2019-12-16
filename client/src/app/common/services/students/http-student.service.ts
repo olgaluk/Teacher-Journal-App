@@ -15,11 +15,11 @@ export class HttpStudentService extends HttpService<Student> {
 
   getStudentsBySubjectAndTeacher(
     teacherId: string,
-    subjectId: string
+    subjectName: string
   ): Observable<Student[]> {
     const url = `${this.serverPath}/${paths.studentsTable}/teacher`;
     let params = new HttpParams()
-      .set('subjectId', `${subjectId}`)
+      .set('subjectName', `${subjectName}`)
       .set('teacherId', `${teacherId}`);
     const options = { ...this.formUrlencodedHeaders, params: params };
     return this.getItemList(url, options);

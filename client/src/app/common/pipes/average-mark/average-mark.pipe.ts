@@ -6,6 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class AverageMarkPipe implements PipeTransform {
 
   transform(value: number[]): number | null {
+
     const marks = value
       .filter(mark => mark !== null);
     if (marks.length) {
@@ -14,5 +15,7 @@ export class AverageMarkPipe implements PipeTransform {
     } else {
       return null;
     }
+
   }
+
 }

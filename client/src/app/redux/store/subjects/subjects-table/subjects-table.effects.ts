@@ -13,7 +13,7 @@ import { getSubjectList, getSubjectListSuccess } from './subjects-table.actions'
 export class SubjectsTableEffects {
   getSubjectList$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
-      ofType(getSubjectList.type),
+      ofType(getSubjectList),
       switchMap(() => this.httpSubjectService.getItems()),
       map((subjects: Subject[]) => getSubjectListSuccess({ subjects }))
     )

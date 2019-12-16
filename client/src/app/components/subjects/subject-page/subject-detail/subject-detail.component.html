@@ -32,6 +32,7 @@
   </div>
 
   <table class="table table-bordered">
+
     <thead>
       <tr class="text-info text-uppercase">
         <th>Name</th>
@@ -43,6 +44,7 @@
         </th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let student of students$ | async">
         <td>{{ student.name }}</td>
