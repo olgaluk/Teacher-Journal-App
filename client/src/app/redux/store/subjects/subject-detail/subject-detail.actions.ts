@@ -93,7 +93,7 @@ export const getStudentsBySelectedSubjectSuccess = createAction(
 
 export const getDates = createAction(
   subjectDetailActions.getDates,
-  props<{ teacherId: string, subjectName: string }>()
+  props<{ subjectName: string }>()
 );
 
 export const getTeachersFromOtherSubject = createAction(
@@ -131,7 +131,7 @@ export const changeMark = createAction(
 
 export const saveChanges = createAction(
   subjectDetailActions.saveChanges,
-  props<{ teacherId: string, newTeacherId: string }>()
+  props<{ subjectName: string, teacherId: string, newTeacherId: string }>()
 );
 
 export const deleteEmptyMarks = createAction(

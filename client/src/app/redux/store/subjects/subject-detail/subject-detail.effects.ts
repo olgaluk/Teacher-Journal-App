@@ -87,7 +87,7 @@ export class SubjectDetailEffects {
       concatMap(([{ teacherId, subjectName }, students]) => {
         return [
           getStudentsBySelectedSubjectSuccess({ students }),
-          getDates({ teacherId, subjectName })
+          getDates({ subjectName })
         ];
       })
     )
@@ -107,13 +107,11 @@ export class SubjectDetailEffects {
   saveChanges$: Observable<Action> = createEffect(() =>
     this.actions$.pipe(
       ofType(saveChanges),
-      withLatestFrom(this.store.pipe(select(selectSelectedSubject))),
-      concatMap(([{ teacherId, newTeacherId }, subject]) => {
-        const subjectName = subject.name;
+      concatMap(({ subjectName, teacherId, newTeacherId }) => {
         if (newTeacherId && teacherId !== newTeacherId) {
           return [
             deleteEmptyMarks(),
-            getDates({ teacherId, subjectName }),
+            getDates({ subjectName }),
             updateTeacherInStudents({ newTeacherId }),
             getSelectedTeacher({ teacherId: newTeacherId }),
             updateTeacherListInSubject({ teacherId, newTeacherId }),
@@ -123,7 +121,7 @@ export class SubjectDetailEffects {
         } else {
           return [
             deleteEmptyMarks(),
-            getDates({ teacherId, subjectName }),
+            getDates({ subjectName }),
             updateInfoInDatabase({ subjectName, teacherId, newTeacherId }),
           ];
         }
@@ -143,7 +141,7 @@ export class SubjectDetailEffects {
         if (newTeacherId && teacherId !== newTeacherId) {
 
           const teachersPipe$ = this.httpSubjectService.updateSubjectTeachersId({
-            name: subjectName,
+            subjectName,
             teacherId,
             newTeacherId,
           })

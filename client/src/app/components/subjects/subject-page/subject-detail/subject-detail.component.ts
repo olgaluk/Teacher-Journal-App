@@ -4,12 +4,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
 import { Observable, SubscriptionLike } from 'rxjs';
 
-import { SubjectInfoService } from '../../../../common/services/subjects/subject-info.service';
-
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
-import { AcademicPerformance } from '../../../../common/entities/student';
 
 import { ModalContentComponent } from '../../../../shared/components/modal-content/modal-content.component';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
@@ -45,9 +42,6 @@ import {
 @Component({
   selector: 'app-subject-detail',
   templateUrl: './subject-detail.component.html',
-  providers: [
-    SubjectInfoService,
-  ],
   styleUrls: ['./subject-detail.component.scss']
 })
 export class SubjectDetailComponent implements OnInit, AfterViewChecked, ComponentCanDeactivate, OnDestroy {
@@ -81,7 +75,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   constructor(
     private store: Store<IAppState>,
-    private subjectInfoService: SubjectInfoService,
     private modalService: BsModalService,
     private router: Router,
     private activateRoute: ActivatedRoute
@@ -137,15 +130,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     }
   }
 
-  getMark(
-    date: string,
-    academicPerformance: AcademicPerformance,
-    subjectId: string,
-  ): number | null {
-    return this.subjectInfoService
-      .getMark(date, academicPerformance, this.teacherId, subjectId);
-  }
-
   addColumn(): void {
     this.saved = false;
     this.store.dispatch(updateDataSaved({ save: false }));
@@ -197,6 +181,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     } else {
       this.saved = true;
       this.store.dispatch(saveChanges({
+        subjectName: this.subjectName,
         teacherId: this.teacherId,
         newTeacherId: this.newTeacherId,
       }));

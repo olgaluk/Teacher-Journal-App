@@ -24,7 +24,6 @@ import {
 
 import { Student } from '../../../../common/entities/student';
 import { Marks } from '../../../../common/entities/student';
-import { AcademicPerformance } from '../../../../common/entities/student';
 import { Subject } from '../../../../common/entities/subject';
 
 const _subjectDetailReducers = createReducer(initialSubjectDetailState,
@@ -42,9 +41,9 @@ const _subjectDetailReducers = createReducer(initialSubjectDetailState,
   ),
   on(
     getDates,
-    (state, { teacherId, subjectName }) => ({
+    (state, { subjectName }) => ({
       ...state,
-     dates: getCurrentDates(state.selectedStudentsBySubject, teacherId, subjectName)
+      dates: getCurrentDates(state.selectedStudentsBySubject, subjectName)
     })
   ),
   on(
@@ -98,29 +97,24 @@ export function subjectDetailReducers(state, action): ISubjectDetailState {
 
 const getCurrentDates = (
   selectedStudentsBySubject: Student[],
-  teacherId: string,
-  subjectId: string,
+  subjectName: string,
 ): string[] => {
-  let dates = [];
+  let dates: string[] = [];
   const students: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
   students
-    .forEach(student => {
-      student.academicPerformance
-        .forEach(studentInfo => {
-          if (studentInfo.subjectId === subjectId
-            && studentInfo.teacherId === teacherId) {
-            studentInfo.marks.forEach(mark => dates.push(mark.date));
-          }
-        });
+    .forEach((student: Student) => {
+      const marks: Marks = student.academicPerformance[subjectName].marks;
+      const currentDates: string[] = Object.keys(marks);
+      dates = dates.concat(currentDates);
     });
   dates = Array.from(new Set(dates));
-  if (dates.includes("")) {
-    dates.splice(dates.indexOf(""), 1);
+  if (dates.includes('')) {
+    dates.splice(dates.indexOf(''), 1);
     dates = dates
       .map(date => (new Date(date)).getTime())
       .sort((a, b) => a - b)
       .map(date => (new Date(date)).toDateString());
-    dates.push("");
+    dates.push('');
   } else {
     dates = dates
       .map(date => (new Date(date)).getTime())
@@ -132,72 +126,48 @@ const getCurrentDates = (
 };
 
 const addEmptyDateInState = (state: ISubjectDetailState): ISubjectDetailState => {
-  const { dates, selectedSubject, selectedTeacher, selectedStudentsBySubject } = state;
+  const { dates, selectedSubject, selectedStudentsBySubject } = state;
   const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
 
   if (dates[dates.length - 1]) {
-    const subjectId: string = selectedSubject._id;
-    const teacherId: string = selectedTeacher.id;
+    const subjectName: string = selectedSubject.name;
 
-    newStudentsBySubject
-      .map(student => {
-        student.academicPerformance
-          .map(studentInfo => {
-            if (studentInfo.subjectId === subjectId
-              && studentInfo.teacherId === teacherId) {
-              studentInfo.marks.push(new Mark("", null))
-            }
-            return studentInfo;
-          });
-
-        return student;
-      });
+    newStudentsBySubject.forEach((student: Student) => {
+      student.academicPerformance[subjectName].marks[''] = null;
+    });
   }
 
   return {
     ...state,
     selectedStudentsBySubject: newStudentsBySubject,
-    dates: [...dates, ""],
+    dates: [...dates, ''],
     visibilitySaveButton: true,
   };
 };
 
 const changeDateInState = (state: ISubjectDetailState, newDate: string, count: number): ISubjectDetailState => {
-  const { dates, selectedSubject, selectedTeacher, selectedStudentsBySubject, visibilitySaveButton } = state;
+  const { dates, selectedSubject, selectedStudentsBySubject, visibilitySaveButton } = state;
   const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
-  const subjectId: string = selectedSubject._id;
-  const teacherId: string = selectedTeacher.id;
+  const subjectName: string = selectedSubject.name;
   let newVisibilitySaveButton: boolean = visibilitySaveButton;
 
   if (newDate && !dates.includes(newDate)) {
     const oldDate: string = dates[count];
 
-    newStudentsBySubject
-      .map(student => {
-        student.academicPerformance
-          .map(studentInfo => {
-            if (studentInfo.subjectId === subjectId
-              && studentInfo.teacherId === teacherId && studentInfo.marks.length) {
-              studentInfo.marks.map(mark => {
-                const newMark = mark;
-                if (mark.date === oldDate) {
-                  newMark.date = newDate;
-                  newVisibilitySaveButton = true;
-                }
-                return newMark;
-              });
-            }
-            return studentInfo;
-          });
-
-        return student;
-      });
+    newStudentsBySubject.forEach((student: Student) => {
+      if (student.academicPerformance[subjectName].marks.hasOwnProperty(oldDate)) {
+        const studentMark: Marks = student.academicPerformance[subjectName].marks;
+        studentMark[newDate] = studentMark[oldDate];
+        delete studentMark[oldDate];
+        newVisibilitySaveButton = true;
+      }
+    });
   }
 
   return {
     ...state,
     selectedStudentsBySubject: newStudentsBySubject,
-    dates: getCurrentDates(newStudentsBySubject, teacherId, subjectId),
+    dates: getCurrentDates(newStudentsBySubject, subjectName),
     visibilitySaveButton: newVisibilitySaveButton,
   };
 };
@@ -210,43 +180,19 @@ const changeMarkInState = (
 ): ISubjectDetailState => {
   const {
     selectedSubject,
-    selectedTeacher,
     selectedStudentsBySubject,
     visibilitySaveButton
   } = state;
   const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
-  const subjectId: string = selectedSubject._id;
-  const teacherId: string = selectedTeacher.id;
+  const subjectName: string = selectedSubject.name;
   let newVisibilitySaveButton: boolean = visibilitySaveButton;
 
-  if (studentId) {
-    const selectedStudentPerformance = newStudentsBySubject
-      .find((student: Student) => student._id === studentId)
-      .academicPerformance
-      .find((studentPerformance: AcademicPerformance) => studentPerformance.subjectId
-        && studentPerformance.subjectId === subjectId
-        && studentPerformance.teacherId === teacherId);
-
-    const studentIncludeDate: boolean = selectedStudentPerformance
-      .marks
-      .some((mark: Mark) => mark.date === date);
-
-    if (!studentIncludeDate) {
-      selectedStudentPerformance
-        .marks
-        .push(new Mark(date, markValue));
-    } else {
-      selectedStudentPerformance
-        .marks
-        .map((mark: Mark) => {
-          if (mark.date === date) {
-            mark.value = markValue;
-            newVisibilitySaveButton = true;
-          }
-          return mark;
-        });
+  newStudentsBySubject.forEach((student: Student) => {
+    if (student._id = studentId) {
+      student.academicPerformance[subjectName].marks[date] = markValue;
+      newVisibilitySaveButton = true;
     }
-  }
+  });
 
   return {
     ...state,
@@ -258,28 +204,18 @@ const changeMarkInState = (
 const deleteEmptyMarksInState = (state: ISubjectDetailState): ISubjectDetailState => {
   const {
     selectedSubject,
-    selectedTeacher,
     selectedStudentsBySubject,
   } = state;
   const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
-  const subjectId: string = selectedSubject._id;
-  const teacherId: string = selectedTeacher.id;
+  const subjectName: string = selectedSubject.name;
 
   newStudentsBySubject.forEach((student: Student) => {
-    student.academicPerformance
-      .forEach((studentPerformance: AcademicPerformance) => {
-        if (studentPerformance.subjectId === subjectId
-          && studentPerformance.teacherId === teacherId && studentPerformance.marks.length) {
-          studentPerformance.marks = studentPerformance.marks
-            .map((mark: Mark) => {
-              if (mark.value === null) {
-                return null;
-              }
-              return mark;
-            })
-            .filter(mark => mark);
-        }
-      });
+    const marks: Marks = student.academicPerformance[subjectName].marks;
+    for (let date in marks) {
+      if (marks[date] === null) {
+        delete marks[date];
+      }
+    }
   });
 
   return {
@@ -296,19 +232,12 @@ const updateTeacherInStudentsInState = (state: ISubjectDetailState, newTeacherId
     selectedStudentsBySubject,
   } = state;
   const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
-  const subjectId: string = selectedSubject._id;
+  const subjectName: string = selectedSubject.name;
   const teacherId: string = selectedTeacher.id;
 
   if (newTeacherId && teacherId !== newTeacherId) {
     newStudentsBySubject.forEach((student) => {
-      student
-        .academicPerformance.
-        find((studentPerformance: AcademicPerformance) => {
-          if (studentPerformance.subjectId === subjectId
-            && studentPerformance.teacherId === teacherId) {
-            studentPerformance.teacherId = newTeacherId;
-          }
-        });
+      student.academicPerformance[subjectName].teacherId = newTeacherId;
     });
   }
 

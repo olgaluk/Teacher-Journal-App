@@ -1,16 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { AcademicPerformance } from '../../entities/student';
+import { Marks } from '../../entities/student';
 
 @Pipe({
   name: 'studentMarks',
 })
 export class StudentMarksPipe implements PipeTransform {
 
-  transform(academicPerformance: AcademicPerformance): number[] {
-
+  transform(marks: Marks): number[] {
     
-    return [];
+    return Object.values(marks);    
   }
 
 }
