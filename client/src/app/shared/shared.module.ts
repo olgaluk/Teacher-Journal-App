@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from '../app-routing.module';
 import { PipesModule } from '../common/pipes/pipes.module';
@@ -29,6 +29,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     AppRoutingModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     PipesModule,
     BsDatepickerModule.forRoot(),
   ],

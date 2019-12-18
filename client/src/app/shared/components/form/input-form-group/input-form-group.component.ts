@@ -6,6 +6,10 @@ import {
   OnInit,
 } from '@angular/core';
 
+import {
+  FormBuilder, FormGroup,
+} from '@angular/forms';
+
 @Component({
   selector: 'app-input-form-group',
   templateUrl: './input-form-group.component.html',
@@ -19,55 +23,62 @@ export class InputFormGroupComponent implements OnInit {
   @Input() itemValue: string | null;
   @Output() changeItemValue = new EventEmitter<any>();
 
-  inputValue: string = '';
+  inputForm: FormGroup;
+
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    if (this.itemValue) {
-      this.inputValue = this.itemValue;
-    }
+    this.inputForm = this.fb.group({
+      inputValue: [this.itemValue],
+    });
   }
 
   reset(): void {
-    this.inputValue = '';
+    this.inputForm.setValue({ inputValue: '' });
   }
 
   onItemValueChange($event: any): void {
+    let value = $event.target.value;
+
     if (this.dataType === 'only letters') {
-      this.inputValue = $event.target.value = $event.target.value
+      value = value
         .replace(/[^A-Za-z]/g, '');
-      if ($event.target.value.length === 1) {
-        this.inputValue = $event.target.value = $event.target.value.toUpperCase();
+      if (value.length === 1) {
+        value = value.toUpperCase();
       }
-      if ($event.target.value.length > 1) {
-        this.inputValue = $event.target.value = $event.target.value[0] +
-          $event.target.value.slice(1).toLowerCase();
+      if (value.length > 1) {
+        value = value[0] +
+          value.slice(1).toLowerCase();
       }
     }
+
     if (this.dataType === 'only numbers') {
-      this.inputValue = $event.target.value = $event.target.value
+      value = value
         .replace(/[^0-9]/g, '')
         .split(' ')
         .join('');
     }
+
     if (this.dataType === 'mark') {
-      this.inputValue = $event.target.value = $event.target.value
+      value = value
         .replace(/[^0-9]/g, '')
         .split(' ')
         .join('');
-      this.inputValue = $event.target.value =
-        +$event.target.value > 10 ? '10' : $event.target.value;
+      value = +value > 10 ? '10' : value;
     }
+
     if (this.dataType === 'only numbers, letters and spaces') {
-      this.inputValue = $event.target.value = $event.target.value
+      value = value
         .replace(/[^A-Za-z0-9 .,]/g, '')
         .replace(/^ /g, '')
         .replace(/\s{2,}/g, ' ');
-      if ($event.target.value.length === 1) {
-        this.inputValue = $event.target.value = $event.target.value.toUpperCase();
+      if (value.length === 1) {
+        value = value.toUpperCase();
       }
     }
+
     if (this.dataType === 'only letters and spaces') {
-      this.inputValue = $event.target.value = $event.target.value
+      value = value
         .replace(/[^A-Za-z ]/g, '')
         .replace(/^ /g, '')
         .replace(/\s{2,}/g, ' ')
@@ -77,12 +88,14 @@ export class InputFormGroupComponent implements OnInit {
         .join(' ');
     }
 
-    if (this.maxLength && $event.target.value.length > this.maxLength) {
-      this.inputValue = $event.target.value = $event.target.value.slice(0, this.maxLength);
+    if (this.maxLength && value.length && value.length > this.maxLength) {
+      value = value.slice(0, this.maxLength);
     }
+
+    this.inputForm.setValue({ inputValue: value });
   }
 
   onChange(): void {
-    this.changeItemValue.emit(this.inputValue);
+    this.changeItemValue.emit(this.inputForm.get(['inputValue']).value);
   }
 }
