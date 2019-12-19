@@ -6,7 +6,7 @@
         placeholder="{{itemName}}" name="name" (input)="onItemValueChange($event)" (change)="onChange()"
         [style.backgroundColor]="'transparent'" />
       <div class="alert alert-danger"
-        *ngIf="inputForm.controls['inputValue'].invalid && inputForm.controls['inputValue'].touched">
+        *ngIf="itemInfo && inputForm.controls['inputValue'].touched">
         {{itemInfo}}
       </div>
     </div>

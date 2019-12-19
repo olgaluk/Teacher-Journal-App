@@ -188,7 +188,7 @@ const changeMarkInState = (
   let newVisibilitySaveButton: boolean = visibilitySaveButton;
 
   newStudentsBySubject.forEach((student: Student) => {
-    if (student._id = studentId) {
+    if (student._id === studentId) {
       student.academicPerformance[subjectName].marks[date] = markValue;
       newVisibilitySaveButton = true;
     }
