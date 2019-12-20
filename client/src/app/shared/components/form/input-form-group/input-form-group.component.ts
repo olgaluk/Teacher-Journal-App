@@ -16,21 +16,24 @@ import {
   styleUrls: ['./input-form-group.component.scss']
 })
 export class InputFormGroupComponent implements OnInit {
-  @Input() dataType: string;
-  @Input() itemInfo: string | null;
-  @Input() itemName: string;
-  @Input() maxLength: string;
-  @Input() itemValue: string | null;
-  @Output() changeItemValue = new EventEmitter<any>();
+  @Input()
+    public inputForm: FormGroup;
+  @Input() public dataType: string;
+  @Input() public itemInfo: string | null;
+  @Input() public itemName: string;
+  @Input() public maxLength: string;
 
-  inputForm: FormGroup;
+  @Input() public itemValue: string | null;
+  @Output() changeItemValue = new EventEmitter<any>();
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.inputForm = this.fb.group({
+    if(!this.inputForm) {
+      this.inputForm = this.fb.group({
       inputValue: [this.itemValue],
     });
+    }
   }
 
   reset(): void {
@@ -93,6 +96,11 @@ export class InputFormGroupComponent implements OnInit {
     }
 
     this.inputForm.setValue({ inputValue: value });
+  }
+
+  getMessage(error: { [key: string]: any }): string {
+    const errorType = Object.keys(error);
+    return errorType[0];
   }
 
   onChange(): void {

@@ -4,28 +4,29 @@
   <h2 class="text-center text-uppercase text-info">Add new student:</h2>
 </div>
 <div class="panel">
-  <form class="form-horizontal">
+  <form class="form-horizontal" [formGroup]="studentForm">
 
-    <app-input-form-group itemValue="{{ name$ | async }}" itemInfo="{{ nameInfo$ | async }}" itemName="Name"
-      (changeItemValue)="changeItemValue($event, 'name')" dataType="only letters" maxLength="15"></app-input-form-group>
-    <app-input-form-group itemValue="{{ lastName$ | async }}" itemInfo="{{ lastNameInfo$ | async }}"
-      itemName="Last name" (changeItemValue)="changeItemValue($event, 'lastName')" dataType="only letters"
-      maxLength="15">
+    <app-input-form-group formGroupName="name" [inputForm]="studentForm.get('name')" itemName="Name"
+      dataType="only letters" maxLength="15"></app-input-form-group>
+    <app-input-form-group formGroupName="lastName" [inputForm]="studentForm.get('lastName')" itemName="Last name"
+      dataType="only letters" maxLength="15">
     </app-input-form-group>
-    <app-input-form-group itemValue="{{ age$ | async }}" itemInfo="{{ ageInfo$ | async }}" itemName="Age"
-      (changeItemValue)="changeItemValue($event, 'age')" dataType="only numbers" maxLength="2"></app-input-form-group>
-    <app-input-form-group itemValue="{{ address$ | async }}" itemInfo="{{ addressInfo$ | async }}" itemName="Address"
-      (changeItemValue)="changeItemValue($event, 'address')" dataType="only numbers, letters and spaces" maxLength="30">
+    <app-input-form-group formGroupName="age" [inputForm]="studentForm.get('age')" itemName="Age"
+      dataType="only numbers"></app-input-form-group>
+    <app-input-form-group formGroupName="address" [inputForm]="studentForm.get('address')" itemName="Address"
+      dataType="only numbers, letters and spaces" maxLength="15">
     </app-input-form-group>
 
     <div class="form-group">
       <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
-        <button type="button" value="{{ correctness$ | async }}" (click)="addNewStudent($event)"
+        <button type="button" (click)="addNewStudent()" [disabled]="studentForm?.invalid"
           class="btn btn-info">ADD</button>
       </div>
     </div>
   </form>
 </div>
+
+<div>{{ studentForm.value | json }}</div>
 
 <a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="{{ path }}">
   <app-button-add value="Back to student list"></app-button-add>
