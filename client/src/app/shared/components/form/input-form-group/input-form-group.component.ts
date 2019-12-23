@@ -10,6 +10,8 @@ import {
   FormBuilder, FormGroup,
 } from '@angular/forms';
 
+import { errorMessages } from '../../../../common/constants/errorMessages';
+
 @Component({
   selector: 'app-input-form-group',
   templateUrl: './input-form-group.component.html',
@@ -18,9 +20,9 @@ import {
 export class InputFormGroupComponent implements OnInit {
   @Input()
     public inputForm: FormGroup;
-  @Input() public dataType: string;
-  @Input() public itemInfo: string | null;
+  @Input() public dataType: string;  
   @Input() public itemName: string;
+  @Input() public messageType: string;
   @Input() public maxLength: string;
 
   @Input() public itemValue: string | null;
@@ -100,7 +102,7 @@ export class InputFormGroupComponent implements OnInit {
 
   getMessage(error: { [key: string]: any }): string {
     const errorType = Object.keys(error);
-    return errorType[0];
+    return errorMessages[this.messageType][errorType[0]];
   }
 
   onChange(): void {

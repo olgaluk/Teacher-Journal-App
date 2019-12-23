@@ -6,10 +6,10 @@
 <div class="panel">
   <form class="form-horizontal">
 
-    <app-input-form-group itemValue="{{ subjectName$ | async }}" itemInfo="{{ subjectInfo$ | async }}"
+    <app-input-form-group itemValue="{{ subjectName$ | async }}"
       itemName="Subject" (changeItemValue)="changeItemValue($event, 'subject')" dataType="only letters" maxLength="15">
     </app-input-form-group>
-    <app-input-form-group itemValue="{{ cabinet$ | async }}" itemInfo="{{ cabinetInfo$ | async }}" itemName="Cabinet"
+    <app-input-form-group itemValue="{{ cabinet$ | async }}" itemName="Cabinet"
       (changeItemValue)="changeItemValue($event, 'cabinet')" dataType="only numbers" maxLength="2">
     </app-input-form-group>
 

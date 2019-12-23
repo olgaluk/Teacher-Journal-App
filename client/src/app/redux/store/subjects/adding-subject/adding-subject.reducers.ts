@@ -57,12 +57,6 @@ const updateSubjectNameInState = (
   subjectName: string,
 ): IAddingSubjectState => {
   let subjectInfo: string | null = null;
-  if (!subjectName) {
-    subjectInfo = errorMessages.subjectName.emptyField;
-  }
-  if (subjectName.length < 4) {
-    subjectInfo = errorMessages.subjectName.lengthBottomLine;
-  }
 
   const { cabinet, cabinetInfo, selectedTeachersId } = state;
   const valuesСorrectness = (!subjectInfo &&
@@ -83,15 +77,6 @@ const updateCabinetInState = (
   cabinet: number | null,
 ): IAddingSubjectState => {
   let cabinetInfo: string | null = null;
-  if (!cabinet && cabinet !== 0) {
-    cabinetInfo = errorMessages.cabinet.emptyField;
-  }
-  if (cabinet < 1) {
-    cabinetInfo = errorMessages.cabinet.lengthBottomLine;
-  }
-  if (cabinet > 30) {
-    cabinetInfo = errorMessages.cabinet.lengthTopLine;
-  }
 
   const { subjectName, subjectInfo, selectedTeachersId } = state;
   const valuesСorrectness = (!cabinetInfo &&

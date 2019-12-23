@@ -1,13 +1,13 @@
 <form [formGroup]="inputForm" novalidate>
   <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <label class="control-label col-sm-2 col-md-2 col-lg-2">{{itemName}}</label>
+    <label class="control-label col-sm-2 col-md-2 col-lg-2">{{ itemName }}</label>
     <div class="col-sm-10 col-md-10 col-lg-10">
       <input type="text" formControlName="inputValue" class="form-control" autocomplete="off"
-        placeholder="{{itemName}}" (input)="onItemValueChange($event)" (change)="onChange()"
+        placeholder="{{ itemName }}" (input)="onItemValueChange($event)" (change)="onChange()"
         [style.backgroundColor]="'transparent'" />
       <div class="alert alert-danger"
-        *ngIf="itemInfo || (inputForm.controls['inputValue'].touched && inputForm.controls['inputValue'].invalid)">
-        {{ itemInfo }}{{ getMessage(inputForm.controls['inputValue'].errors) }}
+        *ngIf="(inputForm.controls['inputValue'].touched && inputForm.controls['inputValue'].invalid)">
+        {{ getMessage(inputForm.controls['inputValue'].errors) }}
       </div>
     </div>
   </div>

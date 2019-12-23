@@ -6,15 +6,15 @@
 <div class="panel">
   <form class="form-horizontal" [formGroup]="studentForm">
 
-    <app-input-form-group formGroupName="name" [inputForm]="studentForm.get('name')" itemName="Name"
+    <app-input-form-group formGroupName="name" [inputForm]="studentForm.get('name')" itemName="Name" messageType="name"
       dataType="only letters" maxLength="15"></app-input-form-group>
     <app-input-form-group formGroupName="lastName" [inputForm]="studentForm.get('lastName')" itemName="Last name"
-      dataType="only letters" maxLength="15">
+      messageType="lastName" dataType="only letters" maxLength="15">
     </app-input-form-group>
-    <app-input-form-group formGroupName="age" [inputForm]="studentForm.get('age')" itemName="Age"
-      dataType="only numbers"></app-input-form-group>
+    <app-input-form-group formGroupName="age" [inputForm]="studentForm.get('age')" itemName="Age" messageType="age"
+      dataType="only numbers" maxLength="2"></app-input-form-group>
     <app-input-form-group formGroupName="address" [inputForm]="studentForm.get('address')" itemName="Address"
-      dataType="only numbers, letters and spaces" maxLength="15">
+      messageType="address" dataType="only numbers, letters and spaces" maxLength="15">
     </app-input-form-group>
 
     <div class="form-group">
@@ -26,12 +26,6 @@
   </form>
 </div>
 
-<div>{{ studentForm.value | json }}</div>
-
 <a class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6" routerLink="{{ path }}">
   <app-button-add value="Back to student list"></app-button-add>
 </a>
-
-<app-modal>
-  <h3 class="text-info">Please check the filling and correctness of filling in all fields!</h3>
-</app-modal>

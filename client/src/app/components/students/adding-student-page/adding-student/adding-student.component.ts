@@ -10,7 +10,7 @@ import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
 
 import {
-  reset,
+  updateDataSaved,
   addNewStudent,
 } from '../../../../redux/store/students/adding-student/adding-student.actions';
 
@@ -65,21 +65,40 @@ export class AddingStudentComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.minLength(2), Validators.maxLength(15)]
         ]
       }),
-      lastName: this.formBuilder.group({ inputValue: null }),
-      age: this.formBuilder.group({ inputValue: null }),
-      address: this.formBuilder.group({ inputValue: null }),
+      lastName: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.required, Validators.minLength(2), Validators.maxLength(15)]
+        ]
+      }),
+      age: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.required, Validators.min(15), Validators.max(30)]
+        ]
+      }),
+      address: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.required, Validators.minLength(6), Validators.maxLength(30)]
+        ]
+      }),
     });
   }
 
   addNewStudent(): void {
+    const { name, lastName, age, address } = this.studentForm.value;
 
-    this.store.dispatch(addNewStudent(this.studentForm.value));
-    this.studentForm.setValue({ inputValue: null })
-
+    this.store.dispatch(addNewStudent({
+      name: name.inputValue,
+      lastName: lastName.inputValue,
+      age: age.inputValue,
+      address: address.inputValue
+    }));
   }
 
   ngOnDestroy(): void {
-    this.store.dispatch(reset());
+    this.store.dispatch(updateDataSaved({ dataSaved: false }));
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;
