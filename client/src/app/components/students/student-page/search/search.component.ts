@@ -1,16 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
-import { Store, select } from '@ngrx/store';
+import {
+  FormBuilder, FormGroup, Validators
+} from '@angular/forms';
+
+import { Store } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
 
 import {
-  updateSearchValue,
   getStudentsByName,
 } from '../../../../redux/store/students/students-table/students-table.actions';
-
-import { selectSearchValue }
-  from '../../../../redux/store/students/students-table/students-table.selectors';
 
 import { InputFormGroupComponent }
   from '../../../../shared/components/form/input-form-group/input-form-group.component';
@@ -20,29 +19,40 @@ import { InputFormGroupComponent }
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent {
-  searchValue: Observable<string> = this.store.pipe(select(selectSearchValue));
-
+export class SearchComponent implements OnInit {
   @ViewChild(InputFormGroupComponent, { static: false })
   private inputComponent: InputFormGroupComponent;
 
-  constructor(private store: Store<IAppState>) { }
+  searchForm: FormGroup;
 
-  updateSearchValue(searchValue: string): void {
-    this.store.dispatch(updateSearchValue({ searchValue }));
+  constructor(private store: Store<IAppState>, private formBuilder: FormBuilder) { }
+
+  ngOnInit(): void {
+    this.initForm();
   }
 
-  getEnteredValue($event: string): void {
-    this.updateSearchValue($event);
+  private initForm(): void {
+    this.searchForm = this.formBuilder.group({
+      searchValue: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.minLength(1), Validators.maxLength(20)]
+        ]
+      }),
+    });
+  }
+
+  getStudents(searchValue: string): void {
+    this.store.dispatch(getStudentsByName({ searchValue }));
   }
 
   findStudent(): void {
-    this.store.dispatch(getStudentsByName());
+    const { searchValue } = this.searchForm.value;
+    this.getStudents(searchValue.inputValue);
   }
 
   reset(): void {
-    this.updateSearchValue('');
-    this.findStudent();
+    this.getStudents('');
     this.inputComponent.reset();
   }
 }

@@ -3,7 +3,6 @@ import { createReducer, on } from '@ngrx/store';
 import {
   getStudentListSuccess,
   getStudentsByNameSuccess,
-  updateSearchValue,
   reset,
 } from './students-table.actions';
 
@@ -20,10 +19,6 @@ const _studentsTableReducers = createReducer(initialStudentsTableState,
   on(
     getStudentsByNameSuccess,
     (state, { searchedStudents }) => ({ ...state, studentList: searchedStudents })
-  ),
-  on(
-    updateSearchValue,
-    (state, { searchValue }) => ({ ...state, searchValue })
   ),
   on(
     reset,

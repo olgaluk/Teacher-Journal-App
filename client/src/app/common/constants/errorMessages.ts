@@ -1,8 +1,8 @@
 interface IMessageFields {
-  contentCharacters: string,
+  contentCharacters?: string,
   minlength?: string,
   maxlength?: string,
-  required: string,
+  required?: string,
   min?: string,
   max?: string,
 }
@@ -15,6 +15,7 @@ interface IErrorMessages {
   subjectName: IMessageFields,
   cabinet: IMessageFields,
   savingChanges: string,
+  searchStudents: IMessageFields,
 }
 
 export const errorMessages: IErrorMessages = {
@@ -56,4 +57,8 @@ export const errorMessages: IErrorMessages = {
   },
   savingChanges: `If you leave the page without saving the changes, they will be lost.
     Are you sure you want to leave the page without saving the changes?`,
+  searchStudents: {
+    minlength: 'Incorrect search! This field cannot be less than 1.',
+    maxlength: 'Incorrect search! This field cannot be more than 20.',
+  },
 }

@@ -7,7 +7,6 @@ interface ITypeActions {
   getStudentListSuccess: string;
   getStudentsByName: string;
   getStudentsByNameSuccess: string;
-  updateSearchValue: string;
   reset: string;
 }
 
@@ -18,7 +17,6 @@ const studentsTableActions: ITypeActions = {
   getStudentListSuccess: `${BLOCK} Get student list success`,
   getStudentsByName: `${BLOCK} Get students by name or last name`,
   getStudentsByNameSuccess: `${BLOCK} Get students by name or last name success`,
-  updateSearchValue: `${BLOCK} Update search value`,
   reset: `${BLOCK} Reset student list`,
 }
 
@@ -33,16 +31,12 @@ export const getStudentListSuccess = createAction(
 
 export const getStudentsByName = createAction(
   studentsTableActions.getStudentsByName,
+  props<{ searchValue: string }>()
 );
 
 export const getStudentsByNameSuccess = createAction(
   studentsTableActions.getStudentsByNameSuccess,
   props<{ searchedStudents: Student[] }>()
-);
-
-export const updateSearchValue = createAction(
-  studentsTableActions.updateSearchValue,
-  props<{ searchValue: string }>()
 );
 
 export const reset = createAction(
