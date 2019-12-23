@@ -51,8 +51,8 @@ export const errorMessages: IErrorMessages = {
   },
   cabinet: {
     contentCharacters: 'This field should contain only numbers!',
-    minlength: 'Incorrect cabinet! This field cannot be less than 1.',
-    maxlength: 'Incorrect cabinet! This field cannot be more than 30.',
+    min: 'Incorrect cabinet! This field cannot be less than 1.',
+    max: 'Incorrect cabinet! This field cannot be more than 30.',
     required: 'This field is required! Please fill in this field.',
   },
   savingChanges: `If you leave the page without saving the changes, they will be lost.

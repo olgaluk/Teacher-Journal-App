@@ -2,27 +2,21 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular
 import { Router } from '@angular/router';
 import { Observable, SubscriptionLike } from 'rxjs';
 
+import {
+  FormBuilder, FormGroup, Validators
+} from '@angular/forms';
+
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../redux/store/app.state';
 
 import {
-  updateSubjectName,
-  updateCabinet,
-  updateDescription,
-  updateSelectedTeachersId,
   getTeacherList,
   addNewSubject,
   reset,
 } from '../../../../redux/store/subjects/adding-subject/adding-subject.actions';
 
 import {
-  selectSubjectName,
-  selectCabinet,
-  selectDescription,
   selectTeacherList,
-  selectSubjectInfo,
-  selectCabinetInfo,
-  selectValuesСorrectness,
   selectDataSaved,
 } from '../../../../redux/store/subjects/adding-subject/adding-subject.selectors';
 
@@ -45,23 +39,18 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild(NotificationSelfClosingComponent, { static: false })
   private notification: NotificationSelfClosingComponent;
 
+  subjectForm: FormGroup;
+
   subscription: SubscriptionLike;
   path: string = `/${paths.subjectsTable}`;
 
-  subjectName$: Observable<string> = this.store.pipe(select(selectSubjectName));
-  cabinet$: Observable<number | null> = this.store.pipe(select(selectCabinet));
-  description$: Observable<string> = this.store.pipe(select(selectDescription));
   teacherList$: Observable<Teacher[]> = this.store.pipe(select(selectTeacherList));
-
-  subjectInfo$: Observable<string> = this.store.pipe(select(selectSubjectInfo));
-  cabinetInfo$: Observable<string> = this.store.pipe(select(selectCabinetInfo));
-
   newDataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
-  correctness$: Observable<boolean> = this.store.pipe(select(selectValuesСorrectness));
 
   constructor(
     private router: Router,
-    private store: Store<IAppState>
+    private store: Store<IAppState>,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -74,6 +63,29 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       })
     );
+
+    this.initForm();
+  }
+
+  private initForm(): void {
+    this.subjectForm = this.formBuilder.group({
+      subjectName: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.required, Validators.minLength(4), Validators.maxLength(15)]
+        ]
+      }),
+      cabinet: this.formBuilder.group({
+        inputValue: [
+          null,
+          [Validators.required, Validators.min(0), Validators.max(30)]
+        ]
+      }),
+      description: this.formBuilder.group({
+        inputValue: ''
+      }),
+      selectedTeachers: [null, Validators.required],
+    });
   }
 
   ngAfterViewInit(): void {
@@ -84,27 +96,15 @@ export class AddingSubjectComponent implements OnInit, AfterViewInit, OnDestroy 
     this.store.dispatch(getTeacherList());
   }
 
-  changeItemValue(valueItem: any, itemName: string) {
-    if (itemName === "subject") {
-      if (valueItem) valueItem.toLowerCase();
-      this.store.dispatch(updateSubjectName({ subjectName: valueItem }));
-    }
-    if (itemName === "cabinet") {
-      this.store.dispatch(updateCabinet({ cabinet: +valueItem }));
-    }
-    if (itemName === "description") {
-      this.store.dispatch(updateDescription({ description: valueItem }));
-    }
-  }
-
-  onChangeTeacherList(teachersID: string[]): void {
-    let newTeachersID: string[];
-    teachersID ? newTeachersID = teachersID : newTeachersID = [];
-    this.store.dispatch(updateSelectedTeachersId({ selectedTeachersId: newTeachersID }));
-  }
-
   addNewSubject(): void {
-    this.store.dispatch(addNewSubject());
+    const { subjectName, cabinet, description, selectedTeachers } = this.subjectForm.value;
+
+    this.store.dispatch(addNewSubject({
+      subjectName: subjectName.inputValue,
+      cabinet: +cabinet.inputValue,
+      selectedTeachers,
+      description: description.inputValue,
+    }));
   }
 
   ngOnDestroy(): void {

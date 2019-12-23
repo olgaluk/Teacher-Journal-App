@@ -4,32 +4,30 @@
   <h2 class="text-center text-uppercase text-info">Add new subject:</h2>
 </div>
 <div class="panel">
-  <form class="form-horizontal">
+  <form class="form-horizontal" [formGroup]="subjectForm">
 
-    <app-input-form-group itemValue="{{ subjectName$ | async }}"
-      itemName="Subject" (changeItemValue)="changeItemValue($event, 'subject')" dataType="only letters" maxLength="15">
+    <app-input-form-group formGroupName="subjectName" [inputForm]="subjectForm.get('subjectName')"
+      messageType="subjectName" itemName="Subject" dataType="only letters" maxLength="15">
     </app-input-form-group>
-    <app-input-form-group itemValue="{{ cabinet$ | async }}" itemName="Cabinet"
-      (changeItemValue)="changeItemValue($event, 'cabinet')" dataType="only numbers" maxLength="2">
+    <app-input-form-group formGroupName="cabinet" [inputForm]="subjectForm.get('cabinet')" messageType="cabinet"
+      itemName="Cabinet" dataType="only numbers" maxLength="2">
     </app-input-form-group>
 
     <div class="form-group">
       <label class="col-sm-2 col-md-offset-2 col-lg-offset-2 control-label">Select teachers:</label>
-      <select multiple class="col-sm-9 col-md-7 col-lg-5" name="teachersID" [(ngModel)]="teachersID"
-        (change)="onChangeTeacherList(teachersID)">
-        <option *ngFor="let teacher of teacherList$ | async" [value]="teacher.id">
+      <select multiple class="col-sm-9 col-md-7 col-lg-5" formControlName="selectedTeachers">
+        <option *ngFor="let teacher of teacherList$ | async" [ngValue]="teacher.id">
           {{teacher.name}} {{teacher.lastName}}
         </option>
       </select>
     </div>
 
-    <app-input-form-group itemValue="{{ description$ | async }}" itemName="Description"
-      (changeItemValue)="changeItemValue($event, 'description')" dataType="only numbers, letters and spaces"
-      maxLength="40"></app-input-form-group>
+    <app-input-form-group formGroupName="description" [inputForm]="subjectForm.get('description')"
+      itemName="Description" dataType="only numbers, letters and spaces" maxLength="40"></app-input-form-group>
 
     <div class="form-group">
       <div class="col-sm-offset-5 col-sm-3 col-md-offset-9 col-md-1 col-lg-offset-9 col-lg-1">
-        <button type="button" [disabled]="!(correctness$ | async)" (click)="addNewSubject()"
+        <button type="button" [disabled]="subjectForm?.invalid" (click)="addNewSubject()"
           class="btn btn-info">ADD</button>
       </div>
     </div>
