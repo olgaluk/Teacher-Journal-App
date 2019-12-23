@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import {
   getSelectedSubjectSuccess,
-  getSelectedTeacherSuccess,
+  updateSelectedTeacherSuccess,
   getStudentsBySelectedSubjectSuccess,
   getDates,
   getTeachersFromOtherSubjectSuccess,
@@ -11,10 +11,9 @@ import {
   changeDate,
   changeMark,
   deleteEmptyMarks,
-  updateTeacherInStudents,
-  updateTeacherListInSubject,
   reset,
   updateDataSaved,
+  setSelectedTeacher,
 } from '../../subjects/subject-detail/subject-detail.actions';
 
 import {
@@ -25,6 +24,8 @@ import {
 import { Student } from '../../../../common/entities/student';
 import { Marks } from '../../../../common/entities/student';
 import { Subject } from '../../../../common/entities/subject';
+import { Teacher } from 'src/app/common/entities/teacher';
+import { state } from '@angular/animations';
 
 const _subjectDetailReducers = createReducer(initialSubjectDetailState,
   on(
@@ -32,8 +33,8 @@ const _subjectDetailReducers = createReducer(initialSubjectDetailState,
     (state, { subject }) => ({ ...state, selectedSubject: subject })
   ),
   on(
-    getSelectedTeacherSuccess,
-    (state, { teacher }) => ({ ...state, selectedTeacher: teacher })
+    updateSelectedTeacherSuccess,
+    (state, { teacherId, teacher }) => (setNewTeacher(state, teacherId, teacher))
   ),
   on(
     getStudentsBySelectedSubjectSuccess,
@@ -71,28 +72,52 @@ const _subjectDetailReducers = createReducer(initialSubjectDetailState,
     (state) => (deleteEmptyMarksInState(state))
   ),
   on(
-    updateTeacherInStudents,
-    (state, { newTeacherId }) => (updateTeacherInStudentsInState(state, newTeacherId))
-  ),
-  on(
-    updateTeacherListInSubject,
-    (state, { teacherId, newTeacherId }) => ({
-      ...state,
-      selectedSubject: updateTeacherList(state.selectedSubject, teacherId, newTeacherId)
-    })
-  ),
-  on(
     reset,
     () => initialSubjectDetailState
   ),
   on(
     updateDataSaved,
     (state, { save }) => ({ ...state, dataSaved: save })
-  )
+  ),
+  on(
+    setSelectedTeacher,
+    (state, { teacher }) => ({ ...state, selectedTeacher: teacher })
+  ),
 );
 
 export function subjectDetailReducers(state, action): ISubjectDetailState {
   return _subjectDetailReducers(state, action);
+}
+
+const setNewTeacher = (
+  state: ISubjectDetailState,
+  teacherId: string,
+  teacher: Teacher
+): ISubjectDetailState => {
+  const {
+    selectedSubject,
+    selectedStudentsBySubject,
+  } = state;
+  const subjectName: string = selectedSubject.name;
+  const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
+
+  const teachersID = selectedSubject.teachersID
+    .map((id) => {
+      let newId: string = id;
+      if (id === teacherId) newId = teacher.id;
+      return newId;
+    });
+
+  newStudentsBySubject.forEach((student) => {
+    student.academicPerformance[subjectName].teacherId = teacher.id;
+  });
+
+  return {
+    ...state,
+    selectedTeacher: teacher,
+    selectedSubject: { ...selectedSubject, teachersID },
+    selectedStudentsBySubject: newStudentsBySubject,
+  };
 }
 
 const getCurrentDates = (
@@ -224,42 +249,3 @@ const deleteEmptyMarksInState = (state: ISubjectDetailState): ISubjectDetailStat
     visibilitySaveButton: false,
   };
 };
-
-const updateTeacherInStudentsInState = (state: ISubjectDetailState, newTeacherId: string) => {
-  const {
-    selectedSubject,
-    selectedTeacher,
-    selectedStudentsBySubject,
-  } = state;
-  const newStudentsBySubject: Student[] = JSON.parse(JSON.stringify(selectedStudentsBySubject));
-  const subjectName: string = selectedSubject.name;
-  const teacherId: string = selectedTeacher.id;
-
-  if (newTeacherId && teacherId !== newTeacherId) {
-    newStudentsBySubject.forEach((student) => {
-      student.academicPerformance[subjectName].teacherId = newTeacherId;
-    });
-  }
-
-  return {
-    ...state,
-    selectedStudentsBySubject: newStudentsBySubject,
-  };
-};
-
-const updateTeacherList = (
-  selectedSubject: Subject,
-  teacherId: string,
-  newTeacherId: string,
-) => {
-  const newSelectedSubject: Subject = JSON.parse(JSON.stringify(selectedSubject));
-  if (newTeacherId && newTeacherId !== teacherId) {
-    newSelectedSubject.teachersID = newSelectedSubject.teachersID
-      .map((id) => {
-        if (id === teacherId) id = newTeacherId;
-        return id;
-      })
-  }
-
-  return newSelectedSubject;
-}

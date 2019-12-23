@@ -8,8 +8,8 @@ interface ITypeActions {
   getInitialInfo: string;
   getSelectedSubject: string;
   getSelectedSubjectSuccess: string;
-  getSelectedTeacher: string;
-  getSelectedTeacherSuccess: string;
+  updateSelectedTeacher: string;
+  updateSelectedTeacherSuccess: string;
   getStudentsBySelectedSubject: string;
   getStudentsBySelectedSubjectSuccess: string;
   getDates: string;
@@ -21,12 +21,11 @@ interface ITypeActions {
   changeMark: string;
   saveChanges: string;
   deleteEmptyMarks: string;
-  updateTeacherInStudents: string;
   updateInfoInDatabase: string;
-  updateTeacherListInSubject: string;
   updateTeachersFromOtherSubject: string;
   reset: string;
   updateDataSaved: string;
+  setSelectedTeacher: string;
 }
 
 const BLOCK: string = '[SubjectDetail]';
@@ -35,8 +34,8 @@ const subjectDetailActions: ITypeActions = {
   getInitialInfo: `${BLOCK} Get initial info`,
   getSelectedSubject: `${BLOCK} Get selected subject`,
   getSelectedSubjectSuccess: `${BLOCK} Get selected subject success`,
-  getSelectedTeacher: `${BLOCK} Get selected teacher`,
-  getSelectedTeacherSuccess: `${BLOCK} Get selected teacher success`,
+  updateSelectedTeacher: `${BLOCK} Update selected teacher`,
+  updateSelectedTeacherSuccess: `${BLOCK} Update selected teacher success`,
   getStudentsBySelectedSubject: `${BLOCK} Get students by selected subject and teacher`,
   getStudentsBySelectedSubjectSuccess: `${BLOCK} Get students by selected subject success`,
   getDates: `${BLOCK} Get dates`,
@@ -48,12 +47,11 @@ const subjectDetailActions: ITypeActions = {
   changeMark: `${BLOCK} Add new mark or change old`,
   saveChanges: `${BLOCK} Save changes`,
   deleteEmptyMarks: `${BLOCK} Delete empty marks`,
-  updateTeacherInStudents: `${BLOCK} Update teacher in students`,
   updateInfoInDatabase: `${BLOCK} Update students and subject in database`,
-  updateTeacherListInSubject: `${BLOCK} Update teacher list in subject`,
   updateTeachersFromOtherSubject: `${BLOCK} Update teachers from other subject`,
   reset: `${BLOCK} Reset`,
   updateDataSaved: `${BLOCK} Update props dataSaved`,
+  setSelectedTeacher: `${BLOCK} Set selected teacher`,
 }
 
 export const getInitialInfo = createAction(
@@ -71,14 +69,14 @@ export const getSelectedSubjectSuccess = createAction(
   props<{ subject: Subject }>()
 );
 
-export const getSelectedTeacher = createAction(
-  subjectDetailActions.getSelectedTeacher,
-  props<{ teacherId: string }>()
+export const updateSelectedTeacher = createAction(
+  subjectDetailActions.updateSelectedTeacher,
+  props<{ oldTeacherId: string, newTeacherId: string }>()
 );
 
-export const getSelectedTeacherSuccess = createAction(
-  subjectDetailActions.getSelectedTeacherSuccess,
-  props<{ teacher: Teacher }>()
+export const updateSelectedTeacherSuccess = createAction(
+  subjectDetailActions.updateSelectedTeacherSuccess,
+  props<{ teacherId: string, teacher: Teacher }>()
 );
 
 export const getStudentsBySelectedSubject = createAction(
@@ -131,26 +129,16 @@ export const changeMark = createAction(
 
 export const saveChanges = createAction(
   subjectDetailActions.saveChanges,
-  props<{ subjectName: string, teacherId: string, newTeacherId: string }>()
+  props<{ subjectName: string, teacherId: string }>()
 );
 
 export const deleteEmptyMarks = createAction(
   subjectDetailActions.deleteEmptyMarks
 );
 
-export const updateTeacherInStudents = createAction(
-  subjectDetailActions.updateTeacherInStudents,
-  props<{ newTeacherId: string }>()
-);
-
 export const updateInfoInDatabase = createAction(
   subjectDetailActions.updateInfoInDatabase,
   props<{ subjectName: string, teacherId: string, newTeacherId: string }>()
-);
-
-export const updateTeacherListInSubject = createAction(
-  subjectDetailActions.updateTeacherListInSubject,
-  props<{ teacherId: string, newTeacherId: string }>()
 );
 
 export const updateTeachersFromOtherSubject = createAction(
@@ -164,4 +152,9 @@ export const reset = createAction(
 export const updateDataSaved = createAction(
   subjectDetailActions.updateDataSaved,
   props<{ save: boolean }>()
+);
+
+export const setSelectedTeacher = createAction(
+  subjectDetailActions.setSelectedTeacher,
+  props<{ teacher: Teacher }>()
 );

@@ -27,6 +27,7 @@ import {
   saveChanges,
   reset,
   updateDataSaved,
+  updateSelectedTeacher,
 } from '../../../../redux/store/subjects/subject-detail/subject-detail.actions';
 
 import {
@@ -70,9 +71,6 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   saved: boolean = true;
 
-  teacherTitle: string;
-  itemSelected: string = "";
-
   constructor(
     private store: Store<IAppState>,
     private modalService: BsModalService,
@@ -89,7 +87,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();
-          this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId ? this.newTeacherId : this.teacherId}`]);
+          if (this.newTeacherId) this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
         }
       })
     );
@@ -107,14 +105,11 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   ngAfterViewChecked(): void {
     if (this.bsModalRef &&
-      this.itemSelected !== this.bsModalRef.content.itemSelected &&
-      this.bsModalRef.content.itemSelected) {
+      this.bsModalRef.content.itemSelected &&
+      this.newTeacherId !== this.bsModalRef.content.itemSelected) {
       Promise.resolve(null).then((value) => {
-        let teacherSelected = this.bsModalRef.content.itemSelected;
-        this.itemSelected = teacherSelected;
-        this.teacherTitle = teacherSelected.split(" (id:")[0];
-        let newTeacherId = teacherSelected.split(" (id: ")[1];
-        this.newTeacherId = newTeacherId.split(")")[0];
+        this.newTeacherId = this.bsModalRef.content.itemSelected;
+        this.store.dispatch(updateSelectedTeacher({ oldTeacherId: this.teacherId, newTeacherId: this.newTeacherId }));
         this.store.dispatch(changeVisibilitySaveButton({ visibility: true }));
         this.saved = false;
         this.store.dispatch(updateDataSaved({ save: false }));
@@ -161,10 +156,8 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.teachersFromOtherSubjects$
       .subscribe(
         (teachers: Teacher[]) => {
-          const listNameTeachers = teachers
-            .map(teacher => `${teacher.name} ${teacher.lastName} (id: ${teacher.id})`);
           const initialState = {
-            list: listNameTeachers,
+            list: teachers,
             title: 'Choose a new teacher:',
             itemSelected: ''
           };
@@ -183,12 +176,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       this.store.dispatch(saveChanges({
         subjectName: this.subjectName,
         teacherId: this.teacherId,
-        newTeacherId: this.newTeacherId,
       }));
-      if (this.newTeacherId && this.newTeacherId !== this.teacherId) {
-        this.teacherId = this.newTeacherId;
-        this.newTeacherId = '';
-      };
     }
   }
 
