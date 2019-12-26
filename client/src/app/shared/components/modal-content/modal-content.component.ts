@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
+import { Teacher } from '../../../common/entities/teacher';
+
 @Component({
   selector: 'app-modal-content',
   templateUrl: './modal-content.component.html',
@@ -9,7 +11,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 export class ModalContentComponent {
   title: string;
   closeBtnName: string;
-  list: string[] = [];
+  list: Teacher[] = [];
   itemSelected: string;
 
   constructor(public bsModalRef: BsModalRef) { }

@@ -4,97 +4,115 @@ import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
 import { Student } from '../../../../common/entities/student';
 
-export enum ESubjectDetailActions {
-  GetInitialInfo = '[SubjectDetail] Get initial info',
-  GetSelectedSubject = '[SubjectDetail] Get selected subject',
-  GetSelectedSubjectSuccess = '[SubjectDetail] Get selected subject success',
-  GetSelectedTeacher = '[SubjectDetail] Get selected teacher',
-  GetSelectedTeacherSuccess = '[SubjectDetail] Get selected teacher success',
-  GetStudentsBySelectedSubject = '[SubjectDetail] Get students by selected subject and teacher',
-  GetStudentsBySelectedSubjectSuccess = '[SubjectDetail] Get students by selected subject success',
-  GetDates = '[SubjectDetail] Get dates',
-  GetTeachersFromOtherSubject = '[SubjectDetail] Get teachers from other subjects',
-  GetTeachersFromOtherSubjectSuccess = '[SubjectDetail] Get teachers from other subjects success',
-  ChangeVisibilitySaveButton = '[SubjectDetail] Change visibility saving button',
-  AddEmptyDate = '[SubjectDetail] Add empty date',
-  ChangeDate = '[SubjectDetail] Change date',
-  ChangeMark = '[SubjectDetail] Add new mark or change old',
-  SaveChanges = '[SubjectDetail] Save changes',
-  DeleteEmptyMarks = '[SubjectDetail] Delete empty marks',
-  UpdateTeacherInStudents = '[SubjectDetail] Update teacher in students',
-  UpdateInfoInDatabase = '[SubjectDetail] Update students and subject in database',
-  UpdateTeacherListInSubject = '[SubjectDetail] Update teacher list in subject',
-  UpdateTeachersFromOtherSubject = '[SubjectDetail] Update teachers from other subject',
-  Reset = '[SubjectDetail] Reset',
-  UpdateDataSaved = '[SubjectDetail] Update props dataSaved',
+interface ITypeActions {
+  getInitialInfo: string;
+  getSelectedSubject: string;
+  getSelectedSubjectSuccess: string;
+  updateSelectedTeacher: string;
+  updateSelectedTeacherSuccess: string;
+  getStudentsBySelectedSubject: string;
+  getStudentsBySelectedSubjectSuccess: string;
+  getTeachersFromOtherSubject: string;
+  getTeachersFromOtherSubjectSuccess: string;
+  changeVisibilitySaveButton: string;
+  addEmptyDate: string;
+  changeDate: string;
+  changeMark: string;
+  saveChanges: string;
+  deleteEmptyMarks: string;
+  updateInfoInDatabase: string;
+  updateTeachersFromOtherSubject: string;
+  reset: string;
+  updateDataSaved: string;
+  setSelectedTeacher: string;
+}
+
+const BLOCK: string = '[SubjectDetail]';
+
+const subjectDetailActions: ITypeActions = {
+  getInitialInfo: `${BLOCK} Get initial info`,
+  getSelectedSubject: `${BLOCK} Get selected subject`,
+  getSelectedSubjectSuccess: `${BLOCK} Get selected subject success`,
+  updateSelectedTeacher: `${BLOCK} Update selected teacher`,
+  updateSelectedTeacherSuccess: `${BLOCK} Update selected teacher success`,
+  getStudentsBySelectedSubject: `${BLOCK} Get students by selected subject and teacher`,
+  getStudentsBySelectedSubjectSuccess: `${BLOCK} Get students by selected subject success`,
+  getTeachersFromOtherSubject: `${BLOCK} Get teachers from other subjects`,
+  getTeachersFromOtherSubjectSuccess: `${BLOCK} Get teachers from other subjects success`,
+  changeVisibilitySaveButton: `${BLOCK} Change visibility saving button`,
+  addEmptyDate: `${BLOCK} Add empty date`,
+  changeDate: `${BLOCK} Change date`,
+  changeMark: `${BLOCK} Add new mark or change old`,
+  saveChanges: `${BLOCK} Save changes`,
+  deleteEmptyMarks: `${BLOCK} Delete empty marks`,
+  updateInfoInDatabase: `${BLOCK} Update students and subject in database`,
+  updateTeachersFromOtherSubject: `${BLOCK} Update teachers from other subject`,
+  reset: `${BLOCK} Reset`,
+  updateDataSaved: `${BLOCK} Update props dataSaved`,
+  setSelectedTeacher: `${BLOCK} Set selected teacher`,
 }
 
 export const getInitialInfo = createAction(
-  ESubjectDetailActions.GetInitialInfo,
+  subjectDetailActions.getInitialInfo,
   props<{ subjectName: string; teacherId: string }>()
 );
 
 export const getSelectedSubject = createAction(
-  ESubjectDetailActions.GetSelectedSubject,
+  subjectDetailActions.getSelectedSubject,
   props<{ subjectName: string }>()
 );
 
 export const getSelectedSubjectSuccess = createAction(
-  ESubjectDetailActions.GetSelectedSubjectSuccess,
+  subjectDetailActions.getSelectedSubjectSuccess,
   props<{ subject: Subject }>()
 );
 
-export const getSelectedTeacher = createAction(
-  ESubjectDetailActions.GetSelectedTeacher,
-  props<{ teacherId: string }>()
+export const updateSelectedTeacher = createAction(
+  subjectDetailActions.updateSelectedTeacher,
+  props<{ oldTeacherId: string, newTeacherId: string }>()
 );
 
-export const getSelectedTeacherSuccess = createAction(
-  ESubjectDetailActions.GetSelectedTeacherSuccess,
-  props<{ teacher: Teacher }>()
+export const updateSelectedTeacherSuccess = createAction(
+  subjectDetailActions.updateSelectedTeacherSuccess,
+  props<{ teacherId: string, teacher: Teacher }>()
 );
 
 export const getStudentsBySelectedSubject = createAction(
-  ESubjectDetailActions.GetStudentsBySelectedSubject,
-  props<{ teacherId: string, subjectId: string }>()
+  subjectDetailActions.getStudentsBySelectedSubject,
+  props<{ teacherId: string, subjectName: string }>()
 );
 
 export const getStudentsBySelectedSubjectSuccess = createAction(
-  ESubjectDetailActions.GetStudentsBySelectedSubjectSuccess,
+  subjectDetailActions.getStudentsBySelectedSubjectSuccess,
   props<{ students: Student[] }>()
 );
 
-export const getDates = createAction(
-  ESubjectDetailActions.GetDates,
-  props<{ teacherId: string, subjectId: string }>()
-);
-
 export const getTeachersFromOtherSubject = createAction(
-  ESubjectDetailActions.GetTeachersFromOtherSubject,
+  subjectDetailActions.getTeachersFromOtherSubject,
   props<{ teacherListForCurrentSubject: string[] }>()
 );
 
 export const getTeachersFromOtherSubjectSuccess = createAction(
-  ESubjectDetailActions.GetTeachersFromOtherSubjectSuccess,
-  props<{ teachersFromOtherSubjects: Teacher[] }>()
+  subjectDetailActions.getTeachersFromOtherSubjectSuccess,
+  props<{ teachers: Teacher[] }>()
 );
 
 export const changeVisibilitySaveButton = createAction(
-  ESubjectDetailActions.ChangeVisibilitySaveButton,
+  subjectDetailActions.changeVisibilitySaveButton,
   props<{ visibility: boolean }>()
 );
 
 export const addEmptyDate = createAction(
-  ESubjectDetailActions.AddEmptyDate
+  subjectDetailActions.addEmptyDate
 );
 
 export const changeDate = createAction(
-  ESubjectDetailActions.ChangeDate,
-  props<{ newDate: string, count: number }>()
+  subjectDetailActions.changeDate,
+  props<{ newDate: string, oldDate: string }>()
 );
 
 export const changeMark = createAction(
-  ESubjectDetailActions.ChangeMark,
+  subjectDetailActions.changeMark,
   props<{
     markValue: number,
     date: string,
@@ -103,38 +121,33 @@ export const changeMark = createAction(
 );
 
 export const saveChanges = createAction(
-  ESubjectDetailActions.SaveChanges,
-  props<{ teacherId: string, newTeacherId: string }>()
+  subjectDetailActions.saveChanges,
+  props<{ subjectName: string, teacherId: string }>()
 );
 
 export const deleteEmptyMarks = createAction(
-  ESubjectDetailActions.DeleteEmptyMarks
-);
-
-export const updateTeacherInStudents = createAction(
-  ESubjectDetailActions.UpdateTeacherInStudents,
-  props<{ newTeacherId: string }>()
+  subjectDetailActions.deleteEmptyMarks
 );
 
 export const updateInfoInDatabase = createAction(
-  ESubjectDetailActions.UpdateInfoInDatabase,
-  props<{ subjectId: string, teacherId: string, newTeacherId: string }>()
-);
-
-export const updateTeacherListInSubject = createAction(
-  ESubjectDetailActions.UpdateTeacherListInSubject,
-  props<{ teacherId: string, newTeacherId: string }>()
+  subjectDetailActions.updateInfoInDatabase,
+  props<{ subjectName: string, teacherId: string, newTeacherId: string }>()
 );
 
 export const updateTeachersFromOtherSubject = createAction(
-  ESubjectDetailActions.UpdateTeachersFromOtherSubject
+  subjectDetailActions.updateTeachersFromOtherSubject
 );
 
 export const reset = createAction(
-  ESubjectDetailActions.Reset
+  subjectDetailActions.reset
 );
 
 export const updateDataSaved = createAction(
-  ESubjectDetailActions.UpdateDataSaved,
+  subjectDetailActions.updateDataSaved,
   props<{ save: boolean }>()
+);
+
+export const setSelectedTeacher = createAction(
+  subjectDetailActions.setSelectedTeacher,
+  props<{ teacher: Teacher }>()
 );

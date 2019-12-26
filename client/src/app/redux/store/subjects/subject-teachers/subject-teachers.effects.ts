@@ -17,20 +17,19 @@ import {
 @Injectable()
 export class SubjectTeachersEffects {
   getTeacherListBySubject$: Observable<Action> = createEffect(() =>
-    this._actions$.pipe(
-      ofType(getTeacherListbySubject.type),
-      concatMap(({ subjectName }) => this._httpSubjectService.getSubjectByName(subjectName)),
-      concatMap((subject: Subject) => this._httpTeacherService.getTeachersListById(subject.teachersID).pipe(
-        map((teachersBySubject: Teacher[]) => getTeacherListbySubjectSuccess({
-          teachersBySubject
-        }))
-      )),
+    this.actions$.pipe(
+      ofType(getTeacherListbySubject),
+      concatMap(({ subjectName }) => this.httpSubjectService.getItemByName(subjectName)),
+      concatMap((subject: Subject) => this.httpTeacherService.getItemListById(subject.teachersID)),
+      map((teachersBySubject: Teacher[]) => getTeacherListbySubjectSuccess({
+        teachersBySubject
+      }))
     )
   );
 
   constructor(
-    private _httpSubjectService: HttpSubjectService,
-    private _httpTeacherService: HttpTeacherService,
-    private _actions$: Actions,
+    private httpSubjectService: HttpSubjectService,
+    private httpTeacherService: HttpTeacherService,
+    private actions$: Actions,
   ) { }
 }

@@ -1,36 +1,31 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { Student } from '../../entities/student';
+
 @Pipe({
   name: 'sort',
-  pure: false
 })
 export class SortPipe implements PipeTransform {
 
-  transform(value: any, ...args: any[]): any {
-    if (value.length) {
-      const studentsSorting = value
-        .sort((studentFirst, studentSecond) => {
-          const studentFirstMarks = this.getStudentMarks(studentFirst);
-          const studentSecondMarks = this.getStudentMarks(studentSecond);
-          const studentFirstAverageMark = studentFirstMarks
-            .reduce((acc, currentMark) => acc + currentMark, 0) / studentFirstMarks.length;
-          const studentSecondAverageMark = studentSecondMarks
-            .reduce((acc, currentMark) => acc + currentMark, 0) / studentSecondMarks.length;
-          return studentSecondAverageMark - studentFirstAverageMark;
-        });
-      return studentsSorting;
-    } else {
-      return [];
-    }
+  transform(value: Student[]): Student[] {
+    const studentsSorting = JSON.parse(JSON.stringify(value))
+      .sort((studentFirst: Student, studentSecond: Student) => {
+        const studentFirstAverageMark: number = this.getAverageMark(studentFirst);
+        const studentSecondAverageMark: number = this.getAverageMark(studentSecond);
+        return studentSecondAverageMark - studentFirstAverageMark;
+      });
+    return studentsSorting;
   }
 
-  getStudentMarks(student: any) {
-    if (!student.academicPerformance.length) return [-1];
-    const studentMarks = student.academicPerformance
-      .map(studentPerformance => studentPerformance.marks)
-      .reduce((acc, marks) => acc.concat(marks), [])
-      .map(mark => mark.value)
-      .filter(mark => mark !== null);
-    return studentMarks ? studentMarks : -1;
+  getAverageMark(student: Student): number {
+    if (!student.academicPerformance) return -1;
+    let marks = [];
+    for (let key in student.academicPerformance) {
+      marks.push(Object.values(student.academicPerformance[key]['marks']));
+    }
+    marks = marks
+      .reduce((acc, currentValue) => acc.concat(currentValue))
+      .filter((mark: number | null) => mark !== null);
+    return (marks.reduce((acc, currentMark) => acc + currentMark) / marks.length);
   }
 }

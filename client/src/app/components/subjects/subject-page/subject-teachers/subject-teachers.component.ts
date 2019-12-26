@@ -11,6 +11,7 @@ import {
 } from '../../../../redux/store/subjects/subject-teachers/subject-teachers.actions';
 
 import { Teacher } from '../../../../common/entities/teacher';
+import { paths } from '../../../../common/constants/paths';
 
 @Component({
   selector: 'app-subject-teachers',
@@ -18,17 +19,17 @@ import { Teacher } from '../../../../common/entities/teacher';
   styleUrls: ['./subject-teachers.component.scss']
 })
 export class SubjectTeachersComponent implements OnInit, OnDestroy {
+  path: string = `/${paths.subjectsTable}`;
   subjectName: string;
-  teacherListBySubject$: Observable<Teacher[]>;
+  teacherListBySubject$: Observable<Teacher[]> = this.store
+    .pipe(select(selectTeacherListBySubject));
 
   constructor(
-    private _store: Store<IAppState>,
-    private _router: Router,
-    private _activateRoute: ActivatedRoute
+    private store: Store<IAppState>,
+    private router: Router,
+    private activateRoute: ActivatedRoute
   ) {
-    this.subjectName = _activateRoute.snapshot.params['id'];
-    this.teacherListBySubject$ = _store
-      .pipe(select(selectTeacherListBySubject));
+    this.subjectName = activateRoute.snapshot.params['id'];
   }
 
   ngOnInit(): void {
@@ -36,15 +37,15 @@ export class SubjectTeachersComponent implements OnInit, OnDestroy {
   }
 
   getTeachers(): void {
-    this._store.dispatch(getTeacherListbySubject({ subjectName: this.subjectName }));
+    this.store.dispatch(getTeacherListbySubject({ subjectName: this.subjectName }));
   }
 
   deleteTeachers(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
   }
 
   navigateToSubjectDetail(selectedTeacherId: string) {
-    this._router.navigate(['subjects', `${this.subjectName}`, selectedTeacherId]);
+    this.router.navigate(['subjects', `${this.subjectName}`, selectedTeacherId]);
   }
 
   ngOnDestroy(): void {

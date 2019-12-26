@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { paths } from '../../common/constants/paths';
+
 @Component({
   selector: 'nav-app',
   templateUrl: './nav.component.html',
@@ -7,10 +9,10 @@ import { Component } from '@angular/core';
 })
 export class NavComponent {
   routerLinks: string[] = [
-    "/main",
-    "/students",
-    "/subjects",
-    "/statistics",
-    "/export"
+    paths.main,
+    paths.studentsTable,
+    paths.subjectsTable,
+    paths.statistic,
+    paths.export,
   ];
 }
