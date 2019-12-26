@@ -35,7 +35,7 @@
         <th>Last Name</th>
         <th>Average Mark</th>
         <th *ngFor="let date of dates$ | async; let count = index">
-          <app-datepicker [valueDate]="date" [dates]="dates$ | async" (onChangedDate)="onChangedDate($event, count)">
+          <app-datepicker [valueDate]="date" [dates]="dates$ | async" (onChangedDate)="onChangedDate($event, date)">
           </app-datepicker>
         </th>
       </tr>

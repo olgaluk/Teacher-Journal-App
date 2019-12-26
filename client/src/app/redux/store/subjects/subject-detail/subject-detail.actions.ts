@@ -12,7 +12,6 @@ interface ITypeActions {
   updateSelectedTeacherSuccess: string;
   getStudentsBySelectedSubject: string;
   getStudentsBySelectedSubjectSuccess: string;
-  getDates: string;
   getTeachersFromOtherSubject: string;
   getTeachersFromOtherSubjectSuccess: string;
   changeVisibilitySaveButton: string;
@@ -38,7 +37,6 @@ const subjectDetailActions: ITypeActions = {
   updateSelectedTeacherSuccess: `${BLOCK} Update selected teacher success`,
   getStudentsBySelectedSubject: `${BLOCK} Get students by selected subject and teacher`,
   getStudentsBySelectedSubjectSuccess: `${BLOCK} Get students by selected subject success`,
-  getDates: `${BLOCK} Get dates`,
   getTeachersFromOtherSubject: `${BLOCK} Get teachers from other subjects`,
   getTeachersFromOtherSubjectSuccess: `${BLOCK} Get teachers from other subjects success`,
   changeVisibilitySaveButton: `${BLOCK} Change visibility saving button`,
@@ -89,11 +87,6 @@ export const getStudentsBySelectedSubjectSuccess = createAction(
   props<{ students: Student[] }>()
 );
 
-export const getDates = createAction(
-  subjectDetailActions.getDates,
-  props<{ subjectName: string }>()
-);
-
 export const getTeachersFromOtherSubject = createAction(
   subjectDetailActions.getTeachersFromOtherSubject,
   props<{ teacherListForCurrentSubject: string[] }>()
@@ -101,7 +94,7 @@ export const getTeachersFromOtherSubject = createAction(
 
 export const getTeachersFromOtherSubjectSuccess = createAction(
   subjectDetailActions.getTeachersFromOtherSubjectSuccess,
-  props<{ teachersFromOtherSubjects: Teacher[] }>()
+  props<{ teachers: Teacher[] }>()
 );
 
 export const changeVisibilitySaveButton = createAction(
@@ -115,7 +108,7 @@ export const addEmptyDate = createAction(
 
 export const changeDate = createAction(
   subjectDetailActions.changeDate,
-  props<{ newDate: string, count: number }>()
+  props<{ newDate: string, oldDate: string }>()
 );
 
 export const changeMark = createAction(

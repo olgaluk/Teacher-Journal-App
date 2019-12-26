@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ComponentCanDeactivate } from '../../../../guards/exit.subject-detail-page.guard';
 import { Observable, SubscriptionLike } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Subject } from '../../../../common/entities/subject';
 import { Teacher } from '../../../../common/entities/teacher';
@@ -34,7 +35,6 @@ import {
   selectSelectedSubject,
   selectSelectedTeacher,
   selectStudentListBySubject,
-  selectDates,
   selectTeachersFromOtherSubjects,
   selectVisibilitySaveButton,
   selectDataSaved,
@@ -64,10 +64,10 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
   teacher$: Observable<Teacher> = this.store.pipe(select(selectSelectedTeacher));
   subject$: Observable<Subject> = this.store.pipe(select(selectSelectedSubject));
   students$: Observable<Student[]> = this.store.pipe(select(selectStudentListBySubject));
-  dates$: Observable<string[]> = this.store.pipe(select(selectDates));
+  dates$: Observable<string[]>;
   teachersFromOtherSubjects$: Observable<Teacher[]> = this.store.pipe(select(selectTeachersFromOtherSubjects));
   visibilitySaveButton$: Observable<boolean> = this.store.pipe(select(selectVisibilitySaveButton));
-  newDataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
+  dataSaved$: Observable<boolean> = this.store.pipe(select(selectDataSaved));
 
   saved: boolean = true;
 
@@ -83,17 +83,24 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
 
   ngOnInit(): void {
     this.getInitialInfo(this.subjectName, this.teacherId);
-    this.subscription = this.newDataSaved$.subscribe(
+    this.subscription = this.dataSaved$.subscribe(
       ((saved: boolean) => {
         if (saved) {
           this.notification.openNotification();
-          if (this.newTeacherId) this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
+          if (this.newTeacherId) {
+            this.router.navigate([`subjects/${this.subjectName}/${this.newTeacherId}`]);
+            this.teacherId = this.newTeacherId;
+            this.newTeacherId = '';
+            this.bsModalRef.content.itemSelected = '';
+          }          
         }
       })
     );
+
+    this.getDates();
   }
 
-  getInitialInfo(
+  private getInitialInfo(
     subjectName: string,
     teacherId: string,
   ): void {
@@ -110,19 +117,48 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       Promise.resolve(null).then((value) => {
         this.newTeacherId = this.bsModalRef.content.itemSelected;
         this.store.dispatch(updateSelectedTeacher({ oldTeacherId: this.teacherId, newTeacherId: this.newTeacherId }));
-        this.store.dispatch(changeVisibilitySaveButton({ visibility: true }));
+        this.store.dispatch(changeVisibilitySaveButton({ visibility: true }));        
         this.saved = false;
         this.store.dispatch(updateDataSaved({ save: false }));
       })
     }
   }
 
-  canDeactivate(): boolean | Observable<boolean> {
+  canDeactivate(): boolean {
     if (!this.saved) {
       return confirm(this.messageAboutChanges);
     } else {
       return true;
     }
+  }
+
+  private getDates(): void {
+    this.dates$ = this.students$.pipe(map((students: Student[]) => {
+      if (students) {
+        let dates: string[] = [];
+        students
+          .forEach((student: Student) => {
+            const marks = student.academicPerformance[this.subjectName].marks;
+            const currentDates: string[] = Object.keys(marks);
+            dates = dates.concat(currentDates);
+          });
+        dates = Array.from(new Set(dates));
+        if (dates.includes('')) {
+          dates.splice(dates.indexOf(''), 1);
+          dates = dates
+            .map(date => (new Date(date)).getTime())
+            .sort((a, b) => a - b)
+            .map(date => (new Date(date)).toDateString());
+          dates.push('');
+        } else {
+          dates = dates
+            .map(date => (new Date(date)).getTime())
+            .sort((a, b) => a - b)
+            .map(date => (new Date(date)).toDateString());
+        }
+        return dates;
+      }
+    }));
   }
 
   addColumn(): void {
@@ -131,20 +167,17 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
     this.store.dispatch(addEmptyDate());
   }
 
-  onChangedDate(newDate: string, count: number): void {
+  onChangedDate(newDate: string, oldDate: string): void {
     if (newDate) {
       this.saved = false;
       this.store.dispatch(updateDataSaved({ save: false }));
-      this.store.dispatch(changeDate({ newDate, count }));
+      this.store.dispatch(changeDate({ newDate, oldDate }));
     }
   }
 
   onChangeMark(inputMark: string, date: string, studentId: string): void {
-    let newMark: number;
-    inputMark ? newMark = +inputMark : newMark = null;
-
     this.store.dispatch(changeMark({
-      markValue: newMark,
+      markValue: inputMark ? +inputMark : null,
       date,
       studentId,
     }));
@@ -167,7 +200,7 @@ export class SubjectDetailComponent implements OnInit, AfterViewChecked, Compone
       .unsubscribe();
   }
 
-  saveChanges($event): void {
+  saveChanges($event: any): void {
     const dates = $event.target.value.split(',');
     if (dates.includes('')) {
       this.templateModalComponent.openModal();
