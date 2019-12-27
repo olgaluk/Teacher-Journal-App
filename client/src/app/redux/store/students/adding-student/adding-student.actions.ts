@@ -1,44 +1,23 @@
 import { createAction, props } from '@ngrx/store';
 
-export enum EAddingStudentActions {
-  UpdateName = '[AddingStudent] Update student name',
-  UpdateLastName = '[AddingStudent] Update student last name',
-  UpdateAge = '[AddingStudent] Update student age',
-  UpdateAddress = '[AddingStudent] Update student address',
-  AddNewStudent = '[AddingStudent] Add new student',
-  UpdateDataSaved = '[AddingStudent] Update data saved',
-  Reset = '[AddingStudent] Reset student info',
+interface ITypeActions {
+  addNewStudent: string;
+  updateDataSaved: string;
 }
 
-export const updateName = createAction(
-  EAddingStudentActions.UpdateName,
-  props<{ name: string }>()
-);
+const BLOCK: string = '[AddingStudent]';
 
-export const updateLastName = createAction(
-  EAddingStudentActions.UpdateLastName,
-  props<{ lastName: string }>()
-);
-
-export const updateAge = createAction(
-  EAddingStudentActions.UpdateAge,
-  props<{ age: number | null }>()
-);
-
-export const updateAddress = createAction(
-  EAddingStudentActions.UpdateAddress,
-  props<{ address: string }>()
-);
+const addingStudentActions: ITypeActions = {
+  addNewStudent: `${BLOCK} Add new student`,
+  updateDataSaved: `${BLOCK} Update data saved`,
+}
 
 export const addNewStudent = createAction(
-  EAddingStudentActions.AddNewStudent
+  addingStudentActions.addNewStudent,
+  props<{ name: string, lastName: string, age: number, address: string }>()
 );
 
 export const updateDataSaved = createAction(
-  EAddingStudentActions.UpdateDataSaved,
+  addingStudentActions.updateDataSaved,
   props<{ dataSaved: boolean }>()
-);
-
-export const reset = createAction(
-  EAddingStudentActions.Reset
 );

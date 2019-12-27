@@ -20,11 +20,6 @@ export const selectStudentListBySubject = createSelector(
   (state: ISubjectDetailState) => state.selectedStudentsBySubject
 );
 
-export const selectDates = createSelector(
-  selectSubjectDetail,
-  (state: ISubjectDetailState) => state.dates
-);
-
 export const selectTeachersFromOtherSubjects = createSelector(
   selectSubjectDetail,
   (state: ISubjectDetailState) => state.teachersFromOtherSubjects

@@ -1,12 +1,13 @@
 <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
-  <form
+  <form [formGroup]="searchForm"
     class="form-inline col-xs-offset-0 col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-2 col-lg-8">
     <div class="col-xs-8 col-sm-6 col-md-6 col-lg-6">
-      <app-input-form-group class="col-xs-12 col-sm-12 col-md-12 col-lg-12" [itemValue]="searchValue"
-        (changeItemValue)="getEnteredValue($event)" dataType="only letters and spaces" maxLength="40">
+      <app-input-form-group class="col-xs-12 col-sm-12 col-md-12 col-lg-12" formGroupName="searchValue"
+        [inputForm]="searchForm.get('searchValue')" dataType="only letters and spaces"
+        messageType="searchStudents">
       </app-input-form-group>
     </div>
-    <button type="button" (click)="findStudent()"
+    <button type="button" (click)="findStudent()" [disabled]="searchForm?.invalid"
       class="btn btn-primary col-xs-offset-0 col-xs-2 col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Search</button>
     <button type="button" (click)="reset()"
       class="btn btn-primary col-xs-offset-0 col-xs-2 col-sm-offset-1 col-sm-2 col-md-offset-1 col-md-2 col-lg-offset-1 col-lg-2">Reset</button>

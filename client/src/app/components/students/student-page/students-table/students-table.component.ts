@@ -6,7 +6,6 @@ import { IAppState } from '../../../../redux/store/app.state';
 
 import {
   getStudentList,
-  getStudentsByName,
   reset,
 } from '../../../../redux/store/students/students-table/students-table.actions';
 
@@ -15,6 +14,7 @@ import {
 } from '../../../../redux/store/students/students-table/students-table.selectors';
 
 import { Student } from '../../../../common/entities/student';
+import { paths } from '../../../..//common/constants/paths';
 
 @Component({
   selector: 'students-table-app',
@@ -22,24 +22,18 @@ import { Student } from '../../../../common/entities/student';
   styleUrls: ['./students-table.component.scss']
 })
 export class StudentsTableComponent implements OnInit, OnDestroy {
-  students$: Observable<Student[]>;
+  path: string = `/${paths.addingStudent}`;
+  students$: Observable<Student[]> = this.store.pipe(select(selectStudentList));
 
   constructor(
-    private _store: Store<IAppState>
-  ) {
-    this.students$ = _store.pipe(select(selectStudentList));
-  }
+    private store: Store<IAppState>
+  ) { }
 
   ngOnInit(): void {
-    this._store.dispatch(getStudentList());
-  }
-
-  searchStudents(name: string) {
-    const inputName = name.trim();
-    this._store.dispatch(getStudentsByName({ inputName }));
+    this.store.dispatch(getStudentList());
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
   }
 }

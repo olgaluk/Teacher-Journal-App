@@ -1,19 +1,23 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+import { Marks } from '../../entities/student';
+import { AcademicPerformance } from '../../entities/student';
+
 @Pipe({
   name: 'studentMarks',
-  pure: false
 })
 export class StudentMarksPipe implements PipeTransform {
 
-  transform(academicPerformance: any, ...args: any[]): any {
-    if (!academicPerformance.length) { return [] };
-    const marks = academicPerformance
-      .map(studentPerformance => studentPerformance.marks)
-      .reduce((acc, marks) => acc.concat(marks), [])
-      .map(mark => mark.value)
-      .filter(mark => mark !== null);
-    return marks;
-  }
+  transform(value: undefined | Marks | AcademicPerformance): number[] {
+    if (!value) return [];
+    if (Object.values(value)[0] instanceof Object) {
+      let marks = [];
+      for (let key in value) {
+        marks.push(Object.values(value[key]['marks']));
+      }
+      return marks.reduce((acc, currentValue) => acc.concat(currentValue));
+    }
 
+    return Object.values(value);
+  }
 }

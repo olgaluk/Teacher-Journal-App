@@ -9,30 +9,31 @@ import { selectSubjectList } from '../../../../redux/store/subjects/subjects-tab
 
 import { Subject } from '../../../../common/entities/subject';
 
+import { paths } from '../../../../common/constants/paths';
+
 @Component({
   selector: 'app-subjects-table',
   templateUrl: './subjects-table.component.html',
   styleUrls: ['./subjects-table.component.scss']
 })
 export class SubjectsTableComponent implements OnInit, OnDestroy {
-  subjects$: Observable<Subject[]>;
+  path: string = `/${paths.addingSubject}`;
+  subjects$: Observable<Subject[]> = this.store.pipe(select(selectSubjectList));
 
   constructor(
-    private _store: Store<IAppState>,
-    private _router: Router
-  ) {
-    this.subjects$ = this._store.pipe(select(selectSubjectList));
-  }
+    private store: Store<IAppState>,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this._store.dispatch(getSubjectList());
+    this.store.dispatch(getSubjectList());
   }
 
   navigateToSubject(subjectName: string) {
-    this._router.navigate(['subjects', subjectName]);
+    this.router.navigate(['subjects', subjectName]);
   }
 
   ngOnDestroy(): void {
-    this._store.dispatch(reset());
+    this.store.dispatch(reset());
   }
 }

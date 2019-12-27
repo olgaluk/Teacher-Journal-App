@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { paths } from '../../../common/constants/paths';
+
 @Component({
   selector: 'app-statistic-page',
   templateUrl: './statistic-page.component.html',
@@ -7,7 +9,7 @@ import { Component } from '@angular/core';
 })
 export class StatisticPageComponent {
   routerLinks: string[] = [
-    "/statistics/students",
-    "/statistics/some"
+    `/${paths.statisticStudents}`,
+    `/${paths.statistic}`,
   ];
 }
