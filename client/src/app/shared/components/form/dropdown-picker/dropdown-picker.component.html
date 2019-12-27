@@ -1,1 +1,4 @@
-<p>dropdown-picker works!</p>
+<form [formGroup]="dropdownPickerForm">
+    <app-dropdown *ngFor="let subject of subjects; let i = index;" formGroupName="{{ subject }}"
+        [selectForm]="dropdownPickerForm.get(subject)" [title]="subject" [options]="dates"></app-dropdown>
+</form>

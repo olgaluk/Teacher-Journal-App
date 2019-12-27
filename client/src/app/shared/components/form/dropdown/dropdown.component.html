@@ -4,14 +4,16 @@
     <button type="button" class="dropdown-toggle" (click)="toggleOpen()">
       <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>
-    <input type="checkbox" formControlName="formTitle">
-    <label>{{ formTitle }}</label>
+    <input type="checkbox" formControlName="isChecked">
+    <label>{{ title }}</label>
   </div>
   <div *ngIf="isOpen()" class="menu">
-    <div *ngFor="let option of selectForm.controls.checkboxes.controls; let i = index;">
-      <input type="checkbox" [formControl]="option" class="" (change)="optionSelect(option.value, options[i]);">
-      <label>{{ options[i].title }}</label>
-    </div>
-    <div class="dropdown-item" *ngIf="!options.length">No items for select</div>
+    <form formGroupName="dates" novalidate>
+      <div *ngFor="let option of options; let i = index;">
+        <input type="checkbox" formControlName="{{ option }}" class="">
+        <label>{{ option }}</label>
+      </div>
+      <div class="dropdown-item" *ngIf="!options.length">No items for select</div>
+    </form>
   </div>
 </form>
