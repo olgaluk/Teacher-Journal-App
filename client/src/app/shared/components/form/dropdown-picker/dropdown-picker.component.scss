@@ -1,0 +1,23 @@
+.dropdown-picker {
+  max-width: 400px;
+  margin: 20px;
+  padding: 10px;
+  background-color: #d5d5ffce;
+  border: 1px inset #91c2ca;
+  border-radius: 4px;
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    background-color: #c8e4fda9;
+    border: 1px solid #b4b4b4;
+
+    p {
+      margin: 5px 0px;
+    }
+  }
+
+  &__item {
+    margin: 3px;
+  }
+}

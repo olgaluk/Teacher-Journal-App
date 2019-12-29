@@ -15,6 +15,8 @@ export class DropdownPickerComponent implements OnInit {
   subjects: string[] = ['subject1', 'subject2', 'subject3'];
   dates: string[] = ['15/04', '17/04', '11/05'];
 
+  open: boolean = false;
+
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -41,5 +43,13 @@ export class DropdownPickerComponent implements OnInit {
       datesGroup.setControl(date, this.formBuilder.control(false));
     });
     return datesGroup;
+  }
+
+  toggleOpen(): void {
+    this.open = !this.open;
+  }
+
+  isOpen(): boolean {
+    return this.open;
   }
 }

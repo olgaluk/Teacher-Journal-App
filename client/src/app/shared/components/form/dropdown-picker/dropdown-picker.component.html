@@ -1,4 +1,15 @@
-<form [formGroup]="dropdownPickerForm">
-    <app-dropdown *ngFor="let subject of subjects; let i = index;" formGroupName="{{ subject }}"
-        [selectForm]="dropdownPickerForm.get(subject)" [title]="subject" [options]="dates"></app-dropdown>
+<form [formGroup]="dropdownPickerForm" class="dropdown-picker">
+  <div class="dropdown-picker__title">
+    <p>Title</p>
+    <button type="button" class="dropdown-picker__title-toggle" (click)="toggleOpen()">
+      <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
+    </button>
+  </div>
+  <div *ngIf="isOpen()" class="dropdown-picker__menu">
+    <app-dropdown class="dropdown-picker__item" *ngFor="let subject of subjects; let i = index;"
+      formGroupName="{{ subject }}" [selectForm]="dropdownPickerForm.get(subject)" [title]="subject" [options]="dates">
+    </app-dropdown>
+  </div>
 </form>
+
+<div>{{ dropdownPickerForm.value | json }}</div>

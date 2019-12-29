@@ -1,19 +1,18 @@
 <form [formGroup]="selectForm" novalidate>
-  <h6>{{ outputItems }}</h6>
-  <div>
-    <button type="button" class="dropdown-toggle" (click)="toggleOpen()">
+  <div class="dropdown__title">
+    <button type="button" class="dropdown__title-toggle" (click)="toggleOpen()">
       <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>
-    <input type="checkbox" formControlName="isChecked">
-    <label>{{ title }}</label>
+    <input id="{{ title }}" type="checkbox" formControlName="isChecked" class="dropdown__title-input">
+    <label for="{{ title }}" class="dropdown__title-label">{{ title }}</label>
   </div>
-  <div *ngIf="isOpen()" class="menu">
+  <div *ngIf="isOpen()" class="dropdown__menu">
     <form formGroupName="dates" novalidate>
-      <div *ngFor="let option of options; let i = index;">
-        <input type="checkbox" formControlName="{{ option }}" class="">
+      <div *ngFor="let option of options; let i = index;" class="dropdown__menu-option">
+        <input type="checkbox" formControlName="{{ option }}">
         <label>{{ option }}</label>
       </div>
-      <div class="dropdown-item" *ngIf="!options.length">No items for select</div>
+      <div *ngIf="!options.length">No items for select</div>
     </form>
   </div>
 </form>
