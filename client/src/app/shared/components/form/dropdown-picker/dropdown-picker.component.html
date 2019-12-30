@@ -7,7 +7,7 @@
   </div>
   <div *ngIf="isOpen()" class="dropdown-picker__menu">
     <app-dropdown class="dropdown-picker__item" *ngFor="let subject of subjects; let i = index;"
-      formGroupName="{{ subject }}" [selectForm]="dropdownPickerForm.get(subject)" [title]="subject" [options]="dates">
+      formGroupName="{{ subject }}" [selectForm]="dropdownPickerForm.get(subject)" [title]="subject">
     </app-dropdown>
   </div>
 </form>

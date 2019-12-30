@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { FormGroup, FormBuilder, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 import { DropdownService } from '../../../../common/services/dropdown/dropdown.service';
 
@@ -37,7 +37,7 @@ export class DropdownPickerComponent implements OnInit {
     })
   }
 
-  createCheckboxes(): AbstractControl {
+  createCheckboxes(): FormGroup {
     const datesGroup = this.formBuilder.group({});
     this.dates.forEach(date => {
       datesGroup.setControl(date, this.formBuilder.control(false));

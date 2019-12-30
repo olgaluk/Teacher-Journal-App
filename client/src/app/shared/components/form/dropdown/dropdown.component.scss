@@ -3,11 +3,7 @@
     display: none;
   }
 
-  &-label {
-    vertical-align: middle;
-  }
-
-  &-label:before {
+  &-label_false:before {
     content: "";
     color: #000;
     display: inline-block;
@@ -18,31 +14,41 @@
     text-align: center;
     width: 15px;
     height: 15px;
-    background: rgb(255, 255, 255);
-    border: 1px solid #e3e3e3;
+    background: #ffffff;
+    border: 1px solid #ffffff;
     vertical-align: middle;
   }
 
-  input:checked + label:before {
-    content: "";
+  &-label_true:before {
+    content: '&#10003';
     color: #000;
     display: inline-block;
-    font: 20px Arial;
     margin-right: 10px;
     margin-left: 10px;
     position: relative;
     text-align: center;
     width: 15px;
     height: 15px;
-    background: rgb(105, 2, 2);
-    border: 3px solid #e3e3e3;
+    background: #3b0269;
+    border: 3px solid #ffffff;
     vertical-align: middle;
   }
 
-  input:disabled + label:before {
-    background: #eee;
-    color: #aaa;
+  &-label_true:before {
+    content: "";
+    color: #000;
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    text-align: center;
+    width: 15px;
+    height: 15px;
+    background: #3b0269;
+    border: 3px solid #ffffff;
+    vertical-align: middle;
   }
+
 }
 
 .dropdown__menu {

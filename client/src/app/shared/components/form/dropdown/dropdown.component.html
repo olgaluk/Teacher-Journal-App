@@ -4,15 +4,15 @@
       <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>
     <input id="{{ title }}" type="checkbox" formControlName="isChecked" class="dropdown__title-input">
-    <label for="{{ title }}" class="dropdown__title-label">{{ title }}</label>
+    <label for="{{ title }}" class="dropdown__title-label_{{selectForm.controls['isChecked'].value}}">{{ title }}</label>
   </div>
   <div *ngIf="isOpen()" class="dropdown__menu">
     <form formGroupName="dates" novalidate>
-      <div *ngFor="let option of options; let i = index;" class="dropdown__menu-option">
-        <input type="checkbox" formControlName="{{ option }}">
-        <label>{{ option }}</label>
+      <div *ngFor="let date of dates; let i = index;" class="dropdown__menu-option">
+        <input type="checkbox" formControlName="{{ date }}">
+        <label>{{ date }}</label>
       </div>
-      <div *ngIf="!options.length">No items for select</div>
+      <div *ngIf="!dates.length">No items for select</div>
     </form>
   </div>
 </form>
