@@ -1,6 +1,6 @@
 <form [formGroup]="dropdownPickerForm" class="dropdown-picker">
   <div class="dropdown-picker__title">
-    <p>Title</p>
+    <p>{{ outputValue.join(', ') }}</p>
     <button type="button" class="dropdown-picker__title-toggle" (click)="toggleOpen()">
       <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>

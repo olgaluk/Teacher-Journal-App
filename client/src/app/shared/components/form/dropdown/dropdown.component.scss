@@ -3,52 +3,34 @@
     display: none;
   }
 
+  label:before {
+    display: inline-block;
+    margin-right: 10px;
+    margin-left: 10px;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+    border: 3px solid #ffffff;
+  }
+
   &-label_false:before {
     content: "";
-    color: #000;
-    display: inline-block;
-    font: 20px Arial;
-    margin-right: 10px;
-    margin-left: 10px;
-    position: relative;
-    text-align: center;
-    width: 15px;
-    height: 15px;
     background: #ffffff;
-    border: 1px solid #ffffff;
-    vertical-align: middle;
   }
 
-  &-label_true:before {
-    content: '&#10003';
-    color: #000;
-    display: inline-block;
-    margin-right: 10px;
-    margin-left: 10px;
-    position: relative;
-    text-align: center;
-    width: 15px;
-    height: 15px;
-    background: #3b0269;
-    border: 3px solid #ffffff;
-    vertical-align: middle;
-  }
-
-  &-label_true:before {
+  &-label_partly:before {
     content: "";
-    color: #000;
-    display: inline-block;
-    margin-right: 10px;
-    margin-left: 10px;
-    position: relative;
-    text-align: center;
-    width: 15px;
-    height: 15px;
     background: #3b0269;
-    border: 3px solid #ffffff;
-    vertical-align: middle;
   }
 
+  &-label_true:before {
+    content: "+";
+    color: #08067e;
+    background: #ffffff;
+    line-height: 0.75;
+  }
 }
 
 .dropdown__menu {

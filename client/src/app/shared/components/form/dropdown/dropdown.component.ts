@@ -1,39 +1,25 @@
-import { Component, forwardRef, Input, OnInit, OnDestroy } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
-
-interface selectOption {
-  title: string;
-  value: string;
-  selected: boolean;
-}
 
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DropdownComponent),
-      multi: true,
-    },
-  ],
 })
-export class DropdownComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class DropdownComponent implements OnInit, OnDestroy {
   @Input()
-  public selectForm: FormGroup;  
+  public selectForm: FormGroup;
   @Input() title: string;
 
-  dates: string[];
+  dates: string[] = [];
   open: boolean = false;
-  private isCheckedSubscription: Subscription;
+  private datesSubscription: Subscription;
 
-  ngOnInit() : void {
-    this.subscribeToIsChecked();
+  ngOnInit(): void {    
     this.dates = Object.keys(this.selectForm.get('dates').value);
+    this.subscribeToDates();
   }
 
   toggleOpen(): void {
@@ -44,33 +30,31 @@ export class DropdownComponent implements ControlValueAccessor, OnInit, OnDestro
     return this.open;
   }
 
-  writeValue() {
-    
-    this.onChange();
-  }
-
-  onChange(): void { 
-  };
-
-  onTouched: any = () => { };
-
-  registerOnChange(fn) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn) {
-    this.onTouched = fn;
-  }
-
-  private subscribeToIsChecked(): void {
-    this.isCheckedSubscription = this.selectForm.get('isChecked')
-     .valueChanges
-     .subscribe(value => {
-       this.dates.forEach((date: string) => this.selectForm.controls['dates'].get(date).setValue(value));
+  private subscribeToDates(): void {
+    this.datesSubscription = this.selectForm.get('dates')
+      .valueChanges
+      .subscribe((dates) => {
+        const valuesDates = Object.values(dates);
+        if (valuesDates.includes(true) && valuesDates.includes(false)) {
+          this.selectForm.controls['isChecked'].setValue('partly');
+        }
+        if (!valuesDates.includes(false)) {
+          this.selectForm.controls['isChecked'].setValue(true);
+        }
+        if (!valuesDates.includes(true)) {
+          this.selectForm.controls['isChecked'].setValue(false);
+        }
       });
-   }
+  }
 
-   ngOnDestroy(): void {
-    this.isCheckedSubscription.unsubscribe();
-   }
+  public subscribeToIsChecked(): void {
+    const valueIsChecked = this.selectForm.controls['isChecked'].value;
+    this.dates.forEach(
+      (date: string) => this.selectForm.controls['dates'].get(date).setValue(!valueIsChecked)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.datesSubscription.unsubscribe();
+  }
 }

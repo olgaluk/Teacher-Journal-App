@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
+
+import { Observable, Subscription } from 'rxjs';
 
 import { DropdownService } from '../../../../common/services/dropdown/dropdown.service';
 
@@ -10,17 +11,26 @@ import { DropdownService } from '../../../../common/services/dropdown/dropdown.s
   styleUrls: ['./dropdown-picker.component.scss'],
   providers: [DropdownService],
 })
-export class DropdownPickerComponent implements OnInit {
+export class DropdownPickerComponent implements OnInit, OnDestroy {
   dropdownPickerForm: FormGroup;
   subjects: string[] = ['subject1', 'subject2', 'subject3'];
   dates: string[] = ['15/04', '17/04', '11/05'];
 
   open: boolean = false;
+  outputValue: string[] = [];
 
-  constructor(private formBuilder: FormBuilder) { }
+  subjectObs: Observable<{}> = this.dropdownService.getSubjectList();
+
+  private datesSubscription: Subscription;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private dropdownService: DropdownService
+  ) { }
 
   ngOnInit() {
     this.initForm();
+    this.subscribeToDates();
   }
 
   initForm(): void {
@@ -35,6 +45,7 @@ export class DropdownPickerComponent implements OnInit {
         dates: this.createCheckboxes()
       }))
     })
+
   }
 
   createCheckboxes(): FormGroup {
@@ -51,5 +62,26 @@ export class DropdownPickerComponent implements OnInit {
 
   isOpen(): boolean {
     return this.open;
+  }
+
+  private subscribeToDates(): void {
+    this.datesSubscription = this.dropdownPickerForm
+      .valueChanges
+      .subscribe((formData) => {
+        this.outputValue = formData.getControls().value
+          .map((subject) => formData[subject].dates)
+          .map((dates) => {
+            const checkedDates: string[] = [];
+            for (let date in dates) {
+              if (dates[date] === true) checkedDates.push(date);
+            }
+            return checkedDates;
+          })
+          .reduce((acc, currentDate) => acc.concat(currentDate));
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.datesSubscription.unsubscribe();
   }
 }

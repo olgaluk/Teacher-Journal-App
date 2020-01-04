@@ -1,10 +1,12 @@
-<form [formGroup]="selectForm" novalidate>
+<form [formGroup]="selectForm" novalidate class="dropdown">
   <div class="dropdown__title">
     <button type="button" class="dropdown__title-toggle" (click)="toggleOpen()">
       <span>{{ isOpen() ? '&#9660;' : '&#9658;' }}</span>
     </button>
-    <input id="{{ title }}" type="checkbox" formControlName="isChecked" class="dropdown__title-input">
-    <label for="{{ title }}" class="dropdown__title-label_{{selectForm.controls['isChecked'].value}}">{{ title }}</label>
+    <input id="{{ title }}" type="checkbox" formControlName="isChecked" class="dropdown__title-input"
+      (click)="subscribeToIsChecked()">
+    <label for="{{ title }}"
+      class="dropdown__title-label_{{selectForm.controls['isChecked'].value}}">{{ title }}</label>
   </div>
   <div *ngIf="isOpen()" class="dropdown__menu">
     <form formGroupName="dates" novalidate>

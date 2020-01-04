@@ -33,6 +33,7 @@ exports.subjects_info_get = (req, res) => {
 };
 
 exports.subject_find_get = (req, res) => {
+  console.log("find");
   const subjectName = req.params[0];
 
   Subject.findOne({ name: subjectName }, { _id: 0 })
@@ -69,6 +70,18 @@ exports.teacher_replacement_put = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      res.status(500).send('Internal Server Error');
+    });
+};
+
+exports.subject_list_get = (req, res) => {
+  Subject.find({}, { name: 1, _id: 0 })
+    .then((subjects) => {
+      const subjectNameList = subjects.map((subject) => subject.name);
+      res.status(200).send(subjectNameList);
+    })
+    .catch((error) => {
+      console.log(error);
       res.status(500).send('Internal Server Error');
     });
 };
